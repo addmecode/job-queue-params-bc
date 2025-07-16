@@ -1,13 +1,11 @@
-namespace jobqueueparamsbc.jobqueueparamsbc;
+namespace Addmecode.JobQueueParams;
 
-using Addmecode.JobQueueParams;
-
-page 50101 "ADD_JobQueueEntryParamTemplate"
+page 50100 "ADD_JobQueueEntryParameters"
 {
     ApplicationArea = All;
-    Caption = 'Job Queue Entry Parameter Template';
+    Caption = 'Job Queue Entry Parameters';
     PageType = List;
-    SourceTable = ADD_JobQueueEntryParamTemplate;
+    SourceTable = ADD_JobQueueEntryParameter;
     UsageCategory = Lists;
 
     layout
@@ -16,6 +14,10 @@ page 50101 "ADD_JobQueueEntryParamTemplate"
         {
             repeater(General)
             {
+                field("Job Queue Entry ID"; Rec."Job Queue Entry ID")
+                {
+                    ToolTip = 'Specifies the value of the Job Queue Entry ID field.', Comment = '%';
+                }
                 field("Object Type"; Rec."Object Type")
                 {
                     ToolTip = 'Specifies the value of the Object Type field.', Comment = '%';
@@ -23,10 +25,6 @@ page 50101 "ADD_JobQueueEntryParamTemplate"
                 field("Object ID"; Rec."Object ID")
                 {
                     ToolTip = 'Specifies the value of the Object ID field.', Comment = '%';
-                }
-                field("Object Caption"; Rec."Object Caption")
-                {
-                    ToolTip = 'Specifies the value of the Object Caption field.', Comment = '%';
                 }
                 field("Parameter Name"; Rec."Parameter Name")
                 {
@@ -36,9 +34,9 @@ page 50101 "ADD_JobQueueEntryParamTemplate"
                 {
                     ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                 }
-                field("Default Parameter Value"; Rec."Default Parameter Value")
+                field("Parameter Value"; Rec."Parameter Value")
                 {
-                    ToolTip = 'Specifies the value of the Default Parameter Value field.', Comment = '%';
+                    ToolTip = 'Specifies the value of the Parameter Value field.', Comment = '%';
                 }
             }
         }

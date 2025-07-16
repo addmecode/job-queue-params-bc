@@ -1,7 +1,6 @@
 namespace Addmecode.JobQueueParams;
 
 using System.Threading;
-using jobqueueparamsbc.jobqueueparamsbc;
 
 table 50100 "ADD_JobQueueEntryParameter"
 {
@@ -56,7 +55,7 @@ table 50100 "ADD_JobQueueEntryParameter"
                 JobQueueEntry.Get("Job Queue Entry ID");
                 JobQueueEntryParamTemplate.SetRange("Object Type", JobQueueEntry."Object Type to Run");
                 JobQueueEntryParamTemplate.SetRange("Object ID", JobQueueEntry."Object ID to Run");
-                if Page.RunModal(Page::ADD_JobQueueEntryParamTemplate, JobQueueEntryParamTemplate) = Action::LookupOK then begin
+                if Page.RunModal(Page::ADD_JobQueueEntrParamTemplates, JobQueueEntryParamTemplate) = Action::LookupOK then begin
                     Rec."Parameter Name" := JobQueueEntryParamTemplate."Parameter Name";
                     Rec."Parameter Value" := JobQueueEntryParamTemplate."Default Parameter Value";
                 end;

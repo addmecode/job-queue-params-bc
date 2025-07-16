@@ -1,9 +1,9 @@
 namespace Addmecode.JobQueueParams;
 
-page 50100 "ADD_JobQueueEntryParameter"
+page 50102 "ADD_JobQueueEntryParamsLookUp"
 {
     ApplicationArea = All;
-    Caption = 'Job Queue Entry Parameter';
+    Caption = 'Job Queue Entry Parameters LookUp';
     PageType = List;
     SourceTable = ADD_JobQueueEntryParameter;
     UsageCategory = Lists;
@@ -14,20 +14,10 @@ page 50100 "ADD_JobQueueEntryParameter"
         {
             repeater(General)
             {
-                field("Job Queue Entry ID"; Rec."Job Queue Entry ID")
-                {
-                    ToolTip = 'Specifies the value of the Job Queue Entry ID field.', Comment = '%';
-                }
-                field("Object Type"; Rec."Object Type")
-                {
-                    ToolTip = 'Specifies the value of the Object Type field.', Comment = '%';
-                }
-                field("Object ID"; Rec."Object ID")
-                {
-                    ToolTip = 'Specifies the value of the Object ID field.', Comment = '%';
-                }
                 field("Parameter Name"; Rec."Parameter Name")
                 {
+                    //todo: move editable to table
+                    Editable = false;
                     ToolTip = 'Specifies the value of the Parameter Name field.', Comment = '%';
                 }
                 field("Parameter Description"; Rec."Parameter Description")
