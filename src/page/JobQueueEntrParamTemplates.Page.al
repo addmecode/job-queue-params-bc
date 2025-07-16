@@ -1,11 +1,11 @@
 namespace Addmecode.JobQueueParams;
 
-page 50100 "ADD_JobQueueEntryParameter"
+page 50101 "ADD_JobQueueEntrParamTemplates"
 {
     ApplicationArea = All;
-    Caption = 'Job Queue Entry Parameter';
+    Caption = 'Job Queue Entry Parameter Templates';
     PageType = List;
-    SourceTable = ADD_JobQueueEntryParameter;
+    SourceTable = ADD_JobQueueEntryParamTemplate;
     UsageCategory = Lists;
 
     layout
@@ -14,10 +14,6 @@ page 50100 "ADD_JobQueueEntryParameter"
         {
             repeater(General)
             {
-                field("Job Queue Entry ID"; Rec."Job Queue Entry ID")
-                {
-                    ToolTip = 'Specifies the value of the Job Queue Entry ID field.', Comment = '%';
-                }
                 field("Object Type"; Rec."Object Type")
                 {
                     ToolTip = 'Specifies the value of the Object Type field.', Comment = '%';
@@ -25,6 +21,10 @@ page 50100 "ADD_JobQueueEntryParameter"
                 field("Object ID"; Rec."Object ID")
                 {
                     ToolTip = 'Specifies the value of the Object ID field.', Comment = '%';
+                }
+                field("Object Caption"; Rec."Object Caption")
+                {
+                    ToolTip = 'Specifies the value of the Object Caption field.', Comment = '%';
                 }
                 field("Parameter Name"; Rec."Parameter Name")
                 {
@@ -34,9 +34,9 @@ page 50100 "ADD_JobQueueEntryParameter"
                 {
                     ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                 }
-                field("Parameter Value"; Rec."Parameter Value")
+                field("Default Parameter Value"; Rec."Default Parameter Value")
                 {
-                    ToolTip = 'Specifies the value of the Parameter Value field.', Comment = '%';
+                    ToolTip = 'Specifies the value of the Default Parameter Value field.', Comment = '%';
                 }
             }
         }
