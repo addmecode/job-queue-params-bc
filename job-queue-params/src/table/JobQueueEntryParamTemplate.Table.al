@@ -56,5 +56,4 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
             Clustered = true;
         }
     }
-
 }

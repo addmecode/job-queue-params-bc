@@ -1,0 +1,39 @@
+{
+  "id": "0528024e-3aed-42b7-838f-4d4b72a1522f",
+  "name": "Demo JobQueueParams",
+  "publisher": "Addmecode",
+  "version": "1.0.0.0",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [
+    {
+      "id": "0528084e-3aed-42b7-838f-4d4b72a1522f",
+      "name": "JobQueueParams",
+      "publisher": "Addmecode",
+      "version": "1.0.0.0"
+    }
+  ],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "26.0.0.0",
+  "idRanges": [
+    {
+      "from": 50100,
+      "to": 50149
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "15.0",
+  "features": [
+    "NoImplicitWith"
+  ]
+}

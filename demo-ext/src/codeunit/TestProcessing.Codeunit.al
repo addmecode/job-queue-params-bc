@@ -1,4 +1,4 @@
-codeunit 50101 "ADD_TestProcessing"
+codeunit 50130 "ADD_TestProcessing"
 {
     TableNo = 472;
     trigger OnRun()
