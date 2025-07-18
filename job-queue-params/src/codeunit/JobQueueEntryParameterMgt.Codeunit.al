@@ -46,6 +46,23 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         CreateJobQueueEntryParam(JQE);
     end;
 
+    internal procedure CreateJqeParamTemplIfNotExists(JqeToCreate: Record ADD_JobQueueEntryParamTemplate)
+    var
+        JobQueueEntryParamTempl: Record ADD_JobQueueEntryParamTemplate;
+    begin
+        if (JobQueueEntryParamTempl.Get(JqeToCreate."Object Type", JqeToCreate."Object ID", JqeToCreate."Parameter Name")) then
+            exit;
+        JqeToCreate.Insert(true);
+    end;
+
+    internal procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Text[250]
+    var
+        JqueParam: Record "ADD_JobQueueEntryParameter";
+    begin
+        JqueParam.Get(Jqe.ID, ParamName);
+        exit(JqueParam."Parameter Value");
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Job Queue Entry", 'OnAfterInsertEvent', '', false, false)]
     local procedure OnAfterInsertJQE(var Rec: Record "Job Queue Entry")
     begin

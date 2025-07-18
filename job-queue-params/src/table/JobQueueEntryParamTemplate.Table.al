@@ -46,7 +46,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
             DataClassification = CustomerContent;
             Caption = 'Default Parameter Value';
         }
-
     }
 
     keys
@@ -56,4 +55,11 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
             Clustered = true;
         }
     }
+
+    procedure CreateIfNotExists()
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        JobQueueEntryMgt.CreateJqeParamTemplIfNotExists(Rec);
+    end;
 }
