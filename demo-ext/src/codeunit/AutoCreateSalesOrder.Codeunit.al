@@ -5,13 +5,15 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
     var
         NewSalesOrderNo: code[20];
     begin
-        NewSalesOrderNo := CreateSalesOrderHeader(Rec.GetJobQueueEntryParamValue(GetCustNoParamName()));
+        NewSalesOrderNo := CreateSalesOrderHeader(Rec.GetJobQueueEntryParamValue(GetCustNoParamName()),
+                                                Rec.GetJobQueueEntryParamValue(GetLocCodeParamName()));
+
         CreateSalesOrderLines(NewSalesOrderNo,
-        Rec.GetJobQueueEntryParamValue(GetItemNoParamName()),
-        Rec.GetJobQueueEntryParamValue(GetQuantityParamName()));
+                            Rec.GetJobQueueEntryParamValue(GetItemNoParamName()),
+                            Rec.GetJobQueueEntryParamValue(GetQuantityParamName()));
     end;
 
-    local procedure CreateSalesOrderHeader(CustomerNo: Text[250]): code[20]
+    local procedure CreateSalesOrderHeader(CustomerNo: Text[250]; LocCode: code[10]): code[20]
     var
         SalesHeader: Record "Sales Header";
         Customer: Record Customer;
@@ -20,9 +22,11 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
 
         SalesHeader.init();
         SalesHeader.Validate("Document Type", SalesHeader."Document Type"::Order);
+        SalesHeader.Insert(true);
         SalesHeader.Validate("Sell-to Customer No.", CustomerNo);
         SalesHeader.Validate("Posting Date", WorkDate());
-        SalesHeader.Insert(true);
+        SalesHeader.Validate("Location Code", LocCode);
+        SalesHeader.Modify(true);
         exit(SalesHeader."No.");
     end;
 
@@ -59,6 +63,11 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
         exit('Quantity');
     end;
 
+    local procedure GetLocCodeParamName(): Text[100]
+    begin
+        Exit('Location Code');
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::ADD_Install, OnBeforeInstallAppPerCompany, '', false, false)]
     local procedure CreateJqeTemplParams()
     var
@@ -71,18 +80,23 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
         JobQueueEntryParamTempl."Parameter Name" := GetCustNoParamName();
         JobQueueEntryParamTempl."Parameter Description" := 'Customer number to auto create sales order.';
         JobQueueEntryParamTempl."Default Parameter Value" := 'C00001';
-        JobQueueEntryParamTempl.CreateIfNotExists();
+        JobQueueEntryParamTempl.CreateIfNotExists(true);
 
         JobQueueEntryParamTempl.Init();
         JobQueueEntryParamTempl."Parameter Name" := GetItemNoParamName();
         JobQueueEntryParamTempl."Parameter Description" := 'Item number to auto create sales order.';
         JobQueueEntryParamTempl."Default Parameter Value" := 'Item0001';
-        JobQueueEntryParamTempl.CreateIfNotExists();
+        JobQueueEntryParamTempl.CreateIfNotExists(true);
         JobQueueEntryParamTempl.Init();
 
         JobQueueEntryParamTempl."Parameter Name" := GetQuantityParamName();
         JobQueueEntryParamTempl."Parameter Description" := 'Quantity to auto create sales order.';
         JobQueueEntryParamTempl."Default Parameter Value" := '1';
-        JobQueueEntryParamTempl.CreateIfNotExists();
+        JobQueueEntryParamTempl.CreateIfNotExists(true);
+
+        JobQueueEntryParamTempl."Parameter Name" := GetLocCodeParamName();
+        JobQueueEntryParamTempl."Parameter Description" := 'Location Code to auto create sales order.';
+        JobQueueEntryParamTempl."Default Parameter Value" := 'MAIN';
+        JobQueueEntryParamTempl.CreateIfNotExists(true);
     end;
 }
