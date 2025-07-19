@@ -56,10 +56,10 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
     }
 
-    procedure CreateIfNotExists()
+    procedure CreateIfNotExists(SetDefValueForExistingJqe: Boolean)
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
     begin
-        JobQueueEntryMgt.CreateJqeParamTemplIfNotExists(Rec);
+        JobQueueEntryMgt.CreateJqeParamTemplIfNotExists(Rec, SetDefValueForExistingJqe);
     end;
 }
