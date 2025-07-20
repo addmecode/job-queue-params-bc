@@ -6,7 +6,9 @@ page 50102 "ADD_JobQueueEntryParamsSubform"
     Caption = 'Job Queue Entry Parameters';
     PageType = ListPart;
     SourceTable = ADD_JobQueueEntryParameter;
-    UsageCategory = Lists;
+    InsertAllowed = false;
+    DeleteAllowed = false;
+    ModifyAllowed = true;
 
     layout
     {
@@ -16,8 +18,6 @@ page 50102 "ADD_JobQueueEntryParamsSubform"
             {
                 field("Parameter Name"; Rec."Parameter Name")
                 {
-                    //todo: move editable to table
-                    Editable = false;
                     ToolTip = 'Specifies the value of the Parameter Name field.', Comment = '%';
                 }
                 field("Parameter Description"; Rec."Parameter Description")

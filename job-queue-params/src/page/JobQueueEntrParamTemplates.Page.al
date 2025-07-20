@@ -7,6 +7,9 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
     PageType = List;
     SourceTable = ADD_JobQueueEntryParamTemplate;
     UsageCategory = Lists;
+    InsertAllowed = false;
+    DeleteAllowed = false;
+    ModifyAllowed = true;
 
     layout
     {
