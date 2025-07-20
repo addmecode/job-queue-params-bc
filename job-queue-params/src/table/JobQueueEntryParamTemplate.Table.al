@@ -15,36 +15,41 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
             DataClassification = CustomerContent;
             OptionCaption = ',,,Report,,Codeunit';
             OptionMembers = ,,,"Report",,"Codeunit";
+            Editable = false;
         }
         field(2; "Object ID"; Integer)
         {
             DataClassification = CustomerContent;
             Caption = 'Object ID';
             TableRelation = AllObjWithCaption."Object ID" where("Object Type" = field("Object Type"));
+            Editable = false;
         }
         field(3; "Object Caption"; Text[250])
         {
             CalcFormula = lookup(AllObjWithCaption."Object Caption" where("Object Type" = field("Object Type"),
                                                                            "Object ID" = field("Object ID")));
             Caption = 'Object Caption';
-            Editable = false;
             FieldClass = FlowField;
+            Editable = false;
         }
         field(4; "Parameter Name"; Text[100])
         {
             DataClassification = CustomerContent;
             Caption = 'Parameter Name';
+            Editable = false;
         }
         field(5; "Parameter Description"; Text[250])
         {
             DataClassification = CustomerContent;
             Caption = 'Parameter Description';
+            Editable = true;
         }
 
         field(6; "Default Parameter Value"; Text[250])
         {
             DataClassification = CustomerContent;
             Caption = 'Default Parameter Value';
+            Editable = true;
         }
     }
 

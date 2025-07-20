@@ -7,6 +7,7 @@ page 50100 "ADD_JobQueueEntryParameters"
     PageType = List;
     SourceTable = ADD_JobQueueEntryParameter;
     UsageCategory = Lists;
+    Editable = false;
 
     layout
     {
