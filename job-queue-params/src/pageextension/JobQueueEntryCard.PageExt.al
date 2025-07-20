@@ -12,6 +12,7 @@ pageextension 50101 "ADD_JobQueueEntryCard" extends "Job Queue Entry Card"
                 SubPageLink = "Job Queue Entry ID" = FIELD(ID);
                 ApplicationArea = All;
                 UpdatePropagation = SubPart;
+                Editable = Rec.Status = Rec.Status::"On Hold";
             }
         }
     }

@@ -99,6 +99,14 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         FilteredJqe.SetRange("Object ID to Run", NewJqeParamTempl."Object ID");
     end;
 
+    procedure CheckIfJqeIsOnHold(JqeParam: Record "ADD_JobQueueEntryParameter")
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+    begin
+        JobQueueEntry.Get(JqeParam."Job Queue Entry ID");
+        JobQueueEntry.TestField(Status, JobQueueEntry.Status::"On Hold");
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Job Queue Entry", 'OnAfterInsertEvent', '', false, false)]
     local procedure OnAfterInsertJQE(var Rec: Record "Job Queue Entry")
     begin
