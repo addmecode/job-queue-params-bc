@@ -1,10 +1,10 @@
 namespace Addmecode.JobQueueParams;
 
-page 50102 "ADD_JobQueueEntryParamsLookUp"
+page 50102 "ADD_JobQueueEntryParamsSubform"
 {
     ApplicationArea = All;
-    Caption = 'Job Queue Entry Parameters LookUp';
-    PageType = List;
+    Caption = 'Job Queue Entry Parameters';
+    PageType = ListPart;
     SourceTable = ADD_JobQueueEntryParameter;
     UsageCategory = Lists;
 
