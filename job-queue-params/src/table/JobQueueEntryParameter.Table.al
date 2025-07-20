@@ -65,4 +65,11 @@ table 50100 "ADD_JobQueueEntryParameter"
             Clustered = true;
         }
     }
+
+    trigger OnModify()
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        JobQueueEntryMgt.CheckIfJqeIsOnHold(Rec);
+    end;
 }
