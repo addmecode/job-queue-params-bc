@@ -26,8 +26,42 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         JQEParam.Init();
         JQEParam."Job Queue Entry ID" := JQE.ID;
         JQEParam."Parameter Name" := JQEParamTempl."Parameter Name";
-        if SetDefValue then
-            JQEParam."Parameter Value" := JQEParamTempl."Default Parameter Value";
+        //todo this is not the best way to do it, but it works for now
+        case JqeParamTempl."Parameter Type" of
+            JqeParamTempl."Parameter Type"::BigInteger:
+                JQEParam."BigInteger Value" := JQEParamTempl."BigInteger Value";
+            JqeParamTempl."Parameter Type"::Blob:
+                begin
+                    JQEParamTempl.CalcFields("Blob Value");
+                    JQEParam."Blob Value" := JQEParamTempl."Blob Value";
+                end;
+            JqeParamTempl."Parameter Type"::Boolean:
+                JQEParam."Boolean Value" := JqeParamTempl."Boolean Value";
+            JqeParamTempl."Parameter Type"::Code:
+                JQEParam."Code Value" := JqeParamTempl."Code Value";
+            JqeParamTempl."Parameter Type"::Date:
+                JQEParam."Date Value" := JqeParamTempl."Date Value";
+            JqeParamTempl."Parameter Type"::DateFormula:
+                JQEParam."DateFormula Value" := JqeParamTempl."DateFormula Value";
+            JqeParamTempl."Parameter Type"::DateTime:
+                JQEParam."DateTime Value" := JqeParamTempl."DateTime Value";
+            JqeParamTempl."Parameter Type"::Decimal:
+                JQEParam."Decimal Value" := JqeParamTempl."Decimal Value";
+            JqeParamTempl."Parameter Type"::Duration:
+                JQEParam."Duration Value" := JqeParamTempl."Duration Value";
+            JqeParamTempl."Parameter Type"::Guid:
+                JQEParam."Guid Value" := JqeParamTempl."Guid Value";
+            JqeParamTempl."Parameter Type"::Integer:
+                JQEParam."Integer Value" := JqeParamTempl."Integer Value";
+            JqeParamTempl."Parameter Type"::Media:
+                JQEParam."Media Value" := JqeParamTempl."Media Value"; //todo calcfield?
+            JqeParamTempl."Parameter Type"::MediaSet:
+                JQEParam."MediaSet Value" := JqeParamTempl."MediaSet Value"; //todo calcfield?
+            JqeParamTempl."Parameter Type"::Text:
+                JQEParam."Text Value" := JqeParamTempl."Text Value";
+            JqeParamTempl."Parameter Type"::Time:
+                JQEParam."Time Value" := JqeParamTempl."Time Value";
+        end;
         JQEParam.Insert();
     end;
 
@@ -69,7 +103,89 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         JqueParam: Record "ADD_JobQueueEntryParameter";
     begin
         JqueParam.Get(Jqe.ID, ParamName);
-        exit(JqueParam."Parameter Value");
+        //todo: this is not the best way to do it, but it works for now
+        case JqueParam."Parameter Type" of
+            JqueParam."Parameter Type"::None:
+                exit('');
+            JqueParam."Parameter Type"::BigInteger:
+                exit(Format(JqueParam."BigInteger Value"));
+            JqueParam."Parameter Type"::Blob:
+                exit(''); //todo
+            JqueParam."Parameter Type"::Boolean:
+                exit(Format(JqueParam."Boolean Value"));
+            JqueParam."Parameter Type"::Code:
+                exit(JqueParam."Code Value");
+            JqueParam."Parameter Type"::Date:
+                exit(Format(JqueParam."Date Value"));
+            JqueParam."Parameter Type"::DateFormula:
+                exit(Format(JqueParam."DateFormula Value"));
+            JqueParam."Parameter Type"::DateTime:
+                exit(Format(JqueParam."DateTime Value"));
+            JqueParam."Parameter Type"::Decimal:
+                exit(Format(JqueParam."Decimal Value"));
+            JqueParam."Parameter Type"::Duration:
+                exit(Format(JqueParam."Duration Value"));
+            JqueParam."Parameter Type"::Guid:
+                exit(Format(JqueParam."Guid Value"));
+            JqueParam."Parameter Type"::Integer:
+                exit(Format(JqueParam."Integer Value"));
+            JqueParam."Parameter Type"::Media:
+                exit(''); //todo
+            JqueParam."Parameter Type"::MediaSet:
+                exit(''); //todo
+            JqueParam."Parameter Type"::Text:
+                exit(JqueParam."Text Value");
+            JqueParam."Parameter Type"::Time:
+                exit(Format(JqueParam."Time Value"));
+            else
+                exit('');
+        end;
+    end;
+
+    procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    begin
+        //todo: this is not the best way to do it, but it works for now
+        case JqeParamTempl."Parameter Type" of
+            JqeParamTempl."Parameter Type"::None:
+                exit('');
+            JqeParamTempl."Parameter Type"::BigInteger:
+                exit(Format(JqeParamTempl."BigInteger Value"));
+            JqeParamTempl."Parameter Type"::Blob:
+                exit(''); //todo
+            JqeParamTempl."Parameter Type"::Boolean:
+                exit(Format(JqeParamTempl."Boolean Value"));
+            JqeParamTempl."Parameter Type"::Code:
+                exit(JqeParamTempl."Code Value");
+            JqeParamTempl."Parameter Type"::Date:
+                exit(Format(JqeParamTempl."Date Value"));
+            JqeParamTempl."Parameter Type"::DateFormula:
+                exit(Format(JqeParamTempl."DateFormula Value"));
+            JqeParamTempl."Parameter Type"::DateTime:
+                exit(Format(JqeParamTempl."DateTime Value"));
+            JqeParamTempl."Parameter Type"::Decimal:
+                exit(Format(JqeParamTempl."Decimal Value"));
+            JqeParamTempl."Parameter Type"::Duration:
+                exit(Format(JqeParamTempl."Duration Value"));
+            JqeParamTempl."Parameter Type"::Guid:
+                exit(Format(JqeParamTempl."Guid Value"));
+            JqeParamTempl."Parameter Type"::Integer:
+                exit(Format(JqeParamTempl."Integer Value"));
+            JqeParamTempl."Parameter Type"::Media:
+                exit(''); //todo
+            JqeParamTempl."Parameter Type"::MediaSet:
+                exit(''); //todo
+            JqeParamTempl."Parameter Type"::Text:
+                exit(JqeParamTempl."Text Value");
+            JqeParamTempl."Parameter Type"::Time:
+                exit(Format(JqeParamTempl."Time Value"));
+            else
+                exit('');
+        end;
+    end;
+
+    procedure ValidateParameterType(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate)
+    begin
+        //todo validate if there is only one parameter value set and it is the same as the parameter type
     end;
 
     local procedure CreateJqeParamFromTemplIfNotExists(JQE: Record "Job Queue Entry"; JQEParamTempl: record ADD_JobQueueEntryParamTemplate; SetDefValue: Boolean)

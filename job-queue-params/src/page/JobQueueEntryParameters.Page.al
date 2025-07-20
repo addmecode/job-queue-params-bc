@@ -39,8 +39,9 @@ page 50100 "ADD_JobQueueEntryParameters"
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
-                field("Parameter Value"; Rec."Parameter Value")
+                field("Parameter Value"; Rec."Text Value")
                 {
+                    //todo based on the type
                     ToolTip = 'Specifies the value of the Parameter Value field.', Comment = '%';
                 }
             }
