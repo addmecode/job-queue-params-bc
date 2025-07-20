@@ -37,6 +37,10 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
                 {
                     ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                 }
+                field("Parameter Type"; Rec."Parameter Type")
+                {
+                    ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
+                }
                 field("Default Parameter Value"; Rec."Default Parameter Value")
                 {
                     ToolTip = 'Specifies the value of the Default Parameter Value field.', Comment = '%';

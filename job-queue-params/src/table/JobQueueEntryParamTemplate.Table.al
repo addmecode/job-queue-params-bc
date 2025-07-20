@@ -38,14 +38,19 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
             Caption = 'Parameter Name';
             Editable = false;
         }
-        field(5; "Parameter Description"; Text[250])
+        field(5; "Parameter Type"; Enum "ADD_JobQueueEntryParameterType")
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Parameter Type';
+            Editable = false;
+        }
+        field(6; "Parameter Description"; Text[250])
         {
             DataClassification = CustomerContent;
             Caption = 'Parameter Description';
             Editable = true;
         }
-
-        field(6; "Default Parameter Value"; Text[250])
+        field(7; "Default Parameter Value"; Text[250])
         {
             DataClassification = CustomerContent;
             Caption = 'Default Parameter Value';

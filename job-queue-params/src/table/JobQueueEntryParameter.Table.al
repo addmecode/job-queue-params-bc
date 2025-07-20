@@ -40,7 +40,17 @@ table 50100 "ADD_JobQueueEntryParameter"
             NotBlank = true;
             Editable = false;
         }
-        field(5; "Parameter Description"; Text[250])
+        field(5; "Parameter Type"; Enum "ADD_JobQueueEntryParameterType")
+        {
+            Caption = 'Parameter Type';
+            FieldClass = FlowField;
+            CalcFormula = lookup(ADD_JobQueueEntryParamTemplate."Parameter Type"
+                          where("Parameter Name" = field("Parameter Name"),
+                                "Object Type" = field("Object Type"),
+                                "Object ID" = field("Object ID")));
+            Editable = false;
+        }
+        field(6; "Parameter Description"; Text[250])
         {
             Caption = 'Parameter Description';
             FieldClass = FlowField;
@@ -50,7 +60,7 @@ table 50100 "ADD_JobQueueEntryParameter"
                                 "Object ID" = field("Object ID")));
             Editable = false;
         }
-        field(6; "Parameter Value"; Text[250])
+        field(7; "Parameter Value"; Text[250])
         {
             DataClassification = CustomerContent;
             Caption = 'Parameter Value';

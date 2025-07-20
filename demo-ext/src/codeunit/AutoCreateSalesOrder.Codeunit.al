@@ -78,23 +78,27 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
         JobQueueEntryParamTempl."Object ID" := 50130;
 
         JobQueueEntryParamTempl."Parameter Name" := GetCustNoParamName();
+        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Text;
         JobQueueEntryParamTempl."Parameter Description" := 'Customer number to auto create sales order.';
         JobQueueEntryParamTempl."Default Parameter Value" := 'C00001';
         JobQueueEntryParamTempl.CreateIfNotExists(true);
 
         JobQueueEntryParamTempl.Init();
         JobQueueEntryParamTempl."Parameter Name" := GetItemNoParamName();
+        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Text;
         JobQueueEntryParamTempl."Parameter Description" := 'Item number to auto create sales order.';
         JobQueueEntryParamTempl."Default Parameter Value" := 'Item0001';
         JobQueueEntryParamTempl.CreateIfNotExists(true);
         JobQueueEntryParamTempl.Init();
 
         JobQueueEntryParamTempl."Parameter Name" := GetQuantityParamName();
+        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Text;
         JobQueueEntryParamTempl."Parameter Description" := 'Quantity to auto create sales order.';
         JobQueueEntryParamTempl."Default Parameter Value" := '1';
         JobQueueEntryParamTempl.CreateIfNotExists(true);
 
         JobQueueEntryParamTempl."Parameter Name" := GetLocCodeParamName();
+        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Text;
         JobQueueEntryParamTempl."Parameter Description" := 'Location Code to auto create sales order.';
         JobQueueEntryParamTempl."Default Parameter Value" := 'MAIN';
         JobQueueEntryParamTempl.CreateIfNotExists(true);
