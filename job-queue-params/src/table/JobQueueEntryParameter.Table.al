@@ -165,4 +165,11 @@ table 50100 "ADD_JobQueueEntryParameter"
     begin
         JobQueueEntryMgt.CheckIfJqeIsOnHold(Rec);
     end;
+
+    procedure GetParameterValue(): Text
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        exit(JobQueueEntryMgt.GetParameterValue(Rec));
+    end;
 }

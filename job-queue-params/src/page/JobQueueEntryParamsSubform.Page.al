@@ -6,9 +6,8 @@ page 50102 "ADD_JobQueueEntryParamsSubform"
     Caption = 'Job Queue Entry Parameters';
     PageType = ListPart;
     SourceTable = ADD_JobQueueEntryParameter;
-    InsertAllowed = false;
-    DeleteAllowed = false;
-    ModifyAllowed = true;
+    CardPageId = ADD_JobQueueEntrParamCard;
+    Editable = false;
 
     layout
     {
@@ -28,10 +27,9 @@ page 50102 "ADD_JobQueueEntryParamsSubform"
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
-                field("Parameter Value"; Rec."Text Value")
+                field("Parameter Value"; Rec.GetParameterValue())
                 {
-                    //todo based on the type
-                    ToolTip = 'Specifies the value of the Parameter Value field.', Comment = '%';
+                    ToolTip = 'Specifies the parameter value.', Comment = '%';
                 }
             }
         }

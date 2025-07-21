@@ -142,6 +142,47 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         end;
     end;
 
+    procedure GetParameterValue(JqeParam: Record ADD_JobQueueEntryParameter): Text
+    begin
+        //todo: this is not the best way to do it, but it works for now
+        case JqeParam."Parameter Type" of
+            JqeParam."Parameter Type"::None:
+                exit('');
+            JqeParam."Parameter Type"::BigInteger:
+                exit(Format(JqeParam."BigInteger Value"));
+            JqeParam."Parameter Type"::Blob:
+                exit(''); //todo
+            JqeParam."Parameter Type"::Boolean:
+                exit(Format(JqeParam."Boolean Value"));
+            JqeParam."Parameter Type"::Code:
+                exit(JqeParam."Code Value");
+            JqeParam."Parameter Type"::Date:
+                exit(Format(JqeParam."Date Value"));
+            JqeParam."Parameter Type"::DateFormula:
+                exit(Format(JqeParam."DateFormula Value"));
+            JqeParam."Parameter Type"::DateTime:
+                exit(Format(JqeParam."DateTime Value"));
+            JqeParam."Parameter Type"::Decimal:
+                exit(Format(JqeParam."Decimal Value"));
+            JqeParam."Parameter Type"::Duration:
+                exit(Format(JqeParam."Duration Value"));
+            JqeParam."Parameter Type"::Guid:
+                exit(Format(JqeParam."Guid Value"));
+            JqeParam."Parameter Type"::Integer:
+                exit(Format(JqeParam."Integer Value"));
+            JqeParam."Parameter Type"::Media:
+                exit(''); //todo
+            JqeParam."Parameter Type"::MediaSet:
+                exit(''); //todo
+            JqeParam."Parameter Type"::Text:
+                exit(JqeParam."Text Value");
+            JqeParam."Parameter Type"::Time:
+                exit(Format(JqeParam."Time Value"));
+            else
+                exit('');
+        end;
+    end;
+
     procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
     begin
         //todo: this is not the best way to do it, but it works for now

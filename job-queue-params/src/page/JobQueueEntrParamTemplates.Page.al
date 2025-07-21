@@ -42,7 +42,7 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
                 }
                 field("Parameter Value"; Rec.GetDefaultParameterValue())
                 {
-                    ToolTip = 'Specifies the value of the Default Parameter Value field.', Comment = '%';
+                    ToolTip = 'Specifies the default parameter value.', Comment = '%';
                 }
             }
         }
