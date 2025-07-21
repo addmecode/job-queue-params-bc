@@ -47,160 +47,173 @@ page 50103 "ADD_JobQueueEntrParamTemplCard"
             }
             group(Custom)
             {
-
-                field("Parameter Description"; Rec."Parameter Description")
+                ShowCaption = False;
+                group(ParameterDescription)
                 {
-                    ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
+                    Caption = 'Parameter Description';
+                    ShowCaption = true;
                     Editable = True;
-                }
-                group(BigIntegerValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::BigInteger;
-                    Caption = '';
-                    field("BigInteger Value"; Rec."BigInteger Value")
+
+                    field("Parameter Description"; Rec."Parameter Description")
                     {
-                        ToolTip = 'Specifies the value of the BigInteger Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
+                        ShowCaption = false;
                     }
                 }
-                group(BlobValue)
+                group(ParameterValue)
                 {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Blob;
-                    Caption = '';
-                    field("Blob Value"; Rec."Blob Value")
+                    Caption = 'Parameter Value';
+                    ShowCaption = true;
+                    Editable = true;
+                    group(BigIntegerValue)
                     {
-                        ToolTip = 'Specifies the value of the Blob Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::BigInteger;
+                        ShowCaption = false;
+                        field("BigInteger Value"; Rec."BigInteger Value")
+                        {
+                            ToolTip = 'Specifies the value of the BigInteger Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(BooleanValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Boolean;
-                    Caption = '';
-                    field("Boolean Value"; Rec."Boolean Value")
+                    group(BlobValue)
                     {
-                        ToolTip = 'Specifies the value of the Boolean Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Blob;
+                        ShowCaption = false;
+                        field("Blob Value"; Rec."Blob Value")
+                        {
+                            ToolTip = 'Specifies the value of the Blob Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(CodeValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Code;
-                    Caption = '';
-                    field("Code Value"; Rec."Code Value")
+                    group(BooleanValue)
                     {
-                        ToolTip = 'Specifies the value of the Code Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Boolean;
+                        ShowCaption = false;
+                        field("Boolean Value"; Rec."Boolean Value")
+                        {
+                            ToolTip = 'Specifies the value of the Boolean Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(DateValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Date;
-                    Caption = '';
-                    field("Date Value"; Rec."Date Value")
+                    group(CodeValue)
                     {
-                        ToolTip = 'Specifies the value of the Date Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Code;
+                        ShowCaption = false;
+                        field("Code Value"; Rec."Code Value")
+                        {
+                            ToolTip = 'Specifies the value of the Code Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(DateFormulaValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::DateFormula;
-                    Caption = '';
-                    field("DateFormula Value"; Rec."DateFormula Value")
+                    group(DateValue)
                     {
-                        ToolTip = 'Specifies the value of the DateFormula Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Date;
+                        ShowCaption = false;
+                        field("Date Value"; Rec."Date Value")
+                        {
+                            ToolTip = 'Specifies the value of the Date Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(DateTimeValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::DateTime;
-                    Caption = '';
-                    field("DateTime Value"; Rec."DateTime Value")
+                    group(DateFormulaValue)
                     {
-                        ToolTip = 'Specifies the value of the DateTime Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::DateFormula;
+                        ShowCaption = false;
+                        field("DateFormula Value"; Rec."DateFormula Value")
+                        {
+                            ToolTip = 'Specifies the value of the DateFormula Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(DecimalValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Decimal;
-                    Caption = '';
-                    field("Decimal Value"; Rec."Decimal Value")
+                    group(DateTimeValue)
                     {
-                        ToolTip = 'Specifies the value of the Decimal Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::DateTime;
+                        ShowCaption = false;
+                        field("DateTime Value"; Rec."DateTime Value")
+                        {
+                            ToolTip = 'Specifies the value of the DateTime Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(DurationValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Duration;
-                    Caption = '';
-                    field("Duration Value"; Rec."Duration Value")
+                    group(DecimalValue)
                     {
-                        ToolTip = 'Specifies the value of the Duration Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Decimal;
+                        ShowCaption = false;
+                        field("Decimal Value"; Rec."Decimal Value")
+                        {
+                            ToolTip = 'Specifies the value of the Decimal Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(GuidValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Guid;
-                    Caption = '';
-                    field("Guid Value"; Rec."Guid Value")
+                    group(DurationValue)
                     {
-                        ToolTip = 'Specifies the value of the Guid Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Duration;
+                        ShowCaption = false;
+                        field("Duration Value"; Rec."Duration Value")
+                        {
+                            ToolTip = 'Specifies the value of the Duration Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(IntegerValue)
-                {
-                    Visible = Rec."Parameter Type" = Rec."Parameter Type"::Integer;
-                    Caption = '';
-                    field("Integer Value"; Rec."Integer Value")
+                    group(GuidValue)
                     {
-                        ToolTip = 'Specifies the value of the Integer Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Guid;
+                        ShowCaption = false;
+                        field("Guid Value"; Rec."Guid Value")
+                        {
+                            ToolTip = 'Specifies the value of the Guid Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(MediaValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Media;
-                    Caption = '';
-                    field("Media Value"; Rec."Media Value")
+                    group(IntegerValue)
                     {
-                        ToolTip = 'Specifies the value of the Media Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        Visible = Rec."Parameter Type" = Rec."Parameter Type"::Integer;
+                        ShowCaption = false;
+                        field("Integer Value"; Rec."Integer Value")
+                        {
+                            ToolTip = 'Specifies the value of the Integer Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(MediaSetValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::MediaSet;
-                    Caption = '';
-                    field("MediaSet Value"; Rec."MediaSet Value")
+                    group(MediaValue)
                     {
-                        ToolTip = 'Specifies the value of the MediaSet Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Media;
+                        ShowCaption = false;
+                        field("Media Value"; Rec."Media Value")
+                        {
+                            ToolTip = 'Specifies the value of the Media Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(TextValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Text;
-                    Caption = '';
-                    field("Text Value"; Rec."Text Value")
+                    group(MediaSetValue)
                     {
-                        ToolTip = 'Specifies the value of the Text Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::MediaSet;
+                        ShowCaption = false;
+                        field("MediaSet Value"; Rec."MediaSet Value")
+                        {
+                            ToolTip = 'Specifies the value of the MediaSet Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
-                }
-                group(TimeValue)
-                {
-                    visible = Rec."Parameter Type" = Rec."Parameter Type"::Time;
-                    Caption = '';
-                    field("Time Value"; Rec."Time Value")
+                    group(TextValue)
                     {
-                        ToolTip = 'Specifies the value of the Time Value field.', Comment = '%';
-                        Caption = 'Parameter Value';
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Text;
+                        ShowCaption = false;
+                        field("Text Value"; Rec."Text Value")
+                        {
+                            ToolTip = 'Specifies the value of the Text Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
+                    }
+                    group(TimeValue)
+                    {
+                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Time;
+                        ShowCaption = false;
+                        field("Time Value"; Rec."Time Value")
+                        {
+                            ToolTip = 'Specifies the value of the Time Value field.', Comment = '%';
+                            ShowCaption = false;
+                        }
                     }
                 }
             }
