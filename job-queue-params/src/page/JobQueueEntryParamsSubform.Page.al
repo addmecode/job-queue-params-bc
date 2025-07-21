@@ -27,7 +27,7 @@ page 50102 "ADD_JobQueueEntryParamsSubform"
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
-                field("Parameter Value"; Rec.GetParameterValue())
+                field("Parameter Value"; Rec.GetParameterValueAsText())
                 {
                     ToolTip = 'Specifies the parameter value.', Comment = '%';
                 }

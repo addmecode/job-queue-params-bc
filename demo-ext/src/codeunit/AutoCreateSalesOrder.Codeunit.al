@@ -13,7 +13,7 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
                             Rec.GetJobQueueEntryParamValue(GetQuantityParamName()));
     end;
 
-    local procedure CreateSalesOrderHeader(CustomerNo: Text[250]; LocCode: code[10]): code[20]
+    local procedure CreateSalesOrderHeader(CustomerNo: code[20]; LocCode: code[10]): code[20]
     var
         SalesHeader: Record "Sales Header";
         Customer: Record Customer;
@@ -30,21 +30,19 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
         exit(SalesHeader."No.");
     end;
 
-    local procedure CreateSalesOrderLines(SalesOrderNo: Code[20]; ItemNo: Text[250]; Quantity: Text[250])
+    local procedure CreateSalesOrderLines(SalesOrderNo: Code[20]; ItemNo: code[20]; Quantity: Integer)
     var
         SalesLine: Record "Sales Line";
         Item: Record Item;
-        Qty: Integer;
     begin
         Item.Get(ItemNo);
-        Evaluate(Qty, Quantity);
 
         SalesLine.init();
         SalesLine.Validate("Document Type", SalesLine."Document Type"::Order);
         SalesLine.Validate("Document No.", SalesOrderNo);
         SalesLine.Validate("Type", SalesLine."Type"::Item);
         SalesLine.Validate("No.", ItemNo);
-        SalesLine.Validate(Quantity, Qty);
+        SalesLine.Validate(Quantity, Quantity);
         SalesLine.Insert(true);
     end;
 

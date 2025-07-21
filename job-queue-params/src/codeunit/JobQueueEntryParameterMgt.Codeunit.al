@@ -75,12 +75,12 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         CreateJqeParamFromNewTempForExistingJqe(JqeTemplToCreate, SetDefValueForExistingJqe);
     end;
 
-    internal procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Text[250]
+    internal procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Variant
     var
         JqueParam: Record "ADD_JobQueueEntryParameter";
     begin
         JqueParam.Get(Jqe.ID, ParamName);
-        GetParameterValue(JqueParam);
+        exit(GetParameterValue(JqueParam));
     end;
 
     procedure GetTemplParameterTypeCaption(var JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
@@ -104,11 +104,17 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         exit(Format(FieldRef.Type));
     end;
 
-    procedure GetParameterValue(JqeParam: Record ADD_JobQueueEntryParameter): Text
+    procedure GetParameterValueAsText(JqeParam: Record ADD_JobQueueEntryParameter): Text
+    begin
+        exit(Format(GetParameterValue((JqeParam))));
+    end;
+
+    procedure GetParameterValue(JqeParam: Record ADD_JobQueueEntryParameter): Variant
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
+        JqeParam.CalcFields("Parameter Type");
         case JqeParam."Parameter Type" of
             // TODO
             JqeParam.FieldNo("Blob Value"):
@@ -120,7 +126,7 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
             else begin
                 RecRef.GetTable(JqeParam);
                 FieldRef := RecRef.Field(JqeParam."Parameter Type");
-                exit(Format(FieldRef.Value()));
+                exit(FieldRef.Value());
             end;
         end;
     end;
