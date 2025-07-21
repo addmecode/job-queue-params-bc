@@ -8,7 +8,7 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
     SourceTable = ADD_JobQueueEntryParamTemplate;
     UsageCategory = Lists;
     CardPageId = "ADD_JobQueueEntrParamTemplCard";
-    Editable = False;
+    Editable = false;
 
     layout
     {
@@ -36,7 +36,7 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
                 {
                     ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                 }
-                field("Parameter Type"; Rec."Parameter Type")
+                field("Parameter Type"; Rec.GetTemplParameterTypeCaption())
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }

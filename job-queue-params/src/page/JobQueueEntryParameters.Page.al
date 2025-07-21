@@ -36,7 +36,7 @@ page 50100 "ADD_JobQueueEntryParameters"
                 {
                     ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                 }
-                field("Parameter Type"; Rec."Parameter Type")
+                field("Parameter Type"; Rec.GetParameterTypeCaption())
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }

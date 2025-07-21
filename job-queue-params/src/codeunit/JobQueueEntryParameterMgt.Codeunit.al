@@ -22,48 +22,25 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
     local procedure CreateJqeParamFromTempl(JQE: Record "Job Queue Entry"; JQEParamTempl: record ADD_JobQueueEntryParamTemplate; SetDefValue: Boolean)
     var
         JQEParam: Record "ADD_JobQueueEntryParameter";
+        RecRefTempl: RecordRef;
+        RecRefParam: RecordRef;
+        TemplFieldRef: FieldRef;
+        ParamFieldRef: FieldRef;
     begin
-        JQEParam.Init();
-        JQEParam."Job Queue Entry ID" := JQE.ID;
-        JQEParam."Parameter Name" := JQEParamTempl."Parameter Name";
-        //todo this is not the best way to do it, but it works for now
-        case JqeParamTempl."Parameter Type" of
-            JqeParamTempl."Parameter Type"::BigInteger:
-                JQEParam."BigInteger Value" := JQEParamTempl."BigInteger Value";
-            JqeParamTempl."Parameter Type"::Blob:
-                begin
-                    JQEParamTempl.CalcFields("Blob Value");
-                    JQEParam."Blob Value" := JQEParamTempl."Blob Value";
-                end;
-            JqeParamTempl."Parameter Type"::Boolean:
-                JQEParam."Boolean Value" := JqeParamTempl."Boolean Value";
-            JqeParamTempl."Parameter Type"::Code:
-                JQEParam."Code Value" := JqeParamTempl."Code Value";
-            JqeParamTempl."Parameter Type"::Date:
-                JQEParam."Date Value" := JqeParamTempl."Date Value";
-            JqeParamTempl."Parameter Type"::DateFormula:
-                JQEParam."DateFormula Value" := JqeParamTempl."DateFormula Value";
-            JqeParamTempl."Parameter Type"::DateTime:
-                JQEParam."DateTime Value" := JqeParamTempl."DateTime Value";
-            JqeParamTempl."Parameter Type"::Decimal:
-                JQEParam."Decimal Value" := JqeParamTempl."Decimal Value";
-            JqeParamTempl."Parameter Type"::Duration:
-                JQEParam."Duration Value" := JqeParamTempl."Duration Value";
-            JqeParamTempl."Parameter Type"::Guid:
-                JQEParam."Guid Value" := JqeParamTempl."Guid Value";
-            JqeParamTempl."Parameter Type"::Integer:
-                JQEParam."Integer Value" := JqeParamTempl."Integer Value";
-            JqeParamTempl."Parameter Type"::Media:
-                JQEParam."Media Value" := JqeParamTempl."Media Value"; //todo calcfield?
-            JqeParamTempl."Parameter Type"::MediaSet:
-                JQEParam."MediaSet Value" := JqeParamTempl."MediaSet Value"; //todo calcfield?
-            JqeParamTempl."Parameter Type"::Text:
-                JQEParam."Text Value" := JqeParamTempl."Text Value";
-            JqeParamTempl."Parameter Type"::Time:
-                JQEParam."Time Value" := JqeParamTempl."Time Value";
+        RecRefTempl.GetTable(JQEParamTempl);
+        RecRefParam.Open(Database::ADD_JobQueueEntryParameter);
+
+        RecRefParam.Field(JQEParam.FieldNo("Job Queue Entry ID")).Value := JQE.ID;
+        RecRefParam.Field(JQEParam.FieldNo("Parameter Name")).Value := JQEParamTempl."Parameter Name";
+        if SetDefValue then begin
+            TemplFieldRef := RecRefTempl.Field(JQEParamTempl."Parameter Type");
+            ParamFieldRef := RecRefParam.Field(TemplFieldRef.Number);
+            ParamFieldRef.Value := TemplFieldRef.Value;
         end;
-        JQEParam.Insert();
+        RecRefParam.Insert();
     end;
+
+
 
     procedure DeleteAllJobQueueEntryParams(JQE: Record "Job Queue Entry")
     var
@@ -103,124 +80,69 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         JqueParam: Record "ADD_JobQueueEntryParameter";
     begin
         JqueParam.Get(Jqe.ID, ParamName);
-        //todo: this is not the best way to do it, but it works for now
-        case JqueParam."Parameter Type" of
-            JqueParam."Parameter Type"::None:
-                exit('');
-            JqueParam."Parameter Type"::BigInteger:
-                exit(Format(JqueParam."BigInteger Value"));
-            JqueParam."Parameter Type"::Blob:
-                exit(''); //todo
-            JqueParam."Parameter Type"::Boolean:
-                exit(Format(JqueParam."Boolean Value"));
-            JqueParam."Parameter Type"::Code:
-                exit(JqueParam."Code Value");
-            JqueParam."Parameter Type"::Date:
-                exit(Format(JqueParam."Date Value"));
-            JqueParam."Parameter Type"::DateFormula:
-                exit(Format(JqueParam."DateFormula Value"));
-            JqueParam."Parameter Type"::DateTime:
-                exit(Format(JqueParam."DateTime Value"));
-            JqueParam."Parameter Type"::Decimal:
-                exit(Format(JqueParam."Decimal Value"));
-            JqueParam."Parameter Type"::Duration:
-                exit(Format(JqueParam."Duration Value"));
-            JqueParam."Parameter Type"::Guid:
-                exit(Format(JqueParam."Guid Value"));
-            JqueParam."Parameter Type"::Integer:
-                exit(Format(JqueParam."Integer Value"));
-            JqueParam."Parameter Type"::Media:
-                exit(''); //todo
-            JqueParam."Parameter Type"::MediaSet:
-                exit(''); //todo
-            JqueParam."Parameter Type"::Text:
-                exit(JqueParam."Text Value");
-            JqueParam."Parameter Type"::Time:
-                exit(Format(JqueParam."Time Value"));
-            else
-                exit('');
-        end;
+        GetParameterValue(JqueParam);
+    end;
+
+    procedure GetTemplParameterTypeCaption(var JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+    begin
+        RecRef.GetTable(JqeParamTempl);
+        FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
+        exit(Format(FieldRef.Type));
+    end;
+
+    procedure GetParameterTypeCaption(var JqeParam: Record ADD_JobQueueEntryParameter): Text
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+    begin
+        JqeParam.CalcFields("Parameter Type");
+        RecRef.GetTable(JqeParam);
+        FieldRef := RecRef.Field(JqeParam."Parameter Type");
+        exit(Format(FieldRef.Type));
     end;
 
     procedure GetParameterValue(JqeParam: Record ADD_JobQueueEntryParameter): Text
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
     begin
-        //todo: this is not the best way to do it, but it works for now
         case JqeParam."Parameter Type" of
-            JqeParam."Parameter Type"::None:
+            // TODO
+            JqeParam.FieldNo("Blob Value"):
                 exit('');
-            JqeParam."Parameter Type"::BigInteger:
-                exit(Format(JqeParam."BigInteger Value"));
-            JqeParam."Parameter Type"::Blob:
-                exit(''); //todo
-            JqeParam."Parameter Type"::Boolean:
-                exit(Format(JqeParam."Boolean Value"));
-            JqeParam."Parameter Type"::Code:
-                exit(JqeParam."Code Value");
-            JqeParam."Parameter Type"::Date:
-                exit(Format(JqeParam."Date Value"));
-            JqeParam."Parameter Type"::DateFormula:
-                exit(Format(JqeParam."DateFormula Value"));
-            JqeParam."Parameter Type"::DateTime:
-                exit(Format(JqeParam."DateTime Value"));
-            JqeParam."Parameter Type"::Decimal:
-                exit(Format(JqeParam."Decimal Value"));
-            JqeParam."Parameter Type"::Duration:
-                exit(Format(JqeParam."Duration Value"));
-            JqeParam."Parameter Type"::Guid:
-                exit(Format(JqeParam."Guid Value"));
-            JqeParam."Parameter Type"::Integer:
-                exit(Format(JqeParam."Integer Value"));
-            JqeParam."Parameter Type"::Media:
-                exit(''); //todo
-            JqeParam."Parameter Type"::MediaSet:
-                exit(''); //todo
-            JqeParam."Parameter Type"::Text:
-                exit(JqeParam."Text Value");
-            JqeParam."Parameter Type"::Time:
-                exit(Format(JqeParam."Time Value"));
-            else
+            JqeParam.FieldNo("Media Value"):
                 exit('');
+            JqeParam.FieldNo("MediaSet Value"):
+                exit('');
+            else begin
+                RecRef.GetTable(JqeParam);
+                FieldRef := RecRef.Field(JqeParam."Parameter Type");
+                exit(Format(FieldRef.Value()));
+            end;
         end;
     end;
 
     procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
     begin
-        //todo: this is not the best way to do it, but it works for now
-        case JqeParamTempl."Parameter Type" of
-            JqeParamTempl."Parameter Type"::None:
+        case JqeParamTempl.FieldNo("Parameter Type") of
+            // TODO
+            JqeParamTempl.FieldNo("Blob Value"):
                 exit('');
-            JqeParamTempl."Parameter Type"::BigInteger:
-                exit(Format(JqeParamTempl."BigInteger Value"));
-            JqeParamTempl."Parameter Type"::Blob:
-                exit(''); //todo
-            JqeParamTempl."Parameter Type"::Boolean:
-                exit(Format(JqeParamTempl."Boolean Value"));
-            JqeParamTempl."Parameter Type"::Code:
-                exit(JqeParamTempl."Code Value");
-            JqeParamTempl."Parameter Type"::Date:
-                exit(Format(JqeParamTempl."Date Value"));
-            JqeParamTempl."Parameter Type"::DateFormula:
-                exit(Format(JqeParamTempl."DateFormula Value"));
-            JqeParamTempl."Parameter Type"::DateTime:
-                exit(Format(JqeParamTempl."DateTime Value"));
-            JqeParamTempl."Parameter Type"::Decimal:
-                exit(Format(JqeParamTempl."Decimal Value"));
-            JqeParamTempl."Parameter Type"::Duration:
-                exit(Format(JqeParamTempl."Duration Value"));
-            JqeParamTempl."Parameter Type"::Guid:
-                exit(Format(JqeParamTempl."Guid Value"));
-            JqeParamTempl."Parameter Type"::Integer:
-                exit(Format(JqeParamTempl."Integer Value"));
-            JqeParamTempl."Parameter Type"::Media:
-                exit(''); //todo
-            JqeParamTempl."Parameter Type"::MediaSet:
-                exit(''); //todo
-            JqeParamTempl."Parameter Type"::Text:
-                exit(JqeParamTempl."Text Value");
-            JqeParamTempl."Parameter Type"::Time:
-                exit(Format(JqeParamTempl."Time Value"));
-            else
+            JqeParamTempl.FieldNo("Media Value"):
                 exit('');
+            JqeParamTempl.FieldNo("MediaSet Value"):
+                exit('');
+            else begin
+                RecRef.GetTable(JqeParamTempl);
+                FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
+                exit(Format(FieldRef.Value()));
+            end;
         end;
     end;
 

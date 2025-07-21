@@ -32,7 +32,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                 {
                     ToolTip = 'Specifies the value of the Parameter Name field.', Comment = '%';
                 }
-                field("Parameter Type"; Rec."Parameter Type")
+                field("Parameter Type"; Rec.GetParameterTypeCaption())
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
@@ -67,7 +67,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     Editable = true;
                     group(BigIntegerValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::BigInteger;
+                        visible = isValueBigInteger;
                         ShowCaption = false;
                         field("BigInteger Value"; Rec."BigInteger Value")
                         {
@@ -77,7 +77,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(BlobValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Blob;
+                        visible = isValueBlob;
                         ShowCaption = false;
                         field("Blob Value"; Rec."Blob Value")
                         {
@@ -87,7 +87,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(BooleanValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Boolean;
+                        visible = isValueBoolean;
                         ShowCaption = false;
                         field("Boolean Value"; Rec."Boolean Value")
                         {
@@ -97,7 +97,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(CodeValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Code;
+                        visible = isValueCode;
                         ShowCaption = false;
                         field("Code Value"; Rec."Code Value")
                         {
@@ -107,7 +107,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(DateValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Date;
+                        visible = isValueDate;
                         ShowCaption = false;
                         field("Date Value"; Rec."Date Value")
                         {
@@ -117,7 +117,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(DateFormulaValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::DateFormula;
+                        visible = isValueDateFormula;
                         ShowCaption = false;
                         field("DateFormula Value"; Rec."DateFormula Value")
                         {
@@ -127,7 +127,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(DateTimeValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::DateTime;
+                        visible = isValueDateTime;
                         ShowCaption = false;
                         field("DateTime Value"; Rec."DateTime Value")
                         {
@@ -137,7 +137,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(DecimalValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Decimal;
+                        visible = isValueDecimal;
                         ShowCaption = false;
                         field("Decimal Value"; Rec."Decimal Value")
                         {
@@ -147,7 +147,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(DurationValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Duration;
+                        visible = isValueDuration;
                         ShowCaption = false;
                         field("Duration Value"; Rec."Duration Value")
                         {
@@ -157,7 +157,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(GuidValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Guid;
+                        visible = isValueGuid;
                         ShowCaption = false;
                         field("Guid Value"; Rec."Guid Value")
                         {
@@ -167,7 +167,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(IntegerValue)
                     {
-                        Visible = Rec."Parameter Type" = Rec."Parameter Type"::Integer;
+                        Visible = isValueInteger;
                         ShowCaption = false;
                         field("Integer Value"; Rec."Integer Value")
                         {
@@ -177,7 +177,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(MediaValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Media;
+                        visible = isValueMedia;
                         ShowCaption = false;
                         field("Media Value"; Rec."Media Value")
                         {
@@ -187,7 +187,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(MediaSetValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::MediaSet;
+                        visible = isValueMediaSet;
                         ShowCaption = false;
                         field("MediaSet Value"; Rec."MediaSet Value")
                         {
@@ -197,7 +197,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(TextValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Text;
+                        visible = isValueText;
                         ShowCaption = false;
                         field("Text Value"; Rec."Text Value")
                         {
@@ -207,7 +207,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
                     }
                     group(TimeValue)
                     {
-                        visible = Rec."Parameter Type" = Rec."Parameter Type"::Time;
+                        visible = isValueTime;
                         ShowCaption = false;
                         field("Time Value"; Rec."Time Value")
                         {
@@ -219,4 +219,40 @@ page 50104 "ADD_JobQueueEntrParamCard"
             }
         }
     }
+    var
+        isValueBigInteger: Boolean;
+        isValueBlob: Boolean;
+        isValueBoolean: Boolean;
+        isValueCode: Boolean;
+        isValueDate: Boolean;
+        isValueDateFormula: Boolean;
+        isValueDateTime: Boolean;
+        isValueDecimal: Boolean;
+        isValueDuration: Boolean;
+        isValueGuid: Boolean;
+        isValueInteger: Boolean;
+        isValueMedia: Boolean;
+        isValueMediaSet: Boolean;
+        isValueText: Boolean;
+        isValueTime: Boolean;
+
+    trigger OnAfterGetRecord()
+    begin
+        Rec.CalcFields("Parameter Type");
+        isValueBigInteger := Rec."Parameter Type" = Rec.FieldNo("BigInteger Value");
+        isValueBlob := Rec."Parameter Type" = Rec.FieldNo("Blob Value");
+        isValueBoolean := Rec."Parameter Type" = Rec.FieldNo("Boolean Value");
+        isValueCode := Rec."Parameter Type" = Rec.FieldNo("Code Value");
+        isValueDate := Rec."Parameter Type" = Rec.FieldNo("Date Value");
+        isValueDateFormula := Rec."Parameter Type" = Rec.FieldNo("DateFormula Value");
+        isValueDateTime := Rec."Parameter Type" = Rec.FieldNo("DateTime Value");
+        isValueDecimal := Rec."Parameter Type" = Rec.FieldNo("Decimal Value");
+        isValueDuration := Rec."Parameter Type" = Rec.FieldNo("Duration Value");
+        isValueGuid := Rec."Parameter Type" = Rec.FieldNo("Guid Value");
+        isValueInteger := Rec."Parameter Type" = Rec.FieldNo("Integer Value");
+        isValueMedia := Rec."Parameter Type" = Rec.FieldNo("Media Value");
+        isValueMediaSet := Rec."Parameter Type" = Rec.FieldNo("MediaSet Value");
+        isValueText := Rec."Parameter Type" = Rec.FieldNo("Text Value");
+        isValueTime := Rec."Parameter Type" = Rec.FieldNo("Time Value");
+    end;
 }

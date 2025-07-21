@@ -40,7 +40,7 @@ table 50100 "ADD_JobQueueEntryParameter"
             NotBlank = true;
             Editable = false;
         }
-        field(5; "Parameter Type"; Enum "ADD_JobQueueEntryParameterType")
+        field(5; "Parameter Type"; Integer)
         {
             Caption = 'Parameter Type';
             FieldClass = FlowField;
@@ -171,5 +171,12 @@ table 50100 "ADD_JobQueueEntryParameter"
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
     begin
         exit(JobQueueEntryMgt.GetParameterValue(Rec));
+    end;
+
+    procedure GetParameterTypeCaption(): Text
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        exit(JobQueueEntryMgt.GetParameterTypeCaption(Rec));
     end;
 }

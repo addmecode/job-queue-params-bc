@@ -79,28 +79,24 @@ codeunit 50130 "ADD_AutoCreateSalesOrder"
 
         JobQueueEntryParamTempl."Parameter Name" := GetCustNoParamName();
         JobQueueEntryParamTempl."Parameter Description" := 'Customer number to auto create sales order.';
-        JobQueueEntryParamTempl."Code Value" := 'C00001';
-        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Code; //todo move it to value on validate
+        JobQueueEntryParamTempl.Validate("Code Value", 'C00001');
         JobQueueEntryParamTempl.CreateIfNotExists(true);
 
         JobQueueEntryParamTempl.Init();
         JobQueueEntryParamTempl."Parameter Name" := GetItemNoParamName();
         JobQueueEntryParamTempl."Parameter Description" := 'Item number to auto create sales order.';
-        JobQueueEntryParamTempl."Code Value" := 'Item0001';
-        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Code;
+        JobQueueEntryParamTempl.Validate("Code Value", 'Item0001');
         JobQueueEntryParamTempl.CreateIfNotExists(true);
         JobQueueEntryParamTempl.Init();
 
         JobQueueEntryParamTempl."Parameter Name" := GetQuantityParamName();
         JobQueueEntryParamTempl."Parameter Description" := 'Quantity to auto create sales order.';
-        JobQueueEntryParamTempl."Integer Value" := 1;
-        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Integer;
+        JobQueueEntryParamTempl.Validate("Integer Value", 1);
         JobQueueEntryParamTempl.CreateIfNotExists(true);
 
         JobQueueEntryParamTempl."Parameter Name" := GetLocCodeParamName();
         JobQueueEntryParamTempl."Parameter Description" := 'Location Code to auto create sales order.';
-        JobQueueEntryParamTempl."Code Value" := 'MAIN';
-        JobQueueEntryParamTempl."Parameter Type" := JobQueueEntryParamTempl."Parameter Type"::Code;
+        JobQueueEntryParamTempl.Validate("Code Value", 'MAIN');
         JobQueueEntryParamTempl.CreateIfNotExists(true);
     end;
 }
