@@ -6,6 +6,8 @@ page 50104 "ADD_JobQueueEntrParamCard"
     Caption = 'Job Queue Entry Parameter Card';
     PageType = Card;
     SourceTable = ADD_JobQueueEntryParameter;
+    InsertAllowed = false;
+    DeleteAllowed = false;
 
     layout
     {
