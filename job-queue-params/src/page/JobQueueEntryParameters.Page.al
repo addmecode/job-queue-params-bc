@@ -6,6 +6,7 @@ page 50100 "ADD_JobQueueEntryParameters"
     Caption = 'Job Queue Entry Parameters';
     PageType = List;
     SourceTable = ADD_JobQueueEntryParameter;
+    CardPageId = ADD_JobQueueEntrParamCard;
     UsageCategory = Lists;
     Editable = false;
 
@@ -35,9 +36,13 @@ page 50100 "ADD_JobQueueEntryParameters"
                 {
                     ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                 }
-                field("Parameter Value"; Rec."Parameter Value")
+                field("Parameter Type"; Rec.GetParameterTypeCaption())
                 {
-                    ToolTip = 'Specifies the value of the Parameter Value field.', Comment = '%';
+                    ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
+                }
+                field("Parameter Value"; Rec.GetParameterValueAsText())
+                {
+                    ToolTip = 'Specifies the parameter value.', Comment = '%';
                 }
             }
         }

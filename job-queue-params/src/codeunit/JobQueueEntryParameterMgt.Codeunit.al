@@ -22,14 +22,25 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
     local procedure CreateJqeParamFromTempl(JQE: Record "Job Queue Entry"; JQEParamTempl: record ADD_JobQueueEntryParamTemplate; SetDefValue: Boolean)
     var
         JQEParam: Record "ADD_JobQueueEntryParameter";
+        RecRefTempl: RecordRef;
+        RecRefParam: RecordRef;
+        TemplFieldRef: FieldRef;
+        ParamFieldRef: FieldRef;
     begin
-        JQEParam.Init();
-        JQEParam."Job Queue Entry ID" := JQE.ID;
-        JQEParam."Parameter Name" := JQEParamTempl."Parameter Name";
-        if SetDefValue then
-            JQEParam."Parameter Value" := JQEParamTempl."Default Parameter Value";
-        JQEParam.Insert();
+        RecRefTempl.GetTable(JQEParamTempl);
+        RecRefParam.Open(Database::ADD_JobQueueEntryParameter);
+
+        RecRefParam.Field(JQEParam.FieldNo("Job Queue Entry ID")).Value := JQE.ID;
+        RecRefParam.Field(JQEParam.FieldNo("Parameter Name")).Value := JQEParamTempl."Parameter Name";
+        if SetDefValue then begin
+            TemplFieldRef := RecRefTempl.Field(JQEParamTempl."Parameter Type");
+            ParamFieldRef := RecRefParam.Field(TemplFieldRef.Number);
+            ParamFieldRef.Value := TemplFieldRef.Value;
+        end;
+        RecRefParam.Insert();
     end;
+
+
 
     procedure DeleteAllJobQueueEntryParams(JQE: Record "Job Queue Entry")
     var
@@ -64,12 +75,86 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         CreateJqeParamFromNewTempForExistingJqe(JqeTemplToCreate, SetDefValueForExistingJqe);
     end;
 
-    internal procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Text[250]
+    internal procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Variant
     var
         JqueParam: Record "ADD_JobQueueEntryParameter";
     begin
         JqueParam.Get(Jqe.ID, ParamName);
-        exit(JqueParam."Parameter Value");
+        exit(GetParameterValue(JqueParam));
+    end;
+
+    procedure GetTemplParameterTypeCaption(var JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+    begin
+        RecRef.GetTable(JqeParamTempl);
+        FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
+        exit(Format(FieldRef.Type));
+    end;
+
+    procedure GetParameterTypeCaption(var JqeParam: Record ADD_JobQueueEntryParameter): Text
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+    begin
+        JqeParam.CalcFields("Parameter Type");
+        RecRef.GetTable(JqeParam);
+        FieldRef := RecRef.Field(JqeParam."Parameter Type");
+        exit(Format(FieldRef.Type));
+    end;
+
+    procedure GetParameterValueAsText(JqeParam: Record ADD_JobQueueEntryParameter): Text
+    begin
+        exit(Format(GetParameterValue((JqeParam))));
+    end;
+
+    procedure GetParameterValue(JqeParam: Record ADD_JobQueueEntryParameter): Variant
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+    begin
+        JqeParam.CalcFields("Parameter Type");
+        case JqeParam."Parameter Type" of
+            // TODO
+            JqeParam.FieldNo("Blob Value"):
+                exit('');
+            JqeParam.FieldNo("Media Value"):
+                exit('');
+            JqeParam.FieldNo("MediaSet Value"):
+                exit('');
+            else begin
+                RecRef.GetTable(JqeParam);
+                FieldRef := RecRef.Field(JqeParam."Parameter Type");
+                exit(FieldRef.Value());
+            end;
+        end;
+    end;
+
+    procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    var
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+    begin
+        case JqeParamTempl.FieldNo("Parameter Type") of
+            // TODO
+            JqeParamTempl.FieldNo("Blob Value"):
+                exit('');
+            JqeParamTempl.FieldNo("Media Value"):
+                exit('');
+            JqeParamTempl.FieldNo("MediaSet Value"):
+                exit('');
+            else begin
+                RecRef.GetTable(JqeParamTempl);
+                FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
+                exit(Format(FieldRef.Value()));
+            end;
+        end;
+    end;
+
+    procedure ValidateParameterType(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate)
+    begin
+        //todo validate if there is only one parameter value set and it is the same as the parameter type
     end;
 
     local procedure CreateJqeParamFromTemplIfNotExists(JQE: Record "Job Queue Entry"; JQEParamTempl: record ADD_JobQueueEntryParamTemplate; SetDefValue: Boolean)

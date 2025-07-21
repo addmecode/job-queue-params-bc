@@ -38,18 +38,166 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
             Caption = 'Parameter Name';
             Editable = false;
         }
-        field(5; "Parameter Description"; Text[250])
+        field(5; "Parameter Type"; Integer)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Parameter Type';
+            Editable = false;
+        }
+        field(6; "Parameter Description"; Text[250])
         {
             DataClassification = CustomerContent;
             Caption = 'Parameter Description';
             Editable = true;
         }
-
-        field(6; "Default Parameter Value"; Text[250])
+        field(7; "BigInteger Value"; BigInteger)
         {
             DataClassification = CustomerContent;
-            Caption = 'Default Parameter Value';
+            Caption = 'BigInteger Value';
             Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("BigInteger Value");
+            end;
+        }
+        field(8; "Blob Value"; Blob)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Blob Value';
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Blob Value");
+            end;
+        }
+        field(9; "Boolean Value"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Boolean Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Boolean Value");
+            end;
+        }
+        field(10; "Code Value"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Code Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Code Value");
+            end;
+        }
+        field(11; "Date Value"; Date)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Date Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Date Value");
+            end;
+        }
+        field(12; "DateFormula Value"; DateFormula)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'DateFormula Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("DateFormula Value");
+            end;
+        }
+        field(13; "DateTime Value"; DateTime)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'DateTime Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("DateTime Value");
+            end;
+        }
+        field(14; "Decimal Value"; Decimal)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Decimal Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Decimal Value");
+            end;
+        }
+        field(15; "Duration Value"; Duration)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Duration Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Duration Value");
+            end;
+        }
+        field(16; "Guid Value"; Guid)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Guid Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Guid Value");
+            end;
+        }
+        field(17; "Integer Value"; Integer)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Integer Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Integer Value");
+            end;
+        }
+        field(18; "Media Value"; Media)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Media Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Media Value");
+            end;
+        }
+        field(19; "MediaSet Value"; MediaSet)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'MediaSet Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("MediaSet Value");
+            end;
+        }
+        field(20; "Text Value"; Text[250])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Text Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Text Value");
+            end;
+        }
+        field(21; "Time Value"; Time)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Time Value';
+            Editable = true;
+            trigger OnValidate()
+            begin
+                Rec."Parameter Type" := Rec.FieldNo("Time Value");
+            end;
         }
     }
 
@@ -61,10 +209,40 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
     }
 
+    trigger OnInsert()
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        //todo
+        JobQueueEntryMgt.ValidateParameterType(Rec);
+    end;
+
+    trigger OnModify()
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        //todo
+        JobQueueEntryMgt.ValidateParameterType(Rec);
+    end;
+
     procedure CreateIfNotExists(SetDefValueForExistingJqe: Boolean)
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
     begin
         JobQueueEntryMgt.CreateJqeParamTemplIfNotExists(Rec, SetDefValueForExistingJqe);
+    end;
+
+    procedure GetDefaultParameterValue(): Text
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        exit(JobQueueEntryMgt.GetDefaultParameterValue(Rec));
+    end;
+
+    procedure GetTemplParameterTypeCaption(): Text
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        exit(JobQueueEntryMgt.GetTemplParameterTypeCaption(Rec));
     end;
 }
