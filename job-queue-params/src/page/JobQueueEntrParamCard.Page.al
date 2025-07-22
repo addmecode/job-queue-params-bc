@@ -48,11 +48,11 @@ page 50104 "ADD_JobQueueEntrParamCard"
             group(Custom)
             {
                 ShowCaption = False;
+                Editable = IsParamEditable;
                 group(ParameterDescription)
                 {
                     Caption = 'Parameter Description';
                     ShowCaption = true;
-                    Editable = True;
 
                     field("Parameter Description"; Rec."Parameter Description")
                     {
@@ -64,7 +64,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
                 {
                     Caption = 'Parameter Value';
                     ShowCaption = true;
-                    Editable = true;
                     group(BigIntegerValue)
                     {
                         visible = isValueBigInteger;
@@ -235,6 +234,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
         isValueMediaSet: Boolean;
         isValueText: Boolean;
         isValueTime: Boolean;
+        IsParamEditable: Boolean;
 
     trigger OnAfterGetRecord()
     begin
@@ -254,5 +254,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
         isValueMediaSet := Rec."Parameter Type" = Rec.FieldNo("MediaSet Value");
         isValueText := Rec."Parameter Type" = Rec.FieldNo("Text Value");
         isValueTime := Rec."Parameter Type" = Rec.FieldNo("Time Value");
+
+        IsParamEditable := Rec.IsParamEditable();
     end;
 }

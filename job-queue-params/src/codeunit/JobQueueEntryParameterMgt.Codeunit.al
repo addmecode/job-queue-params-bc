@@ -83,6 +83,14 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         exit(GetParameterValue(JqueParam));
     end;
 
+    procedure IsParamEditable(JqeParam: Record ADD_JobQueueEntryParameter): Boolean
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+    begin
+        JobQueueEntry.Get(JqeParam."Job Queue Entry ID");
+        exit(JobQueueEntry.Status = JobQueueEntry.Status::"On Hold");
+    end;
+
     procedure GetTemplParameterTypeCaption(var JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
     var
         RecRef: RecordRef;
