@@ -50,7 +50,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
             Caption = 'Parameter Description';
             Editable = true;
         }
-        field(7; "BigInteger Value"; BigInteger)
+        field(20; "BigInteger Value"; BigInteger)
         {
             DataClassification = CustomerContent;
             Caption = 'BigInteger Value';
@@ -60,16 +60,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("BigInteger Value");
             end;
         }
-        field(8; "Blob Value"; Blob)
-        {
-            DataClassification = CustomerContent;
-            Caption = 'Blob Value';
-            trigger OnValidate()
-            begin
-                Rec."Parameter Type" := Rec.FieldNo("Blob Value");
-            end;
-        }
-        field(9; "Boolean Value"; Boolean)
+        field(30; "Boolean Value"; Boolean)
         {
             DataClassification = CustomerContent;
             Caption = 'Boolean Value';
@@ -79,7 +70,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Boolean Value");
             end;
         }
-        field(10; "Code Value"; Code[20])
+        field(40; "Code Value"; Code[20])
         {
             DataClassification = CustomerContent;
             Caption = 'Code Value';
@@ -89,7 +80,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Code Value");
             end;
         }
-        field(11; "Date Value"; Date)
+        field(50; "Date Value"; Date)
         {
             DataClassification = CustomerContent;
             Caption = 'Date Value';
@@ -99,7 +90,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Date Value");
             end;
         }
-        field(12; "DateFormula Value"; DateFormula)
+        field(60; "DateFormula Value"; DateFormula)
         {
             DataClassification = CustomerContent;
             Caption = 'DateFormula Value';
@@ -109,7 +100,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("DateFormula Value");
             end;
         }
-        field(13; "DateTime Value"; DateTime)
+        field(70; "DateTime Value"; DateTime)
         {
             DataClassification = CustomerContent;
             Caption = 'DateTime Value';
@@ -119,7 +110,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("DateTime Value");
             end;
         }
-        field(14; "Decimal Value"; Decimal)
+        field(80; "Decimal Value"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Decimal Value';
@@ -129,7 +120,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Decimal Value");
             end;
         }
-        field(15; "Duration Value"; Duration)
+        field(90; "Duration Value"; Duration)
         {
             DataClassification = CustomerContent;
             Caption = 'Duration Value';
@@ -139,7 +130,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Duration Value");
             end;
         }
-        field(16; "Guid Value"; Guid)
+        field(100; "Guid Value"; Guid)
         {
             DataClassification = CustomerContent;
             Caption = 'Guid Value';
@@ -149,7 +140,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Guid Value");
             end;
         }
-        field(17; "Integer Value"; Integer)
+        field(110; "Integer Value"; Integer)
         {
             DataClassification = CustomerContent;
             Caption = 'Integer Value';
@@ -159,27 +150,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Integer Value");
             end;
         }
-        field(18; "Media Value"; Media)
-        {
-            DataClassification = CustomerContent;
-            Caption = 'Media Value';
-            Editable = true;
-            trigger OnValidate()
-            begin
-                Rec."Parameter Type" := Rec.FieldNo("Media Value");
-            end;
-        }
-        field(19; "MediaSet Value"; MediaSet)
-        {
-            DataClassification = CustomerContent;
-            Caption = 'MediaSet Value';
-            Editable = true;
-            trigger OnValidate()
-            begin
-                Rec."Parameter Type" := Rec.FieldNo("MediaSet Value");
-            end;
-        }
-        field(20; "Text Value"; Text[250])
+        field(120; "Text Value"; Text[250])
         {
             DataClassification = CustomerContent;
             Caption = 'Text Value';
@@ -189,7 +160,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
                 Rec."Parameter Type" := Rec.FieldNo("Text Value");
             end;
         }
-        field(21; "Time Value"; Time)
+        field(130; "Time Value"; Time)
         {
             DataClassification = CustomerContent;
             Caption = 'Time Value';
