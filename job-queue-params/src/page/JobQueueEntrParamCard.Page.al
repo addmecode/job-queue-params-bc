@@ -79,16 +79,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
                             ShowCaption = false;
                         }
                     }
-                    group(BlobValue)
-                    {
-                        visible = isValueBlob;
-                        ShowCaption = false;
-                        field("Blob Value"; Rec."Blob Value")
-                        {
-                            ToolTip = 'Specifies the value of the Blob Value field.', Comment = '%';
-                            ShowCaption = false;
-                        }
-                    }
                     group(BooleanValue)
                     {
                         visible = isValueBoolean;
@@ -179,26 +169,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
                             ShowCaption = false;
                         }
                     }
-                    group(MediaValue)
-                    {
-                        visible = isValueMedia;
-                        ShowCaption = false;
-                        field("Media Value"; Rec."Media Value")
-                        {
-                            ToolTip = 'Specifies the value of the Media Value field.', Comment = '%';
-                            ShowCaption = false;
-                        }
-                    }
-                    group(MediaSetValue)
-                    {
-                        visible = isValueMediaSet;
-                        ShowCaption = false;
-                        field("MediaSet Value"; Rec."MediaSet Value")
-                        {
-                            ToolTip = 'Specifies the value of the MediaSet Value field.', Comment = '%';
-                            ShowCaption = false;
-                        }
-                    }
                     group(TextValue)
                     {
                         visible = isValueText;
@@ -226,7 +196,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
 
     var
         isValueBigInteger: Boolean;
-        isValueBlob: Boolean;
         isValueBoolean: Boolean;
         isValueCode: Boolean;
         isValueDate: Boolean;
@@ -236,8 +205,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
         isValueDuration: Boolean;
         isValueGuid: Boolean;
         isValueInteger: Boolean;
-        isValueMedia: Boolean;
-        isValueMediaSet: Boolean;
         isValueText: Boolean;
         isValueTime: Boolean;
         IsParamEditable: Boolean;
@@ -252,7 +219,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
     begin
         Rec.CalcFields("Parameter Type");
         isValueBigInteger := Rec."Parameter Type" = Rec.FieldNo("BigInteger Value");
-        isValueBlob := Rec."Parameter Type" = Rec.FieldNo("Blob Value");
         isValueBoolean := Rec."Parameter Type" = Rec.FieldNo("Boolean Value");
         isValueCode := Rec."Parameter Type" = Rec.FieldNo("Code Value");
         isValueDate := Rec."Parameter Type" = Rec.FieldNo("Date Value");
@@ -262,8 +228,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
         isValueDuration := Rec."Parameter Type" = Rec.FieldNo("Duration Value");
         isValueGuid := Rec."Parameter Type" = Rec.FieldNo("Guid Value");
         isValueInteger := Rec."Parameter Type" = Rec.FieldNo("Integer Value");
-        isValueMedia := Rec."Parameter Type" = Rec.FieldNo("Media Value");
-        isValueMediaSet := Rec."Parameter Type" = Rec.FieldNo("MediaSet Value");
         isValueText := Rec."Parameter Type" = Rec.FieldNo("Text Value");
         isValueTime := Rec."Parameter Type" = Rec.FieldNo("Time Value");
     end;

@@ -123,20 +123,9 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         FieldRef: FieldRef;
     begin
         JqeParam.CalcFields("Parameter Type");
-        case JqeParam."Parameter Type" of
-            // TODO
-            JqeParam.FieldNo("Blob Value"):
-                exit('');
-            JqeParam.FieldNo("Media Value"):
-                exit('');
-            JqeParam.FieldNo("MediaSet Value"):
-                exit('');
-            else begin
-                RecRef.GetTable(JqeParam);
-                FieldRef := RecRef.Field(JqeParam."Parameter Type");
-                exit(FieldRef.Value());
-            end;
-        end;
+        RecRef.GetTable(JqeParam);
+        FieldRef := RecRef.Field(JqeParam."Parameter Type");
+        exit(FieldRef.Value());
     end;
 
     procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
@@ -144,20 +133,9 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
-        case JqeParamTempl.FieldNo("Parameter Type") of
-            // TODO
-            JqeParamTempl.FieldNo("Blob Value"):
-                exit('');
-            JqeParamTempl.FieldNo("Media Value"):
-                exit('');
-            JqeParamTempl.FieldNo("MediaSet Value"):
-                exit('');
-            else begin
-                RecRef.GetTable(JqeParamTempl);
-                FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
-                exit(Format(FieldRef.Value()));
-            end;
-        end;
+        RecRef.GetTable(JqeParamTempl);
+        FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
+        exit(Format(FieldRef.Value()));
     end;
 
     procedure ValidateParameterType(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate)
