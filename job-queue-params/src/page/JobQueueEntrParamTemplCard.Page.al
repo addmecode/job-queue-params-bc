@@ -238,6 +238,11 @@ page 50103 "ADD_JobQueueEntrParamTemplCard"
 
     trigger OnAfterGetRecord()
     begin
+        SetFieldVisibility();
+    end;
+
+    local procedure SetFieldVisibility()
+    begin
         isValueBigInteger := Rec."Parameter Type" = Rec.FieldNo("BigInteger Value");
         isValueBlob := Rec."Parameter Type" = Rec.FieldNo("Blob Value");
         isValueBoolean := Rec."Parameter Type" = Rec.FieldNo("Boolean Value");

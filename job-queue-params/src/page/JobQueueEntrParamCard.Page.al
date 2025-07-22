@@ -36,23 +36,28 @@ page 50104 "ADD_JobQueueEntrParamCard"
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
-                field(SystemModifiedAt; Rec.SystemModifiedAt)
+                group(ModificationInfo)
                 {
-                    ToolTip = 'Specifies the value of the SystemModifiedAt field.', Comment = '%';
-                }
-                field(SystemModifiedBy; Rec.SystemModifiedBy)
-                {
-                    ToolTip = 'Specifies the value of the SystemModifiedBy field.', Comment = '%';
+                    Caption = 'Modification Information';
+                    ShowCaption = true;
+                    field(SystemModifiedAt; Rec.SystemModifiedAt)
+                    {
+                        ToolTip = 'Specifies the value of the SystemModifiedAt field.', Comment = '%';
+                    }
+                    field(SystemModifiedBy; Rec.SystemModifiedBy)
+                    {
+                        ToolTip = 'Specifies the value of the SystemModifiedBy field.', Comment = '%';
+                    }
                 }
             }
             group(Custom)
             {
                 ShowCaption = False;
+                Editable = IsParamEditable;
                 group(ParameterDescription)
                 {
                     Caption = 'Parameter Description';
                     ShowCaption = true;
-                    Editable = True;
 
                     field("Parameter Description"; Rec."Parameter Description")
                     {
@@ -64,7 +69,6 @@ page 50104 "ADD_JobQueueEntrParamCard"
                 {
                     Caption = 'Parameter Value';
                     ShowCaption = true;
-                    Editable = true;
                     group(BigIntegerValue)
                     {
                         visible = isValueBigInteger;
@@ -219,6 +223,7 @@ page 50104 "ADD_JobQueueEntrParamCard"
             }
         }
     }
+
     var
         isValueBigInteger: Boolean;
         isValueBlob: Boolean;
@@ -235,8 +240,15 @@ page 50104 "ADD_JobQueueEntrParamCard"
         isValueMediaSet: Boolean;
         isValueText: Boolean;
         isValueTime: Boolean;
+        IsParamEditable: Boolean;
 
     trigger OnAfterGetRecord()
+    begin
+        SetFieldVisibility();
+        IsParamEditable := Rec.IsParamEditable();
+    end;
+
+    local procedure SetFieldVisibility()
     begin
         Rec.CalcFields("Parameter Type");
         isValueBigInteger := Rec."Parameter Type" = Rec.FieldNo("BigInteger Value");

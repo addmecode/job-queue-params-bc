@@ -186,4 +186,11 @@ table 50100 "ADD_JobQueueEntryParameter"
     begin
         exit(JobQueueEntryMgt.GetParameterTypeCaption(Rec));
     end;
+
+    procedure IsParamEditable(): Boolean
+    var
+        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+    begin
+        exit(JobQueueEntryMgt.IsParamEditable(Rec));
+    end;
 }
