@@ -34,6 +34,12 @@
       "name": "Test Runner",
       "publisher": "Microsoft",
       "version": "26.3.36158.36731"
+    },
+    {
+      "id": "5d86850b-0d76-4eca-bd7b-951ad998e997",
+      "name": "Tests-TestLibraries",
+      "publisher": "Microsoft",
+      "version": "26.3.36158.36731"
     }
   ],
   "screenshots": [],
