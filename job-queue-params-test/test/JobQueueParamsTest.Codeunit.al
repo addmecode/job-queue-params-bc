@@ -78,14 +78,10 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(ParamTypes.Count(), JobQueueEntryParameter.Count(), 'Number of parameters created should match the number of templates');
 
         // [THEN] Parameters should have the default value from the templates
-        JobQueueEntryParameter.SetAutoCalcFields("Parameter Type");
         JobQueueEntryParameter.FindSet();
         repeat
             JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
-            GetJqeParamTemplParamValueFieldRef(JobQueueEntryParamTemplate, TemplFieldRef);
-            GetJqeParamParamValueFieldRef(JobQueueEntryParameter, ParamFieldRef);
-
-            Assert.AreEqual(TemplFieldRef.Value, ParamFieldRef.Value, 'A parameter should be created with the default value from the template');
+            Assert.AreEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'A parameter should be created with the default value from the template');
         until JobQueueEntryParameter.Next() = 0;
     end;
 
@@ -116,14 +112,10 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(ParamTypes.Count(), JobQueueEntryParameter.Count(), 'Number of parameters created should match the number of templates');
 
         // [THEN] Parameters should not have the default value from the templates
-        JobQueueEntryParameter.SetAutoCalcFields("Parameter Type");
         JobQueueEntryParameter.FindSet();
         repeat
             JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
-            GetJqeParamTemplParamValueFieldRef(JobQueueEntryParamTemplate, TemplFieldRef);
-            GetJqeParamParamValueFieldRef(JobQueueEntryParameter, ParamFieldRef);
-
-            Assert.AreNotEqual(TemplFieldRef.Value, ParamFieldRef.Value, 'A parameter should be created without the default value from the template');
+            Assert.AreNotEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'A parameter should be created without the default value from the template');
         until JobQueueEntryParameter.Next() = 0;
     end;
 
@@ -299,21 +291,21 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         end;
     end;
 
-    local procedure GetJqeParamTemplParamValueFieldRef(var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; var TemplFieldRef: FieldRef)
-    var
-        RecRefTempl: RecordRef;
-    begin
-        RecRefTempl.GetTable(JobQueueEntryParamTemplate);
-        TemplFieldRef := RecRefTempl.Field(JobQueueEntryParamTemplate."Parameter Type");
-    end;
+    // local procedure GetJqeParamTemplParamValueFieldRef(var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; var TemplFieldRef: FieldRef)
+    // var
+    //     RecRefTempl: RecordRef;
+    // begin
+    //     RecRefTempl.GetTable(JobQueueEntryParamTemplate);
+    //     TemplFieldRef := RecRefTempl.Field(JobQueueEntryParamTemplate."Parameter Type");
+    // end;
 
-    local procedure GetJqeParamParamValueFieldRef(var JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter"; var ParamFieldRef: FieldRef)
-    var
-        RecRefParam: RecordRef;
-    begin
-        RecRefParam.GetTable(JobQueueEntryParameter);
-        ParamFieldRef := RecRefParam.Field(JobQueueEntryParameter."Parameter Type");
-    end;
+    // local procedure GetJqeParamParamValueFieldRef(var JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter"; var ParamFieldRef: FieldRef)
+    // var
+    //     RecRefParam: RecordRef;
+    // begin
+    //     RecRefParam.GetTable(JobQueueEntryParameter);
+    //     ParamFieldRef := RecRefParam.Field(JobQueueEntryParameter."Parameter Type");
+    // end;
 
 
     var
