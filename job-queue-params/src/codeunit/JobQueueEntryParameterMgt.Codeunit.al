@@ -1,7 +1,5 @@
 namespace Addmecode.JobQueueParams;
 using System.Threading;
-using Microsoft.Projects.Project.Job;
-using Microsoft.Projects.Project.Archive;
 
 codeunit 50100 "ADD_JobQueueEntryParameterMgt"
 {
@@ -39,8 +37,6 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         end;
         RecRefParam.Insert();
     end;
-
-
 
     procedure DeleteAllJobQueueEntryParams(JQE: Record "Job Queue Entry")
     var
@@ -124,14 +120,19 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         exit(FieldRef.Value());
     end;
 
-    procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    procedure GetDefaultParameterValueAsText(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    begin
+        exit(Format(GetDefaultParameterValue(JqeParamTempl)));
+    end;
+
+    procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Variant
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
         RecRef.GetTable(JqeParamTempl);
         FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
-        exit(Format(FieldRef.Value()));
+        exit(FieldRef.Value());
     end;
 
     procedure ValidateParameterType(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate)
