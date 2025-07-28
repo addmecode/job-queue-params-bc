@@ -46,8 +46,6 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
     var
         JQEParam: Record "ADD_JobQueueEntryParameter";
     begin
-        if JQE."Object ID to Run" = 0 then
-            exit;
         JQEParam.SetRange("Job Queue Entry ID", JQE.ID);
         JQEParam.DeleteAll(true);
     end;
@@ -56,8 +54,6 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
     var
         JQEParam: Record "ADD_JobQueueEntryParameter";
     begin
-        if JQE."Object ID to Run" = 0 then
-            exit;
         if (JQE."Object ID to Run" = xJQE."Object ID to Run") and (JQE."Object Type to Run" = xJQE."Object Type to Run") then
             exit;
 
