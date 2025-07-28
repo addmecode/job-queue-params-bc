@@ -13,9 +13,13 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     var
         JqeParamTempl: Record "ADD_JobQueueEntryParamTemplate";
         JqeParam: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntry: Record "Job Queue Entry";
     begin
         JqeParamTempl.DeleteAll(false);
         JqeParam.DeleteAll(false);
+
+        JobQueueEntry.SetRange("Object ID to Run", GetTestObjectId());
+        JobQueueEntry.DeleteAll(false);
     end;
 
     [Test]
@@ -119,7 +123,7 @@ codeunit 50140 "ADD_JobQueueParamsTest"
             GetJqeParamTemplParamValueFieldRef(JobQueueEntryParamTemplate, TemplFieldRef);
             GetJqeParamParamValueFieldRef(JobQueueEntryParameter, ParamFieldRef);
 
-            Assert.AreNotEqual(TemplFieldRef.Value, ParamFieldRef.Value, 'A parameter should be created with the default value from the template');
+            Assert.AreNotEqual(TemplFieldRef.Value, ParamFieldRef.Value, 'A parameter should be created without the default value from the template');
         until JobQueueEntryParameter.Next() = 0;
     end;
 
@@ -150,6 +154,50 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(0, JobQueueEntryParameter.Count(), 'No parameters should be created when Object ID to Run is 0');
     end;
 
+    [Test]
+    procedure CreateAllJobQueueEntryParamsFromTempl_NoTemplatesExist()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryId: Guid;
+    begin
+        // [SCENARIO] CreateAllJobQueueEntryParamsFromTempl should not create parameters when no templates exist
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry without any matching parameter templates
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+
+        // [WHEN] CreateAllJobQueueEntryParamsFromTempl is called
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [THEN] No parameters should be created
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        Assert.AreEqual(0, JobQueueEntryParameter.Count(), 'No parameters should be created when no templates exist');
+    end;
+
+    [Test]
+    procedure DeleteAllJobQueueEntryParams_NoParametersExist()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryId: Guid;
+    begin
+        // [SCENARIO] DeleteAllJobQueueEntryParams should handle the case when no parameters exist gracefully
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry without parameters
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+
+        // [WHEN] DeleteAllJobQueueEntryParams is called
+        JobQueueEntryParameterMgt.DeleteAllJobQueueEntryParams(JobQueueEntry);
+
+        // [THEN] No error should occur and parameter count should remain 0
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        Assert.AreEqual(0, JobQueueEntryParameter.Count(), 'Parameter count should remain 0 when no parameters exist');
+    end;
+
     local procedure CreateJobQueueEntryWithParameters(var JobQueueEntry: Record "Job Queue Entry"; ParameterCount: Integer): Guid
     var
         JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
@@ -170,9 +218,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntry.Init();
         JobQueueEntry.ID := CreateGuid();
         JobQueueEntry."Object Type to Run" := JobQueueEntry."Object Type to Run"::Codeunit;
-        JobQueueEntry."Object ID to Run" := 50100;
+        JobQueueEntry."Object ID to Run" := GetTestObjectId();
         JobQueueEntry.Insert();
         exit(JobQueueEntry.ID);
+    end;
+
+    local procedure GetTestObjectId(): Integer
+    begin
+        exit(50100);
     end;
 
     local procedure CreateJqeParamTempl(var JobQueueEntry: Record "Job Queue Entry"; var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; NewParamName: Text[100]; ParamType: Integer)
