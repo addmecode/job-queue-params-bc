@@ -52,6 +52,28 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     end;
 
     [Test]
+    procedure DeleteAllJobQueueEntryParams_NoParametersExist()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryId: Guid;
+    begin
+        // [SCENARIO] DeleteAllJobQueueEntryParams should handle the case when no parameters exist gracefully
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry without parameters
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+
+        // [WHEN] DeleteAllJobQueueEntryParams is called
+        JobQueueEntryParameterMgt.DeleteAllJobQueueEntryParams(JobQueueEntry);
+
+        // [THEN] No error should occur and parameter count should remain 0
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        Assert.AreEqual(0, JobQueueEntryParameter.Count(), 'Parameter count should remain 0 when no parameters exist');
+    end;
+
+    [Test]
     procedure CreateAllJobQueueEntryParamsFromTempl_CreatesParameterWithDefaultValue()
     var
         JobQueueEntry: Record "Job Queue Entry";
@@ -169,25 +191,85 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     end;
 
     [Test]
-    procedure DeleteAllJobQueueEntryParams_NoParametersExist()
+    procedure OverwriteAllJobQueueEntryParamsFromTempl_DoNotOverwriteExistingParameters()
     var
         JobQueueEntry: Record "Job Queue Entry";
-        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
         JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
         JobQueueEntryId: Guid;
+        ParamTypes: List of [Integer];
     begin
-        // [SCENARIO] DeleteAllJobQueueEntryParams should handle the case when no parameters exist gracefully
+        // [SCENARIO] OverwriteAllJobQueueEntryParamsFromTempl should not overwrite existing parameters if the Object ID and Type match
         Initialize();
 
-        // [GIVEN] A Job Queue Entry without parameters
+        // [GIVEN] A Job Queue Entry with existing parameters and a parameter templates
         JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'Param1', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TEST 1');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
 
-        // [WHEN] DeleteAllJobQueueEntryParams is called
-        JobQueueEntryParameterMgt.DeleteAllJobQueueEntryParams(JobQueueEntry);
+        // [GIVEN] A new Job Queue Entry Parameter Template with a different default value
+        JobQueueEntryParamTemplate.Reset();
+        JobQueueEntryParamTemplate.DeleteAll(False);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'Param1', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TEST 2');
 
-        // [THEN] No error should occur and parameter count should remain 0
+        // [WHEN] OverwriteAllJobQueueEntryParamsFromTempl is called with the same Job Queue Entry
+        JobQueueEntryParameterMgt.OverwriteAllJobQueueEntryParamsFromTempl(JobQueueEntry, JobQueueEntry, true);
+
+        // [THEN] No parameters should be deleted or inserted
         JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
-        Assert.AreEqual(0, JobQueueEntryParameter.Count(), 'Parameter count should remain 0 when no parameters exist');
+        Assert.AreEqual(1, JobQueueEntryParameter.Count(), 'No parameters should be deleted or inserted when Object ID and Type match');
+
+        // [THEN] The parameter should retain the original value
+        JobQueueEntryParameter.FindSet();
+        repeat
+            JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
+            Assert.AreNotEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'A parameter should retain the original value when Object ID and Type match');
+        until JobQueueEntryParameter.Next() = 0;
+    end;
+
+    [Test]
+    procedure OverwriteAllJobQueueEntryParamsFromTempl_OverwriteExistingParameters()
+    var
+        OldJobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryId: Guid;
+        ParamTypes: List of [Integer];
+    begin
+        // [SCENARIO] OverwriteAllJobQueueEntryParamsFromTempl should overwrite existing parameters if the Object ID or Type is changed
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry with existing parameters and a parameter templates
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'Param1', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TEST 1');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [GIVEN] A new Job Queue Entry with a different Object ID or Type
+        OldJobQueueEntry := JobQueueEntry;
+        JobQueueEntry."Object ID to Run" := GetSecondTestObjectId();
+        JobQueueEntry.Modify(False);
+
+        // [GIVEN] A new parameter template with a different default value
+        JobQueueEntryParamTemplate.Reset();
+        JobQueueEntryParamTemplate.DeleteAll(False);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'Param1', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TEST 2');
+
+        // [WHEN] OverwriteAllJobQueueEntryParamsFromTempl is called with the same Job Queue Entry
+        JobQueueEntryParameterMgt.OverwriteAllJobQueueEntryParamsFromTempl(JobQueueEntry, OldJobQueueEntry, true);
+
+        // [THEN] All existing parameters should be deleted
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        Assert.AreEqual(1, JobQueueEntryParameter.Count(), 'Only one parameter should exist after overwriting');
+
+        // [THEN] The parameter should be overwritten with the new default value
+        JobQueueEntryParameter.FindSet();
+        repeat
+            JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
+            Assert.AreEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'A parameter should be overwritten with the new default value when Object ID or Type is changed');
+        until JobQueueEntryParameter.Next() = 0;
     end;
 
     local procedure CreateJobQueueEntryWithParameters(var JobQueueEntry: Record "Job Queue Entry"; ParameterCount: Integer): Guid
@@ -220,7 +302,50 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         exit(50100);
     end;
 
+    local procedure GetSecondTestObjectId(): Integer
+    begin
+        exit(11);
+    end;
+
     local procedure CreateJqeParamTempl(var JobQueueEntry: Record "Job Queue Entry"; var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; NewParamName: Text[100]; ParamType: Integer)
+    var
+        Any: Codeunit Any;
+        DateForm: Text;
+        ParamValue: Variant;
+    begin
+        case ParamType of
+            JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
+                ParamValue := Any.IntegerInRange(1, 1000000);
+            JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
+                ParamValue := true;
+            JobQueueEntryParamTemplate.FieldNo("Code Value"):
+                ParamValue := 'TEST CODE';
+            JobQueueEntryParamTemplate.FieldNo("Date Value"):
+                ParamValue := Today;
+            JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
+                begin
+                    DateForm := 'CM+' + Format(Any.IntegerInRange(1, 31)) + 'D';
+                    ParamValue := DateForm;
+                end;
+            JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
+                ParamValue := CurrentDateTime;
+            JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
+                ParamValue := Any.DecimalInRange(10, 2);
+            JobQueueEntryParamTemplate.FieldNo("Duration Value"):
+                ParamValue := Any.IntegerInRange(1, 100);
+            JobQueueEntryParamTemplate.FieldNo("Guid Value"):
+                ParamValue := CreateGuid();
+            JobQueueEntryParamTemplate.FieldNo("Integer Value"):
+                ParamValue := Any.IntegerInRange(1, 1000);
+            JobQueueEntryParamTemplate.FieldNo("Text Value"):
+                ParamValue := 'Sample Text';
+            JobQueueEntryParamTemplate.FieldNo("Time Value"):
+                ParamValue := DT2Time(CurrentDateTime);
+        end;
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, NewParamName, ParamType, ParamValue);
+    end;
+
+    local procedure CreateJqeParamTemplWithGivenValue(var JobQueueEntry: Record "Job Queue Entry"; var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; NewParamName: Text[100]; ParamType: Integer; ParamValue: Variant)
     var
         Any: Codeunit Any;
         DateForm: Text;
@@ -231,32 +356,29 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParamTemplate."Parameter Type" := ParamType;
         case ParamType of
             JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
-                JobQueueEntryParamTemplate."BigInteger Value" := Any.IntegerInRange(1, 1000000);
+                JobQueueEntryParamTemplate."BigInteger Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
-                JobQueueEntryParamTemplate."Boolean Value" := true;
+                JobQueueEntryParamTemplate."Boolean Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Code Value"):
-                JobQueueEntryParamTemplate."Code Value" := 'TEST CODE';
+                JobQueueEntryParamTemplate."Code Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Date Value"):
-                JobQueueEntryParamTemplate."Date Value" := Today;
+                JobQueueEntryParamTemplate."Date Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
-                begin
-                    DateForm := 'CM+' + Format(Any.IntegerInRange(1, 31)) + 'D';
-                    Evaluate(JobQueueEntryParamTemplate."DateFormula Value", DateForm);
-                end;
+                Evaluate(JobQueueEntryParamTemplate."DateFormula Value", ParamValue);
             JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
-                JobQueueEntryParamTemplate."DateTime Value" := CurrentDateTime;
+                JobQueueEntryParamTemplate."DateTime Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
-                JobQueueEntryParamTemplate."Decimal Value" := Any.DecimalInRange(10, 2);
+                JobQueueEntryParamTemplate."Decimal Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Duration Value"):
-                JobQueueEntryParamTemplate."Duration Value" := Any.IntegerInRange(1, 100);
+                JobQueueEntryParamTemplate."Duration Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Guid Value"):
-                JobQueueEntryParamTemplate."Guid Value" := CreateGuid();
+                JobQueueEntryParamTemplate."Guid Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Integer Value"):
-                JobQueueEntryParamTemplate."Integer Value" := Any.IntegerInRange(1, 1000);
+                JobQueueEntryParamTemplate."Integer Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Text Value"):
-                JobQueueEntryParamTemplate."Text Value" := 'Sample Text';
+                JobQueueEntryParamTemplate."Text Value" := ParamValue;
             JobQueueEntryParamTemplate.FieldNo("Time Value"):
-                JobQueueEntryParamTemplate."Time Value" := DT2Time(CurrentDateTime);
+                JobQueueEntryParamTemplate."Time Value" := ParamValue;
         end;
         JobQueueEntryParamTemplate.Insert();
     end;
