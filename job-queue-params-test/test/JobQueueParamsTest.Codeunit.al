@@ -198,15 +198,20 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
         JobQueueEntryId: Guid;
-        ParamTypes: List of [Integer];
+        OriginalParameterValue: Variant;
     begin
         // [SCENARIO] OverwriteAllJobQueueEntryParamsFromTempl should not overwrite existing parameters if the Object ID and Type match
         Initialize();
 
-        // [GIVEN] A Job Queue Entry with existing parameters and a parameter templates
+        // [GIVEN] A Job Queue Entry with existing parameters and a parameter template
         JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
         CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'Param1', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TEST 1');
         JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [GIVEN] Store the original parameter value for comparison
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        JobQueueEntryParameter.FindFirst();
+        OriginalParameterValue := JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter);
 
         // [GIVEN] A new Job Queue Entry Parameter Template with a different default value
         JobQueueEntryParamTemplate.Reset();
@@ -220,12 +225,13 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
         Assert.AreEqual(1, JobQueueEntryParameter.Count(), 'No parameters should be deleted or inserted when Object ID and Type match');
 
-        // [THEN] The parameter should retain the original value
-        JobQueueEntryParameter.FindSet();
-        repeat
-            JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
-            Assert.AreNotEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'A parameter should retain the original value when Object ID and Type match');
-        until JobQueueEntryParameter.Next() = 0;
+        // [THEN] The parameter should retain the original value, not the new template value
+        JobQueueEntryParameter.FindFirst();
+        Assert.AreEqual(OriginalParameterValue, JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'Parameter should retain the original value when Object ID and Type match');
+
+        // [THEN] Verify it's different from the new template value
+        JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
+        Assert.AreNotEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'Parameter value should be different from the new template value');
     end;
 
     [Test]
@@ -237,7 +243,6 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
         JobQueueEntryId: Guid;
-        ParamTypes: List of [Integer];
     begin
         // [SCENARIO] OverwriteAllJobQueueEntryParamsFromTempl should overwrite existing parameters if the Object ID or Type is changed
         Initialize();
@@ -265,11 +270,39 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(1, JobQueueEntryParameter.Count(), 'Only one parameter should exist after overwriting');
 
         // [THEN] The parameter should be overwritten with the new default value
-        JobQueueEntryParameter.FindSet();
-        repeat
-            JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
-            Assert.AreEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'A parameter should be overwritten with the new default value when Object ID or Type is changed');
-        until JobQueueEntryParameter.Next() = 0;
+        JobQueueEntryParameter.FindFirst();
+        JobQueueEntryParamTemplate.Get(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryParameter."Parameter Name");
+        Assert.AreEqual(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate), JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter), 'A parameter should be overwritten with the new default value when Object ID or Type is changed');
+    end;
+
+    [Test]
+    procedure OverwriteAllJobQueueEntryParamsFromTempl_NoTemplatesForNewObjectId()
+    var
+        OldJobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+    begin
+        // [SCENARIO] OverwriteAllJobQueueEntryParamsFromTempl should delete all parameters when Object ID changes but no templates exist for the new Object ID
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry with existing parameters
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'Param1', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TEST VALUE');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [GIVEN] Change the Object ID to one that has no templates
+        OldJobQueueEntry := JobQueueEntry;
+        JobQueueEntry."Object ID to Run" := GetSecondTestObjectId();
+        JobQueueEntry.Modify(False);
+
+        // [WHEN] OverwriteAllJobQueueEntryParamsFromTempl is called
+        JobQueueEntryParameterMgt.OverwriteAllJobQueueEntryParamsFromTempl(JobQueueEntry, OldJobQueueEntry, true);
+
+        // [THEN] All parameters should be deleted and none created
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        Assert.AreEqual(0, JobQueueEntryParameter.Count(), 'No parameters should exist when Object ID changes and no templates exist for the new Object ID');
     end;
 
     local procedure CreateJobQueueEntryWithParameters(var JobQueueEntry: Record "Job Queue Entry"; ParameterCount: Integer): Guid
