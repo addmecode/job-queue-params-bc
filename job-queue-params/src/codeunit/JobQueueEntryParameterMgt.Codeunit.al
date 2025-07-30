@@ -57,7 +57,7 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         CreateAllJobQueueEntryParamsFromTempl(JQE, SetDefValue);
     end;
 
-    internal procedure CreateJqeParamTemplIfNotExists(JqeTemplToCreate: Record ADD_JobQueueEntryParamTemplate; SetDefValueForExistingJqe: Boolean)
+    procedure CreateJqeParamTemplIfNotExists(JqeTemplToCreate: Record ADD_JobQueueEntryParamTemplate; SetDefValueForExistingJqe: Boolean)
     var
         JobQueueEntryParamTempl: Record ADD_JobQueueEntryParamTemplate;
     begin

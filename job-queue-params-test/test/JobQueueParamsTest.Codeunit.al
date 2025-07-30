@@ -305,6 +305,77 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(0, JobQueueEntryParameter.Count(), 'No parameters should exist when Object ID changes and no templates exist for the new Object ID');
     end;
 
+    [Test]
+    procedure CreateJqeParamTemplIfNotExists_DoNotCreateIfExists()
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntry: Record "Job Queue Entry";
+        JqeTemplToCreate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryId: Guid;
+    begin
+        // [SCENARIO] CreateJqeParamTemplIfNotExists should not create a template if it already exists
+        Initialize();
+        // [GIVEN] A Job Queue Entry and a parameter template
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTempl(JobQueueEntry, JobQueueEntryParamTemplate, 'TestParam', JobQueueEntryParamTemplate.FieldNo("Text Value"));
+        JqeTemplToCreate := JobQueueEntryParamTemplate;
+
+        // [WHEN] CreateJqeParamTemplIfNotExists is called with the same template
+        JobQueueEntryParameterMgt.CreateJqeParamTemplIfNotExists(JqeTemplToCreate, True);
+
+        // [THEN] The template should not be created again
+        Assert.AreEqual(1, JobQueueEntryParamTemplate.Count(), 'Template should not be created again if it already exists');
+    end;
+
+    [Test]
+    procedure CreateJqeParamTemplIfNotExists_CreateIfNotExists()
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+    begin
+        // [SCENARIO] CreateJqeParamTemplIfNotExists should create a template if it does not exist
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template
+        CreateJqeParamTemplWithTextVal(JobQueueEntryParamTemplate, 'TestParam', 'TestValue');
+
+        // [WHEN] CreateJqeParamTemplIfNotExists is called with a new template
+        JobQueueEntryParameterMgt.CreateJqeParamTemplIfNotExists(JobQueueEntryParamTemplate, True);
+
+        // [THEN] The template should be created
+        Assert.AreEqual(1, JobQueueEntryParamTemplate.Count(), 'Template should be created if it does not exist');
+    end;
+
+    [Test]
+    procedure CreateJqeParamTemplIfNotExists_CreateTemplAndCreateParamsForJobQueueEntry()
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryId: Guid;
+    begin
+        // [SCENARIO] CreateJqeParamTemplIfNotExists should create a template if it does not exist
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry without parameters
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+
+        // [GIVEN] A Job Queue Entry Parameter Template
+        CreateJqeParamTemplWithTextVal(JobQueueEntryParamTemplate, 'TestParam', 'TestValue');
+
+        // [WHEN] CreateJqeParamTemplIfNotExists is called with a new template
+        JobQueueEntryParameterMgt.CreateJqeParamTemplIfNotExists(JobQueueEntryParamTemplate, True);
+
+        // [THEN] The template should be created
+        Assert.AreEqual(1, JobQueueEntryParamTemplate.Count(), 'Template should be created if it does not exist');
+
+        // [THEN] Parameters should be created for the Job Queue Entry
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntryId);
+        Assert.AreEqual(1, JobQueueEntryParameter.Count(), 'Parameter should be created for the Job Queue Entry');
+    end;
+
     local procedure CreateJobQueueEntryWithParameters(var JobQueueEntry: Record "Job Queue Entry"; ParameterCount: Integer): Guid
     var
         JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
@@ -444,6 +515,15 @@ codeunit 50140 "ADD_JobQueueParamsTest"
             NewParamName := 'TestParameter' + Format(TemplCounter);
             CreateJqeParamTempl(JobQueueEntry, JobQueueEntryParamTemplate, NewParamName, ParamTypes.Get(TemplCounter));
         end;
+    end;
+
+    local procedure CreateJqeParamTemplWithTextVal(var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; ParamName: Text[100]; TextVal: Text[250])
+    begin
+        JobQueueEntryParamTemplate."Object ID" := GetTestObjectId();
+        JobQueueEntryParamTemplate."Object Type" := JobQueueEntryParamTemplate."Object Type"::Codeunit;
+        JobQueueEntryParamTemplate."Parameter Name" := ParamName;
+        JobQueueEntryParamTemplate."Parameter Type" := JobQueueEntryParamTemplate.FieldNo("Text Value");
+        JobQueueEntryParamTemplate."Text Value" := TextVal;
     end;
 
     // local procedure GetJqeParamTemplParamValueFieldRef(var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; var TemplFieldRef: FieldRef)
