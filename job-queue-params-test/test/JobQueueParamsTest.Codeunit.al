@@ -376,6 +376,54 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(1, JobQueueEntryParameter.Count(), 'Parameter should be created for the Job Queue Entry');
     end;
 
+    [Test]
+    procedure GetJobQueueEntryParamValue_ParameterDoesNotExist()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryId: Guid;
+        ParamName: Text[100];
+        ParamValue: Variant;
+    begin
+        // [SCENARIO] GetJobQueueEntryParamValue should throw an error if the parameter does not exist
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry without parameters
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        ParamName := 'NonExistingParam';
+
+        // [WHEN] GetJobQueueEntryParamValue is called for a non-existent parameter
+        // [THEN] An error should be thrown because the parameter does not exist
+        asserterror ParamValue := JobQueueEntryParameterMgt.GetJobQueueEntryParamValue(JobQueueEntry, ParamName);
+    end;
+
+    [Test]
+    procedure GetJobQueueEntryParamValue_ReturnsCorrectValue()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        ParamName: Text[100];
+        ParamValue: Variant;
+        ParamValueReturned: Variant;
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+    begin
+        // [SCENARIO] GetJobQueueEntryParamValue should throw an error if the parameter does not exist
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry with a template and a parameter
+        ParamName := 'TestParam';
+        ParamValue := 'TestValue';
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, ParamName, JobQueueEntryParamTemplate.FieldNo("Text Value"), ParamValue);
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [WHEN] GetJobQueueEntryParamValue is called for an existing parameter
+        ParamValueReturned := JobQueueEntryParameterMgt.GetJobQueueEntryParamValue(JobQueueEntry, ParamName);
+
+        // [THEN] The correct value should be returned
+        Assert.AreEqual(ParamValueReturned, ParamValue, 'The returned parameter value is incorrect');
+    end;
+
     local procedure CreateJobQueueEntryWithParameters(var JobQueueEntry: Record "Job Queue Entry"; ParameterCount: Integer): Guid
     var
         JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";

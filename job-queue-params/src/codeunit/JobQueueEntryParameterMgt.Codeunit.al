@@ -67,7 +67,7 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         CreateJqeParamFromNewTempForExistingJqe(JqeTemplToCreate, SetDefValueForExistingJqe);
     end;
 
-    internal procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Variant
+    procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Variant
     var
         JqueParam: Record "ADD_JobQueueEntryParameter";
     begin
