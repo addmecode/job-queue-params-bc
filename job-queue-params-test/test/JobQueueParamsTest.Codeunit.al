@@ -506,6 +506,60 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         until JobQueueEntryParamTemplate.Next() = 0;
     end;
 
+    [Test]
+    procedure GetParameterTypeCaption_ReturnsCorrectCaption()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+    begin
+        // [SCENARIO] GetParameterTypeCaption should return the correct caption for each parameter type
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry, a Job Queue Entry Parameter Template with all possible parameter types, and parameters created from the template
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithAllPossParamType(JobQueueEntry, JobQueueEntryParamTemplate);
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [WHEN] GetParameterTypeCaption is called
+        // [THEN] The returned caption should match the expected caption
+        JobQueueEntryParameter.FindSet();
+        repeat
+            Assert.AreEqual(JobQueueEntryParameterMgt.GetParameterTypeCaption(JobQueueEntryParameter), GetJqeParamCaption(JobQueueEntryParameter), 'The caption for the parameter type should match the expected caption');
+        until JobQueueEntryParameter.Next() = 0;
+    end;
+
+    local procedure GetJqeParamCaption(JobQueueEntryParam: Record "ADD_JobQueueEntryParameter"): Text[100]
+    begin
+        case JobQueueEntryParam."Parameter Type" of
+            JobQueueEntryParam.FieldNo("BigInteger Value"):
+                exit('BigInteger');
+            JobQueueEntryParam.FieldNo("Boolean Value"):
+                exit('Boolean');
+            JobQueueEntryParam.FieldNo("Code Value"):
+                exit('Code');
+            JobQueueEntryParam.FieldNo("Date Value"):
+                exit('Date');
+            JobQueueEntryParam.FieldNo("DateFormula Value"):
+                exit('DateFormula');
+            JobQueueEntryParam.FieldNo("DateTime Value"):
+                exit('DateTime');
+            JobQueueEntryParam.FieldNo("Decimal Value"):
+                exit('Decimal');
+            JobQueueEntryParam.FieldNo("Duration Value"):
+                exit('Duration');
+            JobQueueEntryParam.FieldNo("Guid Value"):
+                exit('GUID');
+            JobQueueEntryParam.FieldNo("Integer Value"):
+                exit('Integer');
+            JobQueueEntryParam.FieldNo("Text Value"):
+                exit('Text');
+            JobQueueEntryParam.FieldNo("Time Value"):
+                exit('Time');
+        end;
+    end;
+
     local procedure GetJqeParamTemplCaption(JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"): Text[100]
     begin
         case JobQueueEntryParamTemplate."Parameter Type" of
