@@ -588,6 +588,58 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         until JobQueueEntryParameter.Next() = 0;
     end;
 
+    [Test]
+    procedure GetDefaultParameterValue_ReturnsCorrectValue()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ParamValue: Variant;
+        ExpectedParamValue: Variant;
+    begin
+        // [SCENARIO] GetDefaultParameterValue should return the correct value for a parameter
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry and a parameter template with all possible parameter types
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithAllPossParamType(JobQueueEntry, JobQueueEntryParamTemplate);
+
+        // [WHEN] GetDefaultParameterValue is called for the parameter
+        // [THEN] The correct value should be returned
+        JobQueueEntryParamTemplate.FindSet();
+        repeat
+            ParamValue := JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate);
+            ExpectedParamValue := GetDefaultParameterTemplValue(JobQueueEntryParamTemplate."Parameter Type");
+            AssertVariantsAreEqual(ExpectedParamValue, ParamValue, 'The returned parameter value should match the expected value');
+        until JobQueueEntryParamTemplate.Next() = 0;
+    end;
+
+    [Test]
+    procedure GetDefaultParameterValueAsText_ReturnsCorrectValue()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ParamValueAsText: Text;
+        ExpectedParamValueAsText: Text;
+    begin
+        // [SCENARIO] GetDefaultParameterValueAsText should return the correct value for a parameter
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry and a parameter template with all possible parameter types
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithAllPossParamType(JobQueueEntry, JobQueueEntryParamTemplate);
+
+        // [WHEN] GetDefaultParameterValue is called for the parameter
+        // [THEN] The correct value should be returned
+        JobQueueEntryParamTemplate.FindSet();
+        repeat
+            ParamValueAsText := JobQueueEntryParameterMgt.GetDefaultParameterValueAsText(JobQueueEntryParamTemplate);
+            ExpectedParamValueAsText := Format(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate));
+            Assert.AreEqual(ExpectedParamValueAsText, ParamValueAsText, 'The returned parameter value as text should match the expected value as text');
+        until JobQueueEntryParamTemplate.Next() = 0;
+    end;
+
     local procedure GetJqeParamCaption(JobQueueEntryParam: Record "ADD_JobQueueEntryParameter"): Text[100]
     begin
         case JobQueueEntryParam."Parameter Type" of
@@ -802,94 +854,94 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParamTemplate."Text Value" := TextVal;
     end;
 
-    local procedure AssertVariantsAreEqual(var CurrValue: Variant; var ExpectedValue: Variant; Msg: Text)
+    local procedure AssertVariantsAreEqual(var ExpectedValue: Variant; var CurrValue: Variant; Msg: Text)
     begin
         case True of
             CurrValue.IsBigInteger():
-                AssertBigIntegersAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertBigIntegersAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsBoolean():
-                AssertBooleansAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertBooleansAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsCode():
-                AssertCodesAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertCodesAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsDate():
-                AssertDatesAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertDatesAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsDateFormula():
-                AssertDateFormulasAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertDateFormulasAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsDateTime():
-                AssertDateTimesAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertDateTimesAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsDecimal():
-                AssertDecimalsAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertDecimalsAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsDuration():
-                AssertDurationsAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertDurationsAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsGuid():
-                AssertGuidsAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertGuidsAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsInteger():
-                AssertIntegersAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertIntegersAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsText():
-                AssertTextsAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertTextsAreEqual(ExpectedValue, CurrValue, Msg);
             CurrValue.IsTime():
-                AssertTimesAreEqual(CurrValue, ExpectedValue, Msg);
+                AssertTimesAreEqual(ExpectedValue, CurrValue, Msg);
         end;
     end;
 
-    local procedure AssertBigIntegersAreEqual(Value: BigInteger; ExpectedValue: BigInteger; Msg: Text)
+    local procedure AssertBigIntegersAreEqual(ExpectedValue: BigInteger; CurrValue: BigInteger; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertBooleansAreEqual(Value: Boolean; ExpectedValue: Boolean; Msg: Text)
+    local procedure AssertBooleansAreEqual(ExpectedValue: Boolean; CurrValue: Boolean; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertCodesAreEqual(Value: Code[100]; ExpectedValue: Code[100]; Msg: Text)
+    local procedure AssertCodesAreEqual(ExpectedValue: Code[100]; CurrValue: Code[100]; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertDatesAreEqual(Value: Date; ExpectedValue: Date; Msg: Text)
+    local procedure AssertDatesAreEqual(ExpectedValue: Date; CurrValue: Date; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertDateFormulasAreEqual(Value: DateFormula; ExpectedValue: DateFormula; Msg: Text)
+    local procedure AssertDateFormulasAreEqual(ExpectedValue: DateFormula; CurrValue: DateFormula; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertDateTimesAreEqual(Value: DateTime; ExpectedValue: DateTime; Msg: Text)
+    local procedure AssertDateTimesAreEqual(ExpectedValue: DateTime; CurrValue: DateTime; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertDecimalsAreEqual(Value: Decimal; ExpectedValue: Decimal; Msg: Text)
+    local procedure AssertDecimalsAreEqual(ExpectedValue: Decimal; CurrValue: Decimal; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertDurationsAreEqual(Value: Duration; ExpectedValue: Duration; Msg: Text)
+    local procedure AssertDurationsAreEqual(ExpectedValue: Duration; CurrValue: Duration; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertGuidsAreEqual(Value: Guid; ExpectedValue: Guid; Msg: Text)
+    local procedure AssertGuidsAreEqual(ExpectedValue: Guid; CurrValue: Guid; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertIntegersAreEqual(Value: Integer; ExpectedValue: Integer; Msg: Text)
+    local procedure AssertIntegersAreEqual(ExpectedValue: Integer; CurrValue: Integer; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertTextsAreEqual(Value: Text; ExpectedValue: Text; Msg: Text)
+    local procedure AssertTextsAreEqual(ExpectedValue: Text; CurrValue: Text; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
-    local procedure AssertTimesAreEqual(Value: Time; ExpectedValue: Time; Msg: Text)
+    local procedure AssertTimesAreEqual(ExpectedValue: Time; CurrValue: Time; Msg: Text)
     begin
-        Assert.AreEqual(Value, ExpectedValue, Msg);
+        Assert.AreEqual(ExpectedValue, CurrValue, Msg);
     end;
 
 
