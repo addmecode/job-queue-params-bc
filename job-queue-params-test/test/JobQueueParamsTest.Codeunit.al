@@ -537,16 +537,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
         JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
-        JobQueueEntryId: Guid;
         ParamValue: Variant;
         ExpectedParamValue: Variant;
-        BigIntegerValue: BigInteger;
     begin
         // [SCENARIO] GetParameterValue should return the correct value for a parameter
         Initialize();
 
         // [GIVEN] A Job Queue Entry with a parameter template and a parameter
-        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry);
         CreateJqeParamTemplWithAllPossParamType(JobQueueEntry, JobQueueEntryParamTemplate);
         JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
 
@@ -557,7 +555,36 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         repeat
             ParamValue := JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter);
             ExpectedParamValue := GetDefaultParameterTemplValue(JobQueueEntryParameter."Parameter Type");
-            AssertVariantsAreEqual(ParamValue, ExpectedParamValue, 'The returned parameter value should match the expected value');
+            AssertVariantsAreEqual(ExpectedParamValue, ParamValue, 'The returned parameter value should match the expected value');
+        until JobQueueEntryParameter.Next() = 0;
+    end;
+
+    [Test]
+    procedure GetParameterValueAsText_ReturnsCorrectValue()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        ParamValueAsText: Text;
+        ExpectedParamValueAsText: Text;
+    begin
+        // [SCENARIO] GetParameterValue should return the correct value for a parameter
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry with a parameter template and a parameter
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithAllPossParamType(JobQueueEntry, JobQueueEntryParamTemplate);
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [WHEN] GetParameterValue is called for the parameter
+        // [THEN] The correct value should be returned
+        JobQueueEntryParameter.SetAutoCalcFields("Parameter Type");
+        JobQueueEntryParameter.FindSet();
+        repeat
+            ParamValueAsText := JobQueueEntryParameterMgt.GetParameterValueAsText(JobQueueEntryParameter);
+            ExpectedParamValueAsText := Format(JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter));
+            Assert.AreEqual(ExpectedParamValueAsText, ParamValueAsText, 'The returned parameter value as text should match the expected value as text');
         until JobQueueEntryParameter.Next() = 0;
     end;
 
@@ -686,7 +713,7 @@ codeunit 50140 "ADD_JobQueueParamsTest"
             JobQueueEntryParamTemplate.FieldNo("Duration Value"):
                 Exit(60);
             JobQueueEntryParamTemplate.FieldNo("Guid Value"):
-                Exit('10000000-0000-0000-0000-000000000000');
+                Exit('{10000000-0000-0000-0000-000000000000}');
             JobQueueEntryParamTemplate.FieldNo("Integer Value"):
                 Exit(100);
             JobQueueEntryParamTemplate.FieldNo("Text Value"):
