@@ -424,6 +424,77 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(ParamValueReturned, ParamValue, 'The returned parameter value is incorrect');
     end;
 
+    [Test]
+    procedure IsParamEditable_ReturnsTrue()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryId: Guid;
+        IsEditable: Boolean;
+    begin
+        // [SCENARIO] IsParamEditable should return true for a parameter when the Job Queue Entry is on hold
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry with a parameter
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'TestParam', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TestValue');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [GIVEN] Set the Job Queue Entry status to "On Hold"
+        JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
+        JobQueueEntry.Modify(false);
+
+        // [WHEN] IsParamEditable is called for the parameter
+        JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        JobQueueEntryParameter.FindFirst();
+        IsEditable := JobQueueEntryParameterMgt.IsParamEditable(JobQueueEntryParameter);
+
+        // [THEN] It should return true
+        Assert.IsTrue(IsEditable, 'The parameter should be editable when the Job Queue Entry is on hold');
+    end;
+
+    [Test]
+    procedure IsParamEditable_ReturnsFalse()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryId: Guid;
+        IsEditable: Boolean;
+        StatusesToTest: List of [Integer];
+        StatusIndex: Integer;
+    begin
+        // [SCENARIO] IsParamEditable should return false for a parameter when the Job Queue Entry is not on hold
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry with a parameter
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, 'TestParam', JobQueueEntryParamTemplate.FieldNo("Text Value"), 'TestValue');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [GIVEN] Prepare list of all statuses except "On Hold"
+        StatusesToTest.Add(JobQueueEntry.Status::Ready);
+        StatusesToTest.Add(JobQueueEntry.Status::"In Process");
+        StatusesToTest.Add(JobQueueEntry.Status::Error);
+        StatusesToTest.Add(JobQueueEntry.Status::Finished);
+
+        // [WHEN] IsParamEditable is called for each non-"On Hold" status
+        for StatusIndex := 1 to StatusesToTest.Count() do begin
+            JobQueueEntry.Status := StatusesToTest.Get(StatusIndex);
+            JobQueueEntry.Modify(false);
+
+            JobQueueEntryParameter.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+            JobQueueEntryParameter.FindFirst();
+            IsEditable := JobQueueEntryParameterMgt.IsParamEditable(JobQueueEntryParameter);
+
+            // [THEN] It should return false for all statuses except "On Hold"
+            Assert.IsFalse(IsEditable, StrSubstNo('The parameter should not be editable when the Job Queue Entry status is %1', JobQueueEntry.Status));
+        end;
+    end;
+
     local procedure CreateJobQueueEntryWithParameters(var JobQueueEntry: Record "Job Queue Entry"; ParameterCount: Integer): Guid
     var
         JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
