@@ -530,6 +530,37 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         until JobQueueEntryParameter.Next() = 0;
     end;
 
+    [Test]
+    procedure GetParameterValue_ReturnsCorrectValue()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryId: Guid;
+        ParamValue: Variant;
+        ExpectedParamValue: Variant;
+        BigIntegerValue: BigInteger;
+    begin
+        // [SCENARIO] GetParameterValue should return the correct value for a parameter
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry with a parameter template and a parameter
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithAllPossParamType(JobQueueEntry, JobQueueEntryParamTemplate);
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+
+        // [WHEN] GetParameterValue is called for the parameter
+        // [THEN] The correct value should be returned
+        JobQueueEntryParameter.SetAutoCalcFields("Parameter Type");
+        JobQueueEntryParameter.FindSet();
+        repeat
+            ParamValue := JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter);
+            ExpectedParamValue := GetDefaultParameterTemplValue(JobQueueEntryParameter."Parameter Type");
+            AssertVariantsAreEqual(ParamValue, ExpectedParamValue, 'The returned parameter value should match the expected value');
+        until JobQueueEntryParameter.Next() = 0;
+    end;
+
     local procedure GetJqeParamCaption(JobQueueEntryParam: Record "ADD_JobQueueEntryParameter"): Text[100]
     begin
         case JobQueueEntryParam."Parameter Type" of
@@ -627,40 +658,42 @@ codeunit 50140 "ADD_JobQueueParamsTest"
 
     local procedure CreateJqeParamTempl(var JobQueueEntry: Record "Job Queue Entry"; var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; NewParamName: Text[100]; ParamType: Integer)
     var
-        Any: Codeunit Any;
-        DateForm: Text;
         ParamValue: Variant;
+    begin
+        ParamValue := GetDefaultParameterTemplValue(ParamType);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, NewParamName, ParamType, ParamValue);
+    end;
+
+    local procedure GetDefaultParameterTemplValue(ParamType: Integer): Variant
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
     begin
         case ParamType of
             JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
-                ParamValue := Any.IntegerInRange(1, 1000000);
+                Exit(1000000);
             JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
-                ParamValue := true;
+                Exit(true);
             JobQueueEntryParamTemplate.FieldNo("Code Value"):
-                ParamValue := 'TEST CODE';
+                Exit('SAMPLE CODE');
             JobQueueEntryParamTemplate.FieldNo("Date Value"):
-                ParamValue := Today;
+                Exit(DMY2Date(01, 01, 2025));
             JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
-                begin
-                    DateForm := 'CM+' + Format(Any.IntegerInRange(1, 31)) + 'D';
-                    ParamValue := DateForm;
-                end;
+                Exit('+1D');
             JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
-                ParamValue := CurrentDateTime;
+                Exit(CreateDateTime(DMY2Date(01, 01, 2025), 115900T));
             JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
-                ParamValue := Any.DecimalInRange(10, 2);
+                Exit(0.5);
             JobQueueEntryParamTemplate.FieldNo("Duration Value"):
-                ParamValue := Any.IntegerInRange(1, 100);
+                Exit(60);
             JobQueueEntryParamTemplate.FieldNo("Guid Value"):
-                ParamValue := CreateGuid();
+                Exit('10000000-0000-0000-0000-000000000000');
             JobQueueEntryParamTemplate.FieldNo("Integer Value"):
-                ParamValue := Any.IntegerInRange(1, 1000);
+                Exit(100);
             JobQueueEntryParamTemplate.FieldNo("Text Value"):
-                ParamValue := 'Sample Text';
+                Exit('Sample Text');
             JobQueueEntryParamTemplate.FieldNo("Time Value"):
-                ParamValue := DT2Time(CurrentDateTime);
+                Exit(115900T);
         end;
-        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, NewParamName, ParamType, ParamValue);
     end;
 
     local procedure CreateJqeParamTemplWithGivenValue(var JobQueueEntry: Record "Job Queue Entry"; var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; NewParamName: Text[100]; ParamType: Integer; ParamValue: Variant)
@@ -741,6 +774,98 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParamTemplate."Parameter Type" := JobQueueEntryParamTemplate.FieldNo("Text Value");
         JobQueueEntryParamTemplate."Text Value" := TextVal;
     end;
+
+    local procedure AssertVariantsAreEqual(var CurrValue: Variant; var ExpectedValue: Variant; Msg: Text)
+    begin
+        case True of
+            CurrValue.IsBigInteger():
+                AssertBigIntegersAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsBoolean():
+                AssertBooleansAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsCode():
+                AssertCodesAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsDate():
+                AssertDatesAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsDateFormula():
+                AssertDateFormulasAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsDateTime():
+                AssertDateTimesAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsDecimal():
+                AssertDecimalsAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsDuration():
+                AssertDurationsAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsGuid():
+                AssertGuidsAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsInteger():
+                AssertIntegersAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsText():
+                AssertTextsAreEqual(CurrValue, ExpectedValue, Msg);
+            CurrValue.IsTime():
+                AssertTimesAreEqual(CurrValue, ExpectedValue, Msg);
+        end;
+    end;
+
+    local procedure AssertBigIntegersAreEqual(Value: BigInteger; ExpectedValue: BigInteger; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertBooleansAreEqual(Value: Boolean; ExpectedValue: Boolean; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertCodesAreEqual(Value: Code[100]; ExpectedValue: Code[100]; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertDatesAreEqual(Value: Date; ExpectedValue: Date; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertDateFormulasAreEqual(Value: DateFormula; ExpectedValue: DateFormula; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertDateTimesAreEqual(Value: DateTime; ExpectedValue: DateTime; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertDecimalsAreEqual(Value: Decimal; ExpectedValue: Decimal; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertDurationsAreEqual(Value: Duration; ExpectedValue: Duration; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertGuidsAreEqual(Value: Guid; ExpectedValue: Guid; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertIntegersAreEqual(Value: Integer; ExpectedValue: Integer; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertTextsAreEqual(Value: Text; ExpectedValue: Text; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+    local procedure AssertTimesAreEqual(Value: Time; ExpectedValue: Time; Msg: Text)
+    begin
+        Assert.AreEqual(Value, ExpectedValue, Msg);
+    end;
+
+
 
     // local procedure GetJqeParamTemplParamValueFieldRef(var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; var TemplFieldRef: FieldRef)
     // var
