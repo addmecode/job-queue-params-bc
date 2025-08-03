@@ -207,7 +207,7 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
     begin
-        exit(JobQueueEntryMgt.GetDefaultParameterValue(Rec));
+        exit(JobQueueEntryMgt.GetDefaultParameterValueAsText(Rec));
     end;
 
     procedure GetTemplParameterTypeCaption(): Text

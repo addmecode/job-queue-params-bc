@@ -1,7 +1,5 @@
 namespace Addmecode.JobQueueParams;
 using System.Threading;
-using Microsoft.Projects.Project.Job;
-using Microsoft.Projects.Project.Archive;
 
 codeunit 50100 "ADD_JobQueueEntryParameterMgt"
 {
@@ -40,14 +38,10 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         RecRefParam.Insert();
     end;
 
-
-
     procedure DeleteAllJobQueueEntryParams(JQE: Record "Job Queue Entry")
     var
         JQEParam: Record "ADD_JobQueueEntryParameter";
     begin
-        if JQE."Object ID to Run" = 0 then
-            exit;
         JQEParam.SetRange("Job Queue Entry ID", JQE.ID);
         JQEParam.DeleteAll(true);
     end;
@@ -56,8 +50,6 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
     var
         JQEParam: Record "ADD_JobQueueEntryParameter";
     begin
-        if JQE."Object ID to Run" = 0 then
-            exit;
         if (JQE."Object ID to Run" = xJQE."Object ID to Run") and (JQE."Object Type to Run" = xJQE."Object Type to Run") then
             exit;
 
@@ -65,7 +57,7 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         CreateAllJobQueueEntryParamsFromTempl(JQE, SetDefValue);
     end;
 
-    internal procedure CreateJqeParamTemplIfNotExists(JqeTemplToCreate: Record ADD_JobQueueEntryParamTemplate; SetDefValueForExistingJqe: Boolean)
+    procedure CreateJqeParamTemplIfNotExists(JqeTemplToCreate: Record ADD_JobQueueEntryParamTemplate; SetDefValueForExistingJqe: Boolean)
     var
         JobQueueEntryParamTempl: Record ADD_JobQueueEntryParamTemplate;
     begin
@@ -75,7 +67,7 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         CreateJqeParamFromNewTempForExistingJqe(JqeTemplToCreate, SetDefValueForExistingJqe);
     end;
 
-    internal procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Variant
+    procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Variant
     var
         JqueParam: Record "ADD_JobQueueEntryParameter";
     begin
@@ -128,14 +120,19 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         exit(FieldRef.Value());
     end;
 
-    procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    procedure GetDefaultParameterValueAsText(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    begin
+        exit(Format(GetDefaultParameterValue(JqeParamTempl)));
+    end;
+
+    procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Variant
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
         RecRef.GetTable(JqeParamTempl);
         FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
-        exit(Format(FieldRef.Value()));
+        exit(FieldRef.Value());
     end;
 
     procedure ValidateParameterType(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate)
