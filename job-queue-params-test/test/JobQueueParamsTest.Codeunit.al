@@ -640,6 +640,82 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         until JobQueueEntryParamTemplate.Next() = 0;
     end;
 
+    procedure ModifyJobQueueEntryParameter_JobQueueEntryIsOnHold_DontThrowError()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryId: Guid;
+        ParamName: Text[100];
+        ModParamValue: Text[100];
+    begin
+        // [SCENARIO] Modify Job Queue Entry Parameter should not throw an error if the Job Queue Entry is OnHold
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template and a Job Queue Entry with Status = OnHold and with parameters from this template
+        ParamName := 'Test Param';
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, ParamName, JobQueueEntryParamTemplate.FieldNo("Text Value"), 'Test Value');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+        JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
+        JobQueueEntry.Modify(false);
+
+        // [WHEN] Modify Job Queue Entry Parameter is called
+        ModParamValue := 'Modified Value';
+        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
+        JobQueueEntryParameter."Text Value" := 'Modified Value';
+        JobQueueEntryParameter.Modify(True);
+
+        // [THEN] The Job Queue Entry Parameter should be modified without error
+        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
+        Assert.AreEqual(ModParamValue, JobQueueEntryParameter."Text Value", 'The Job Queue Entry Parameter should be modified successfully when the Job Queue Entry is On Hold');
+    end;
+
+    [Test]
+    procedure ModifyJobQueueEntryParameter_JobQueueEntryIsNotOnHold_ThrowError()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryId: Guid;
+        ParamName: Text[100];
+        ModParamValue: Text[100];
+        StatusesToTest: List of [Integer];
+        StatusIndex: Integer;
+    begin
+        // [SCENARIO] Modify Job Queue Entry Parameter should throw an error if the Job Queue Entry is not OnHold
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template and a Job Queue Entry with parameters from this template
+        ParamName := 'Test Param';
+        ModParamValue := 'Modified Value';
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, ParamName, JobQueueEntryParamTemplate.FieldNo("Text Value"), 'Test Value');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+        commit();
+
+        // [GIVEN] Prepare list of all statuses except "On Hold"
+        StatusesToTest.Add(JobQueueEntry.Status::Ready);
+        StatusesToTest.Add(JobQueueEntry.Status::"In Process");
+        StatusesToTest.Add(JobQueueEntry.Status::Error);
+        StatusesToTest.Add(JobQueueEntry.Status::Finished);
+
+        // [WHEN] IsParamEditable is called for each non-"On Hold" status
+        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
+        for StatusIndex := 1 to StatusesToTest.Count() do begin
+            // [GIVEN] Job Queue Entry with status not "On Hold"
+            JobQueueEntry.Status := StatusesToTest.Get(StatusIndex);
+            JobQueueEntry.Modify(false);
+
+            JobQueueEntryParameter."Text Value" := ModParamValue;
+            // [THEN] An error should be thrown
+            asserterror JobQueueEntryParameter.Modify(True);
+            Assert.ExpectedErrorCode('TestField');
+        end;
+    end;
+
     local procedure GetJqeParamCaption(JobQueueEntryParam: Record "ADD_JobQueueEntryParameter"): Text[100]
     begin
         case JobQueueEntryParam."Parameter Type" of
