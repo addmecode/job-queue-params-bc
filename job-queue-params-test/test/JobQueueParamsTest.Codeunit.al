@@ -23,6 +23,423 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     end;
 
     [Test]
+    procedure CreateJobQueEntrParamTemplIsNotPossibleFromListPage()
+    begin
+        //TODO
+        // [SCENARIO] Creating Job Queue Entry Parameter Template from List Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template List Page
+
+        // [THEN] Creating a Job Queue Entry Parameter Template from the List Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamTemplIsNotPossibleFromListPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Template from List Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template List Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Template from the List Page should not be possible
+    end;
+
+    [Test]
+    procedure CreateJobQueEntrParamTemplIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Creating Job Queue Entry Parameter Template from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page
+
+        // [THEN] Creating a Job Queue Entry Parameter Template from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamTemplDescIsPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Template Description from Card Page should be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Template Description from the Card Page should be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamTemplValueIsPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Template Value from Card Page should be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Template Value from the Card Page should be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamTemplObjTypeIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Template Object Type from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Template Object Type from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamTemplObjIDIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Template Object ID from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Template Object ID from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamTemplParamNameIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Template Parameter Name from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Template Parameter Name from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamTemplParamTypeIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Template Parameter Type from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Template Parameter Type from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure CreateJobQueEntrParamIsNotPossibleFromListPage()
+    begin
+        //TODO
+        // [SCENARIO] Creating Job Queue Entry Parameter from List Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter List Page
+
+        // [THEN] Creating a Job Queue Entry Parameter from the List Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamIsNotPossibleFromListPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter from List Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter List Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter from the List Page should not be possible
+    end;
+
+    [Test]
+    procedure CreateJobQueEntrParamIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Creating Job Queue Entry Parameter from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Card Page
+
+        // [THEN] Creating a Job Queue Entry Parameter from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamDescIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Description from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Description from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamValueIsPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Value from Card Page should be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Value from the Card Page should be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamObjTypeIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Object Type from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Object Type from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamObjIDIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Object ID from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Object ID from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamParamNameIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Parameter Name from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Parameter Name from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamParamTypeIsNotPossibleFromCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter Parameter Type from Card Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Card Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter Parameter Type from the Card Page should not be possible
+    end;
+
+    [Test]
+    procedure JobQueEntrParamSubformPageIsVisibleOnJobQueEntryCardPage()
+    begin
+        //TODO
+        // [SCENARIO] Job Queue Entry Parameter Subform Page should be visible on Job Queue Entry Card Page
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry
+
+        // [WHEN] Job Queue Entry Card Page is opened
+
+        // [THEN] The Job Queue Entry Parameter Subform Page should be visible
+    end;
+
+    [Test]
+    procedure JobQueEntrParamSubformPageDisplayOnlyParametersRelatedToTheJobQue()
+    begin
+        //TODO
+        // [SCENARIO] Job Queue Entry Parameter Subform Page should display only parameters related to the Job Queue
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry
+
+        // [WHEN] Job Queue Entry Card Page is opened
+
+        // [THEN] The Job Queue Entry Parameter Subform displays only parameters related to the Job Queue Entry
+    end;
+
+    [Test]
+    procedure ModifyJobQueEntrParamIsNotPossibleFromSubformPage()
+    begin
+        //TODO
+        // [SCENARIO] Modifying Job Queue Entry Parameter from Subform Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Subform Page
+
+        // [THEN] Modifying a Job Queue Entry Parameter from the Subform Page should not be possible
+    end;
+
+    [Test]
+    procedure CreateJobQueEntrParamIsNotPossibleFromSubformPage()
+    begin
+        //TODO
+        // [SCENARIO] Creating Job Queue Entry Parameter from Subform Page should not be possible
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Subform Page
+
+        // [THEN] Creating a Job Queue Entry Parameter from the Subform Page should not be possible
+    end;
+
+    [Test]
+    procedure JobQueEntryParamsAreCreatedWhenTemplExistsAndJobQueEntryIsCreated()
+    begin
+        // [SCENARIO] Job Queue Entry Parameters should be created when a Job Queue Entry is created with an existing template
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template exists
+
+        // [WHEN] A Job Queue Entry is created with this template
+
+        // [THEN] Job Queue Entry Parameters should be created
+    end;
+
+    [Test]
+    procedure JobQueEntryParamsAreNotCreatedWhenTemplDoesNotExistAndJobQueEntryIsCreated()
+    begin
+        // [SCENARIO] Job Queue Entry Parameters should not be created when a Job Queue Entry is created without an existing template
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template does not exist
+
+        // [WHEN] A Job Queue Entry is created with this template
+
+        // [THEN] Job Queue Entry Parameters should not be created
+    end;
+
+    [Test]
+    procedure JobQueEntryParamsAreDeletedWhenJobQueEntryIsDeleted()
+    begin
+        // [SCENARIO] Job Queue Entry Parameters should be deleted when a Job Queue Entry is deleted
+        Initialize();
+        // [GIVEN] A Job Queue Entry
+
+        // [GIVEN] Job Queue Entry Parameters exist for this Job Queue Entry
+
+        // [WHEN] The Job Queue Entry is deleted
+
+        // [THEN] Job Queue Entry Parameters should be deleted
+    end;
+
+    [Test]
+    procedure OverwriteJobQueEntryParamsWhenJobQueEntryObjIdIsChanged()
+    begin
+        // [SCENARIO] Job Queue Entry Parameters should be overwritten when the Object ID of a Job Queue Entry is changed   
+        Initialize();
+        // [GIVEN] A Job Queue Entry
+
+        // [GIVEN] Job Queue Entry Parameters exist for this Job Queue Entry
+
+        // [GIVEN] A Job Queue Entry Parameter Template exists for the new Object ID
+
+        // [WHEN] The Object ID of the Job Queue Entry is changed
+
+        // [THEN] Job Queue Entry Parameters should be overwritten with the ones for a new Object ID
+    end;
+
+    [Test]
+    procedure OverwriteJobQueEntryParamsWhenJobQueEntryObjTypeIsChanged()
+    begin
+        // [SCENARIO] Job Queue Entry Parameters should be overwritten when the Object ID of a Job Queue Entry is changed   
+        Initialize();
+        // [GIVEN] A Job Queue Entry
+
+        // [GIVEN] Job Queue Entry Parameters exist for this Job Queue Entry
+
+        // [GIVEN] A Job Queue Entry Parameter Template exists for the new Object Type
+
+        // [WHEN] The Object Type of the Job Queue Entry is changed
+
+        // [THEN] Job Queue Entry Parameters should be overwritten with the ones for a new Object Type
+    end;
+
+    [Test]
+    procedure ModifyJobQueueEntryParameterWhenJobQueueEntryIsOnHoldIsPossible()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryId: Guid;
+        ParamName: Text[100];
+        ModParamValue: Text[100];
+    begin
+        // [SCENARIO] Modify Job Queue Entry Parameter should not throw an error if the Job Queue Entry is OnHold
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template and a Job Queue Entry with Status = OnHold and with parameters from this template
+        ParamName := 'Test Param';
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, ParamName, JobQueueEntryParamTemplate.FieldNo("Text Value"), 'Test Value');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+        JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
+        JobQueueEntry.Modify(false);
+
+        // [WHEN] Modify Job Queue Entry Parameter is called
+        ModParamValue := 'Modified Value';
+        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
+        JobQueueEntryParameter."Text Value" := 'Modified Value';
+        JobQueueEntryParameter.Modify(True);
+
+        // [THEN] The Job Queue Entry Parameter should be modified without error
+        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
+        Assert.AreEqual(ModParamValue, JobQueueEntryParameter."Text Value", 'The Job Queue Entry Parameter should be modified successfully when the Job Queue Entry is On Hold');
+    end;
+
+    [Test]
+    procedure ModifyJobQueueEntryParameterWhenJobQueueEntryIsNotOnHoldIsNotPossible()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryId: Guid;
+        ParamName: Text[100];
+        ModParamValue: Text[100];
+        StatusesToTest: List of [Integer];
+        StatusIndex: Integer;
+    begin
+        // [SCENARIO] Modify Job Queue Entry Parameter should throw an error if the Job Queue Entry is not OnHold
+        Initialize();
+
+        // [GIVEN] A Job Queue Entry Parameter Template and a Job Queue Entry with parameters from this template
+        ParamName := 'Test Param';
+        ModParamValue := 'Modified Value';
+        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, ParamName, JobQueueEntryParamTemplate.FieldNo("Text Value"), 'Test Value');
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
+        commit();
+
+        // [GIVEN] Prepare list of all statuses except "On Hold"
+        StatusesToTest.Add(JobQueueEntry.Status::Ready);
+        StatusesToTest.Add(JobQueueEntry.Status::"In Process");
+        StatusesToTest.Add(JobQueueEntry.Status::Error);
+        StatusesToTest.Add(JobQueueEntry.Status::Finished);
+
+        // [WHEN] IsParamEditable is called for each non-"On Hold" status
+        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
+        for StatusIndex := 1 to StatusesToTest.Count() do begin
+            // [GIVEN] Job Queue Entry with status not "On Hold"
+            JobQueueEntry.Status := StatusesToTest.Get(StatusIndex);
+            JobQueueEntry.Modify(false);
+
+            JobQueueEntryParameter."Text Value" := ModParamValue;
+            // [THEN] An error should be thrown
+            asserterror JobQueueEntryParameter.Modify(True);
+            Assert.ExpectedErrorCode('TestField');
+        end;
+    end;
+
+    [Test]
     procedure DeleteAllJobQueueEntryParams_DeletesAllParameters()
     var
         JobQueueEntry: Record "Job Queue Entry";
@@ -638,82 +1055,6 @@ codeunit 50140 "ADD_JobQueueParamsTest"
             ExpectedParamValueAsText := Format(JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate));
             Assert.AreEqual(ExpectedParamValueAsText, ParamValueAsText, 'The returned parameter value as text should match the expected value as text');
         until JobQueueEntryParamTemplate.Next() = 0;
-    end;
-
-    procedure ModifyJobQueueEntryParameter_JobQueueEntryIsOnHold_DontThrowError()
-    var
-        JobQueueEntry: Record "Job Queue Entry";
-        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
-        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
-        JobQueueEntryId: Guid;
-        ParamName: Text[100];
-        ModParamValue: Text[100];
-    begin
-        // [SCENARIO] Modify Job Queue Entry Parameter should not throw an error if the Job Queue Entry is OnHold
-        Initialize();
-
-        // [GIVEN] A Job Queue Entry Parameter Template and a Job Queue Entry with Status = OnHold and with parameters from this template
-        ParamName := 'Test Param';
-        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
-        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, ParamName, JobQueueEntryParamTemplate.FieldNo("Text Value"), 'Test Value');
-        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
-        JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
-        JobQueueEntry.Modify(false);
-
-        // [WHEN] Modify Job Queue Entry Parameter is called
-        ModParamValue := 'Modified Value';
-        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
-        JobQueueEntryParameter."Text Value" := 'Modified Value';
-        JobQueueEntryParameter.Modify(True);
-
-        // [THEN] The Job Queue Entry Parameter should be modified without error
-        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
-        Assert.AreEqual(ModParamValue, JobQueueEntryParameter."Text Value", 'The Job Queue Entry Parameter should be modified successfully when the Job Queue Entry is On Hold');
-    end;
-
-    [Test]
-    procedure ModifyJobQueueEntryParameter_JobQueueEntryIsNotOnHold_ThrowError()
-    var
-        JobQueueEntry: Record "Job Queue Entry";
-        JobQueueEntryParameter: Record "ADD_JobQueueEntryParameter";
-        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
-        JobQueueEntryId: Guid;
-        ParamName: Text[100];
-        ModParamValue: Text[100];
-        StatusesToTest: List of [Integer];
-        StatusIndex: Integer;
-    begin
-        // [SCENARIO] Modify Job Queue Entry Parameter should throw an error if the Job Queue Entry is not OnHold
-        Initialize();
-
-        // [GIVEN] A Job Queue Entry Parameter Template and a Job Queue Entry with parameters from this template
-        ParamName := 'Test Param';
-        ModParamValue := 'Modified Value';
-        JobQueueEntryId := CreateJobQueueEntryWithoutParameters(JobQueueEntry);
-        CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, ParamName, JobQueueEntryParamTemplate.FieldNo("Text Value"), 'Test Value');
-        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, true);
-        commit();
-
-        // [GIVEN] Prepare list of all statuses except "On Hold"
-        StatusesToTest.Add(JobQueueEntry.Status::Ready);
-        StatusesToTest.Add(JobQueueEntry.Status::"In Process");
-        StatusesToTest.Add(JobQueueEntry.Status::Error);
-        StatusesToTest.Add(JobQueueEntry.Status::Finished);
-
-        // [WHEN] IsParamEditable is called for each non-"On Hold" status
-        JobQueueEntryParameter.Get(JobQueueEntryId, ParamName);
-        for StatusIndex := 1 to StatusesToTest.Count() do begin
-            // [GIVEN] Job Queue Entry with status not "On Hold"
-            JobQueueEntry.Status := StatusesToTest.Get(StatusIndex);
-            JobQueueEntry.Modify(false);
-
-            JobQueueEntryParameter."Text Value" := ModParamValue;
-            // [THEN] An error should be thrown
-            asserterror JobQueueEntryParameter.Modify(True);
-            Assert.ExpectedErrorCode('TestField');
-        end;
     end;
 
     local procedure GetJqeParamCaption(JobQueueEntryParam: Record "ADD_JobQueueEntryParameter"): Text[100]
