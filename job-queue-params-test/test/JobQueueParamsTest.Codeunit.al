@@ -69,7 +69,6 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     var
         JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
     begin
-        //TODO
         // [SCENARIO] Creating Job Queue Entry Parameter Template from Card Page should not be possible
         Initialize();
 
@@ -87,18 +86,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamTemplDescIsPossibleFromCardPage()
     var
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Template Description from Card Page should be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template
-        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
-
-        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template
-        JobQueueEntrParamTemplateCard.OpenEdit();
-        JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template in edit mode
+        CreateSampleTemplAndOpenItInTemplCardPageEditMode(JobQueueEntrParamTemplateCard);
 
         // [WHEN] Attempting to edit Parameter Description on the card page
         // [THEN] Modifying a Job Queue Entry Parameter Template Parameter Description from the Card Page should be possible
@@ -110,18 +105,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamTemplValueIsPossibleFromCardPage()
     var
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Template Value from Card Page should be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template
-        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
-
-        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template
-        JobQueueEntrParamTemplateCard.OpenEdit();
-        JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template in edit mode
+        CreateSampleTemplAndOpenItInTemplCardPageEditMode(JobQueueEntrParamTemplateCard);
 
         // [WHEN] Attempting to edit Parameter Value on the card page
         // [THEN] Modifying a Job Queue Entry Parameter Template Parameter Value from the Card Page should be possible
@@ -134,18 +125,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamTemplObjTypeIsNotPossibleFromCardPage()
     var
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Template Object Type from Card Page should not be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template
-        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
-
-        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template
-        JobQueueEntrParamTemplateCard.OpenEdit();
-        JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template in edit mode
+        CreateSampleTemplAndOpenItInTemplCardPageEditMode(JobQueueEntrParamTemplateCard);
 
         // [WHEN] Attempting to edit Object Type on the card page
         // [THEN] Modifying a Job Queue Entry Parameter Template Object Type from the Card Page should not be possible
@@ -157,18 +144,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamTemplObjIDIsNotPossibleFromCardPage()
     var
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Template Object ID from Card Page should not be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template
-        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
-
-        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template
-        JobQueueEntrParamTemplateCard.OpenEdit();
-        JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template in edit mode
+        CreateSampleTemplAndOpenItInTemplCardPageEditMode(JobQueueEntrParamTemplateCard);
 
         // [WHEN] Attempting to edit Object ID on the card page
         // [THEN] Modifying a Job Queue Entry Parameter Template Object ID from the Card Page should not be possible
@@ -180,18 +163,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamTemplParamNameIsNotPossibleFromCardPage()
     var
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Template Parameter Name from Card Page should not be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template
-        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
-
-        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template
-        JobQueueEntrParamTemplateCard.OpenEdit();
-        JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template in edit mode
+        CreateSampleTemplAndOpenItInTemplCardPageEditMode(JobQueueEntrParamTemplateCard);
 
         // [WHEN] Attempting to edit Parameter Name on the card page
         // [THEN] Modifying a Job Queue Entry Parameter Template Parameter Name from the Card Page should not be possible
@@ -203,18 +182,14 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamTemplParamTypeIsNotPossibleFromCardPage()
     var
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
         JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Template Parameter Type from Card Page should not be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template
-        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
-
-        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template
-        JobQueueEntrParamTemplateCard.OpenEdit();
-        JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
+        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template in edit mode
+        CreateSampleTemplAndOpenItInTemplCardPageEditMode(JobQueueEntrParamTemplateCard);
 
         // [WHEN] Attempting to edit Parameter Type on the card page
         // [THEN] Modifying a Job Queue Entry Parameter Template Parameter Type from the Card Page should not be possible
@@ -1462,6 +1437,15 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     local procedure AssertTimesAreEqual(ExpectedValue: Time; CurrValue: Time; Msg: Text)
     begin
         Assert.AreEqual(ExpectedValue, CurrValue, Msg);
+    end;
+
+    local procedure CreateSampleTemplAndOpenItInTemplCardPageEditMode(var JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard)
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+    begin
+        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
+        JobQueueEntrParamTemplateCard.OpenEdit();
+        JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
     end;
 
 
