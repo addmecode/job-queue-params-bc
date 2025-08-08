@@ -24,26 +24,41 @@ codeunit 50140 "ADD_JobQueueParamsTest"
 
     [Test]
     procedure CreateJobQueEntrParamTemplIsNotPossibleFromListPage()
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntrParamTemplates: TestPage "ADD_JobQueueEntrParamTemplates";
     begin
-        //TODO
         // [SCENARIO] Creating Job Queue Entry Parameter Template from List Page should not be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template List Page
+        JobQueueEntrParamTemplates.OpenView();
 
+        // [WHEN] Attempting to create a new record on the list page
         // [THEN] Creating a Job Queue Entry Parameter Template from the List Page should not be possible
+        asserterror JobQueueEntrParamTemplates.New();
+        Assert.ExpectedErrorCode('DB:ClientInsertDenied');
+
+        JobQueueEntrParamTemplates.Close();
     end;
 
     [Test]
     procedure ModifyJobQueEntrParamTemplIsNotPossibleFromListPage()
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntrParamTemplates: TestPage "ADD_JobQueueEntrParamTemplates";
     begin
-        //TODO
         // [SCENARIO] Modifying Job Queue Entry Parameter Template from List Page should not be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter Template List Page
+        JobQueueEntrParamTemplates.OpenView();
 
-        // [THEN] Modifying a Job Queue Entry Parameter Template from the List Page should not be possible
+        // [WHEN] Checking if the page is editable
+        // [THEN] The Job Queue Entry Parameter Template List Page should not be editable
+        Assert.IsFalse(JobQueueEntrParamTemplates.Editable(), 'The list page should not be editable');
+
+        JobQueueEntrParamTemplates.Close();
     end;
 
     [Test]
@@ -1269,6 +1284,7 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParamTemplate."Parameter Name" := ParamName;
         JobQueueEntryParamTemplate."Parameter Type" := JobQueueEntryParamTemplate.FieldNo("Text Value");
         JobQueueEntryParamTemplate."Text Value" := TextVal;
+        JobQueueEntryParamTemplate.Insert();
     end;
 
     local procedure AssertVariantsAreEqual(var ExpectedValue: Variant; var CurrValue: Variant; Msg: Text)
