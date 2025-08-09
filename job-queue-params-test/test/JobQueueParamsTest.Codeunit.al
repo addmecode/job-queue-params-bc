@@ -200,26 +200,47 @@ codeunit 50140 "ADD_JobQueueParamsTest"
 
     [Test]
     procedure CreateJobQueEntrParamIsNotPossibleFromListPage()
+    var
+        JobQueueEntrParams: TestPage ADD_JobQueueEntrParamTemplates;
     begin
-        //TODO
         // [SCENARIO] Creating Job Queue Entry Parameter from List Page should not be possible
         Initialize();
 
         // [GIVEN] A Job Queue Entry Parameter List Page
+        JobQueueEntrParams.OpenView();
 
+        // [WHEN] Attempting to create a new record on the list page
         // [THEN] Creating a Job Queue Entry Parameter from the List Page should not be possible
+        asserterror JobQueueEntrParams.New();
+        Assert.ExpectedErrorCode('DB:ClientInsertDenied');
+
+        JobQueueEntrParams.Close();
     end;
 
     [Test]
     procedure ModifyJobQueEntrParamIsNotPossibleFromListPage()
+    var
+        JobQueueEntrParams: TestPage ADD_JobQueueEntrParamTemplates;
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
     begin
-        //TODO
         // [SCENARIO] Modifying Job Queue Entry Parameter from List Page should not be possible
         Initialize();
 
-        // [GIVEN] A Job Queue Entry Parameter List Page
+        // [GIVEN] A Job Queue Entry Parameter Template
+        CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
 
+        // [GIVEN] A Job Queue Entry with parameters from this template
+        CreateSampleJobQueueEntry();
+
+        // [GIVEN] A Job Queue Entry Parameter List Page opened with the parameters
+        JobQueueEntrParams.OpenEdit();
+        JobQueueEntrParams.First();
+
+        // [WHEN] Checking if the page is editable
         // [THEN] Modifying a Job Queue Entry Parameter from the List Page should not be possible
+        Assert.IsFalse(JobQueueEntrParams.Editable(), 'The list page should not be editable');
+
+        JobQueueEntrParams.Close();
     end;
 
     [Test]
@@ -1446,6 +1467,16 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         CreateSampleTextJqeParamTempl(JobQueueEntryParamTemplate);
         JobQueueEntrParamTemplateCard.OpenEdit();
         JobQueueEntrParamTemplateCard.GoToRecord(JobQueueEntryParamTemplate);
+    end;
+
+    local procedure CreateSampleJobQueueEntry()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+    begin
+        JobQueueEntry.Init();
+        JobQueueEntry.Validate("Object Type to Run", JobQueueEntry."Object Type to Run"::Codeunit);
+        JobQueueEntry.Validate("Object ID to Run", GetTestObjectId());
+        JobQueueEntry.Insert(True);
     end;
 
 
