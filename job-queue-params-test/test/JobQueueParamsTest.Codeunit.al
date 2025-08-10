@@ -565,6 +565,126 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     end;
 
     [Test]
+    procedure CorrectParamValueIsDisplayedOnJobQEntryParamTemplListPage()
+    begin
+        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Template List Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Template List Page is opened
+
+        // [THEN] The correct Parameter Value should be displayed on the list page
+    end;
+
+    [Test]
+    procedure CorrectParamValueIsDisplayedOnJobQEntryParamListPage()
+    begin
+        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter List Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter List Page is opened
+
+        // [THEN] The correct Parameter Value should be displayed on the list page
+    end;
+
+    [Test]
+    procedure CorrectParamValueIsDisplayedOnJobQEntryParamSubformListPage()
+    begin
+        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Subform List Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Subform List Page is opened
+
+        // [THEN] The correct Parameter Value should be displayed on the list page
+    end;
+
+    [Test]
+    procedure CorrectParamValueIsDisplayedOnJobQEntryParamTemplCardPage()
+    begin
+        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Template Card Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Template Card Page is opened
+
+        // [THEN] The correct Parameter Value should be displayed on the card page
+    end;
+
+    [Test]
+    procedure CorrectParamValueIsDisplayedOnJobQEntryParamCardPage()
+    begin
+        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Card Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Card Page is opened
+
+        // [THEN] The correct Parameter Value should be displayed on the card page
+    end;
+
+    [Test]
+    procedure CorrectParamTypeIsDisplayedOnJobQEntryParamTemplListPage()
+    begin
+        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Template List Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Template List Page is opened
+
+        // [THEN] The correct Parameter Type should be displayed on the list page
+    end;
+
+    [Test]
+    procedure CorrectParamTypeIsDisplayedOnJobQEntryParamListPage()
+    begin
+        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter List Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter List Page is opened
+
+        // [THEN] The correct Parameter Type should be displayed on the list page
+    end;
+
+    [Test]
+    procedure CorrectParamTypeIsDisplayedOnJobQEntryParamSubformListPage()
+    begin
+        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Subform List Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Subform List Page is opened
+
+        // [THEN] The correct Parameter Type should be displayed on the list page
+    end;
+
+    [Test]
+    procedure CorrectParamTypeIsDisplayedOnJobQEntryParamTemplCardPage()
+    begin
+        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Template Card Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Template Card Page is opened
+
+        // [THEN] The correct Parameter Type should be displayed on the card page
+    end;
+
+    [Test]
+    procedure CorrectParamTypeIsDisplayedOnJobQEntryParamCardPage()
+    begin
+        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Card Page
+        Initialize();
+        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [WHEN] The Job Queue Entry Parameter Card Page is opened
+
+        // [THEN] The correct Parameter Type should be displayed on the card page
+    end;
+
+    [Test]
     procedure ModifyJobQueueEntryParameterWhenJobQueueEntryIsOnHoldIsPossible()
     var
         JobQueueEntry: Record "Job Queue Entry";
