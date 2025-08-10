@@ -442,54 +442,125 @@ codeunit 50140 "ADD_JobQueueParamsTest"
 
     [Test]
     procedure JobQueEntrParamSubformPageIsVisibleOnJobQueEntryCardPage()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQEntryParams: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryCard: TestPage "Job Queue Entry Card";
     begin
-        //TODO
         // [SCENARIO] Job Queue Entry Parameter Subform Page should be visible on Job Queue Entry Card Page
         Initialize();
 
-        // [GIVEN] A Job Queue Entry
+        // [GIVEN] A Job Queue Entry Parameter Template
+        // [GIVEN] A Job Queue Entry with parameters from this template
+        CreateJobQEntryWithSampleParams(JobQueueEntry, JobQEntryParams, JobQueueEntryParamTemplate);
 
         // [WHEN] Job Queue Entry Card Page is opened
+        JobQueueEntryCard.OpenEdit();
+        JobQueueEntryCard.GoToRecord(JobQueueEntry);
 
-        // [THEN] The Job Queue Entry Parameter Subform Page should be visible
+        // [THEN] The Job Queue Entry Parameter Subform Page should be accessible and functional
+        Assert.IsTrue(JobQueueEntryCard.JobQueueEntryParameters.First(), 'The Job Queue Entry Parameter Subform should be accessible and contain parameters');
+
+        JobQueueEntryCard.Close();
     end;
 
     [Test]
     procedure JobQueEntrParamSubformPageDisplayOnlyParametersRelatedToTheJobQue()
+    var
+        JobQueueEntry1: Record "Job Queue Entry";
+        JobQueueEntry2: Record "Job Queue Entry";
+        JobQueueEntryParamTemplate1: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParamTemplate2: Record "ADD_JobQueueEntryParamTemplate";
+        JobQueueEntryParameterMgt: Codeunit "ADD_JobQueueEntryParameterMgt";
+        JobQueueEntryCard: TestPage "Job Queue Entry Card";
+        ParameterCount: Integer;
     begin
-        //TODO
-        // [SCENARIO] Job Queue Entry Parameter Subform Page should display only parameters related to the Job Queue
+        // [SCENARIO] Job Queue Entry Parameter Subform Page should display only parameters related to the Job Queue Entry
         Initialize();
 
-        // [GIVEN] A Job Queue Entry
+        // [GIVEN] Two Job Queue Entries with different parameters
+        CreateJobQueueEntryWithoutParameters(JobQueueEntry1);
+        CreateJobQueueEntryWithoutParameters2(JobQueueEntry2);
 
-        // [WHEN] Job Queue Entry Card Page is opened
+        // [GIVEN] Create parameter templates for each Job Queue Entry with different parameter names
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry1, JobQueueEntryParamTemplate1, 'Param1', JobQueueEntryParamTemplate1.FieldNo("Text Value"), 'Value1');
+        CreateJqeParamTemplWithGivenValue(JobQueueEntry2, JobQueueEntryParamTemplate2, 'Param2', JobQueueEntryParamTemplate2.FieldNo("Text Value"), 'Value2');
 
-        // [THEN] The Job Queue Entry Parameter Subform displays only parameters related to the Job Queue Entry
+        // [GIVEN] Create parameters for both Job Queue Entries
+        //TODO: if the CreateAllJobQueueEntryParamsFromTempl will be local, the code must be change so the parameters will be created when insert(true) on Job queue entry 
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry1, true);
+        JobQueueEntryParameterMgt.CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry2, true);
+
+        // [WHEN] Job Queue Entry Card Page is opened for the first Job Queue Entry
+        JobQueueEntryCard.OpenEdit();
+        JobQueueEntryCard.GoToRecord(JobQueueEntry1);
+
+        // [THEN] The Job Queue Entry Parameter Subform should display only parameters related to the first Job Queue Entry
+        Assert.IsTrue(JobQueueEntryCard.JobQueueEntryParameters.First(), 'The subform should contain at least one parameter');
+
+        // [THEN] Verify the parameter belongs to the correct Job Queue Entry
+        Assert.AreEqual('Param1', JobQueueEntryCard.JobQueueEntryParameters."Parameter Name".Value, 'The parameter name should match');
+
+        // [THEN] Verify only one parameter is displayed (the one for this Job Queue Entry)
+        ParameterCount := 0;
+        repeat
+            ParameterCount += 1;
+        until not JobQueueEntryCard.JobQueueEntryParameters.Next();
+        Assert.AreEqual(1, ParameterCount, 'The subform should display only one parameter related to the Job Queue Entry');
+
+        JobQueueEntryCard.Close();
     end;
 
     [Test]
     procedure ModifyJobQueEntrParamIsNotPossibleFromSubformPage()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQEntryParams: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryCard: TestPage "Job Queue Entry Card";
     begin
-        //TODO
         // [SCENARIO] Modifying Job Queue Entry Parameter from Subform Page should not be possible
         Initialize();
 
-        // [GIVEN] A Job Queue Entry Parameter Subform Page
+        // [GIVEN] A Job Queue Entry Parameter Template
+        // [GIVEN] A Job Queue Entry with parameters from this template
+        CreateJobQEntryWithSampleParams(JobQueueEntry, JobQEntryParams, JobQueueEntryParamTemplate);
+
+        // [WHEN] Job Queue Entry Card Page is opened
+        JobQueueEntryCard.OpenEdit();
+        JobQueueEntryCard.GoToRecord(JobQueueEntry);
 
         // [THEN] Modifying a Job Queue Entry Parameter from the Subform Page should not be possible
+        Assert.IsFalse(JobQueueEntryCard.JobQueueEntryParameters.Editable(), 'The Job Queue Entry Parameter Subform should not be editable');
+
+        JobQueueEntryCard.Close();
     end;
 
     [Test]
     procedure CreateJobQueEntrParamIsNotPossibleFromSubformPage()
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        JobQEntryParams: Record "ADD_JobQueueEntryParameter";
+        JobQueueEntryCard: TestPage "Job Queue Entry Card";
     begin
-        //TODO
         // [SCENARIO] Creating Job Queue Entry Parameter from Subform Page should not be possible
         Initialize();
 
-        // [GIVEN] A Job Queue Entry Parameter Subform Page
+        // [GIVEN] A Job Queue Entry Parameter Template
+        // [GIVEN] A Job Queue Entry with parameters from this template
+        CreateJobQEntryWithSampleParams(JobQueueEntry, JobQEntryParams, JobQueueEntryParamTemplate);
+
+        // [WHEN] Job Queue Entry Card Page is opened
+        JobQueueEntryCard.OpenEdit();
+        JobQueueEntryCard.GoToRecord(JobQueueEntry);
 
         // [THEN] Creating a Job Queue Entry Parameter from the Subform Page should not be possible
+        asserterror JobQueueEntryCard.JobQueueEntryParameters.New();
+        Assert.ExpectedErrorCode('DB:ClientInsertDenied');
+
+        JobQueueEntryCard.Close();
     end;
 
     [Test]
@@ -1460,6 +1531,16 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntry.ID := CreateGuid();
         JobQueueEntry."Object Type to Run" := JobQueueEntry."Object Type to Run"::Codeunit;
         JobQueueEntry."Object ID to Run" := GetTestObjectId();
+        JobQueueEntry.Insert();
+        exit(JobQueueEntry.ID);
+    end;
+
+    local procedure CreateJobQueueEntryWithoutParameters2(var JobQueueEntry: Record "Job Queue Entry"): Guid
+    begin
+        JobQueueEntry.Init();
+        JobQueueEntry.ID := CreateGuid();
+        JobQueueEntry."Object Type to Run" := JobQueueEntry."Object Type to Run"::Codeunit;
+        JobQueueEntry."Object ID to Run" := GetSecondTestObjectId();
         JobQueueEntry.Insert();
         exit(JobQueueEntry.ID);
     end;
