@@ -46,10 +46,14 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         JQEParam.DeleteAll(true);
     end;
 
-    procedure OverwriteAllJobQueueEntryParamsFromTempl(JQE: Record "Job Queue Entry"; xJQE: Record "Job Queue Entry"; SetDefValue: Boolean)
+    procedure OverwriteAllJobQueueEntryParamsFromTempl(JQE: Record "Job Queue Entry"; SetDefValue: Boolean)
     var
         JQEParam: Record "ADD_JobQueueEntryParameter";
+        xJQE: Record "Job Queue Entry";
     begin
+        if not xJQE.Get(JQE.ID) then
+            exit;
+
         if (JQE."Object ID to Run" = xJQE."Object ID to Run") and (JQE."Object Type to Run" = xJQE."Object Type to Run") then
             exit;
 
@@ -181,8 +185,8 @@ codeunit 50100 "ADD_JobQueueEntryParameterMgt"
         Rec.CreateJobQueueEntryParam();
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Job Queue Entry", 'OnAfterModifyEvent', '', false, false)]
-    local procedure OnAfterModifyJQE(var Rec: Record "Job Queue Entry")
+    [EventSubscriber(ObjectType::Table, Database::"Job Queue Entry", 'OnBeforeModifyEvent', '', false, false)]
+    local procedure OnBeforeModifyJQE(var Rec: Record "Job Queue Entry")
     begin
         Rec.OverwriteJobQueueEntryParam();
     end;

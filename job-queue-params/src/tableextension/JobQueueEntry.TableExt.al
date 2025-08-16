@@ -24,7 +24,7 @@ tableextension 50100 "ADD_JobQueueEntry" extends "Job Queue Entry"
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
     begin
-        JobQueueEntryMgt.OverwriteAllJobQueueEntryParamsFromTempl(Rec, xRec, true);
+        JobQueueEntryMgt.OverwriteAllJobQueueEntryParamsFromTempl(Rec, true);
     end;
 
     procedure GetJobQueueEntryParamValue(ParamName: Text[100]): Variant
