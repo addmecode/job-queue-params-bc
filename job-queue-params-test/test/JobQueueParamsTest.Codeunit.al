@@ -118,21 +118,55 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamTemplValueIsPossibleFromCardPage()
     var
-        JobQueueEntrParamTemplateCard: TestPage ADD_JobQueueEntrParamTemplCard;
+        JobQueueEntryParamTemplCard: TestPage ADD_JobQueueEntrParamTemplCard;
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Template Value from Card Page should be possible
         Initialize();
 
-        // [GIVEN] A Job Queue Entry Parameter Template
-        // [GIVEN] A Job Queue Entry Parameter Template Card Page opened with the created template in edit mode
-        CreateSampleTemplAndOpenItInTemplCardPageEditMode(JobQueueEntrParamTemplateCard);
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values, Job Queue Entry and Job Queue Entry Parameters
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [WHEN] Attempting to edit Parameter Value on the card page
-        // [THEN] Modifying a Job Queue Entry Parameter Template Parameter Value from the Card Page should be possible
-        //TODO: it shoould check each possible value type
-        Assert.IsTrue(JobQueueEntrParamTemplateCard."Text Value".Editable(), 'The Text Value on the card page should be editable');
+        // [WHEN] Job Queue Entry Parameter Template Card Page is opened
+        JobQueueEntryParamTemplate.SetRange("Object ID", ObjId);
+        JobQueueEntryParamTemplate.SetRange("Object Type", ObjType);
+        JobQueueEntryParamTemplate.FindSet();
+        JobQueueEntryParamTemplCard.OpenEdit();
+        repeat
+            JobQueueEntryParamTemplCard.GoToRecord(JobQueueEntryParamTemplate);
+            // [THEN] The correct value should be editable
+            case JobQueueEntryParamTemplate."Parameter Type" of
+                JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."BigInteger Value".Editable(), 'BigInteger Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Boolean Value".Editable(), 'Boolean Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Code Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Code Value".Editable(), 'Code Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Date Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Date Value".Editable(), 'Date Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."DateFormula Value".Editable(), 'DateFormula Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."DateTime Value".Editable(), 'DateTime Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Decimal Value".Editable(), 'Decimal Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Duration Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Duration Value".Editable(), 'Duration Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Guid Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Guid Value".Editable(), 'Guid Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Integer Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Integer Value".Editable(), 'Integer Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Text Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Text Value".Editable(), 'Text Value should be Editable');
+                JobQueueEntryParamTemplate.FieldNo("Time Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Time Value".Editable(), 'Time Value should be Editable');
+            end;
+        until JobQueueEntryParamTemplate.Next() = 0;
 
-        JobQueueEntrParamTemplateCard.Close();
+        JobQueueEntryParamTemplCard.Close();
     end;
 
     [Test]
@@ -301,64 +335,125 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     [Test]
     procedure ModifyJobQueEntrParamValueIsPossibleFromCardPageWhenJobQEntryIsOnHold()
     var
-        JobQueueEntrParamCard: TestPage ADD_JobQueueEntrParamCard;
+        JobQueueEntryParamCard: TestPage ADD_JobQueueEntrParamCard;
+        JobQueueEntryParam: Record "ADD_JobQueueEntryParameter";
         JobQueueEntry: Record "Job Queue Entry";
-        JobQEntryParams: Record "ADD_JobQueueEntryParameter";
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Value from Parameter Card Page should be possible when Job Queue Entry is On Hold 
         Initialize();
 
-        // [GIVEN] A Job Queue Entry Parameter Template
-        // [GIVEN] A Job Queue Entry with parameters from this template
-        CreateJobQEntryWithSampleParams(JobQueueEntry, JobQEntryParams, JobQueueEntryParamTemplate);
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values, Job Queue Entry and Job Queue Entry Parameters
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
         // [GIVEN] The Job Queue Entry is On Hold
+        JobQueueEntry.SetRange("Object Type to Run", ObjType);
+        JobQueueEntry.SetRange("Object ID to Run", ObjId);
+        JobQueueEntry.FindFirst();
         JobQueueEntry.Status := JobQueueEntry.Status::"On Hold";
         JobQueueEntry.Modify(False);
 
-        // [GIVEN] A Job Queue Entry Parameter Card Page opened with the parameters
-        JobQueueEntrParamCard.OpenEdit();
-        JobQueueEntrParamCard.GoToRecord(JobQEntryParams);
+        // [WHEN] Job Queue Entry Parameter Template Card Page is opened
+        JobQueueEntryParam.SetRange("Object ID", ObjId);
+        JobQueueEntryParam.SetRange("Object Type", ObjType);
+        JobQueueEntryParam.FindSet();
+        JobQueueEntryParamCard.OpenView();
+        repeat
+            JobQueueEntryParamCard.GoToRecord(JobQueueEntryParam);
+            // [THEN] The correct value should be Editable
+            case JobQueueEntryParam."Parameter Type" of
+                JobQueueEntryParam.FieldNo("BigInteger Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."BigInteger Value".Editable(), 'BigInteger Value should be Editable');
+                JobQueueEntryParam.FieldNo("Boolean Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Boolean Value".Editable(), 'Boolean Value should be Editable');
+                JobQueueEntryParam.FieldNo("Code Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Code Value".Editable(), 'Code Value should be Editable');
+                JobQueueEntryParam.FieldNo("Date Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Date Value".Editable(), 'Date Value should be Editable');
+                JobQueueEntryParam.FieldNo("DateFormula Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."DateFormula Value".Editable(), 'DateFormula Value should be Editable');
+                JobQueueEntryParam.FieldNo("DateTime Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."DateTime Value".Editable(), 'DateTime Value should be Editable');
+                JobQueueEntryParam.FieldNo("Decimal Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Decimal Value".Editable(), 'Decimal Value should be Editable');
+                JobQueueEntryParam.FieldNo("Duration Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Duration Value".Editable(), 'Duration Value should be Editable');
+                JobQueueEntryParam.FieldNo("Guid Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Guid Value".Editable(), 'Guid Value should be Editable');
+                JobQueueEntryParam.FieldNo("Integer Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Integer Value".Editable(), 'Integer Value should be Editable');
+                JobQueueEntryParam.FieldNo("Text Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Text Value".Editable(), 'Text Value should be Editable');
+                JobQueueEntryParam.FieldNo("Time Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Time Value".Editable(), 'Time Value should be Editable');
+            end;
+        until JobQueueEntryParam.Next() = 0;
 
-        // [WHEN] Attempting to edit Parameter Value on the card page
-        // [THEN] Modifying a Job Queue Entry Parameter Value from the Card Page should not be possible
-        //TODO: it shoould check each possible value type
-        Assert.IsTrue(JobQueueEntrParamCard."Text Value".Editable(), 'The Parameter Value on the parameter card page should be editable');
-
-        JobQueueEntrParamCard.Close();
+        JobQueueEntryParamCard.Close();
     end;
 
     [Test]
     procedure ModifyJobQueEntrParamValueIsNotPossibleFromCardPageWhenJobQEntryIsNotOnHold()
     var
-        JobQueueEntrParamCard: TestPage ADD_JobQueueEntrParamCard;
+        JobQueueEntryParamCard: TestPage ADD_JobQueueEntrParamCard;
+        JobQueueEntryParam: Record "ADD_JobQueueEntryParameter";
         JobQueueEntry: Record "Job Queue Entry";
-        JobQEntryParams: Record "ADD_JobQueueEntryParameter";
-        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         // [SCENARIO] Modifying Job Queue Entry Parameter Value from Parameter Card Page should not be possible when Job Queue Entry is not On Hold
         Initialize();
 
-        // [GIVEN] A Job Queue Entry Parameter Template
-        // [GIVEN] A Job Queue Entry with parameters from this template
-        CreateJobQEntryWithSampleParams(JobQueueEntry, JobQEntryParams, JobQueueEntryParamTemplate);
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values, Job Queue Entry and Job Queue Entry Parameters
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [GIVEN] The Job Queue Entry is not On Hold
-        //TODO: it should check each possible status <> OnHold
+        // [GIVEN] The Job Queue Entry is On Hold
+        JobQueueEntry.SetRange("Object Type to Run", ObjType);
+        JobQueueEntry.SetRange("Object ID to Run", ObjId);
+        JobQueueEntry.FindFirst();
         JobQueueEntry.Status := JobQueueEntry.Status::Ready;
         JobQueueEntry.Modify(False);
 
-        // [GIVEN] A Job Queue Entry Parameter Card Page opened with the parameters
-        JobQueueEntrParamCard.OpenEdit();
-        JobQueueEntrParamCard.GoToRecord(JobQEntryParams);
+        // [WHEN] Job Queue Entry Parameter Template Card Page is opened
+        JobQueueEntryParam.SetRange("Object ID", ObjId);
+        JobQueueEntryParam.SetRange("Object Type", ObjType);
+        JobQueueEntryParam.FindSet();
+        JobQueueEntryParamCard.OpenView();
+        repeat
+            JobQueueEntryParamCard.GoToRecord(JobQueueEntryParam);
+            // [THEN] The correct value should be Editable
+            case JobQueueEntryParam."Parameter Type" of
+                JobQueueEntryParam.FieldNo("BigInteger Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."BigInteger Value".Editable(), 'BigInteger Value should be Editable');
+                JobQueueEntryParam.FieldNo("Boolean Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Boolean Value".Editable(), 'Boolean Value should be Editable');
+                JobQueueEntryParam.FieldNo("Code Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Code Value".Editable(), 'Code Value should be Editable');
+                JobQueueEntryParam.FieldNo("Date Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Date Value".Editable(), 'Date Value should be Editable');
+                JobQueueEntryParam.FieldNo("DateFormula Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."DateFormula Value".Editable(), 'DateFormula Value should be Editable');
+                JobQueueEntryParam.FieldNo("DateTime Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."DateTime Value".Editable(), 'DateTime Value should be Editable');
+                JobQueueEntryParam.FieldNo("Decimal Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Decimal Value".Editable(), 'Decimal Value should be Editable');
+                JobQueueEntryParam.FieldNo("Duration Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Duration Value".Editable(), 'Duration Value should be Editable');
+                JobQueueEntryParam.FieldNo("Guid Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Guid Value".Editable(), 'Guid Value should be Editable');
+                JobQueueEntryParam.FieldNo("Integer Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Integer Value".Editable(), 'Integer Value should be Editable');
+                JobQueueEntryParam.FieldNo("Text Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Text Value".Editable(), 'Text Value should be Editable');
+                JobQueueEntryParam.FieldNo("Time Value"):
+                    Assert.IsFalse(JobQueueEntryParamCard."Time Value".Editable(), 'Time Value should be Editable');
+            end;
+        until JobQueueEntryParam.Next() = 0;
 
-        // [WHEN] Attempting to edit Parameter Value on the card page
-        // [THEN] Modifying a Job Queue Entry Parameter Value from the Card Page should not be possible
-        //TODO: it shoould check each possible value type
-        Assert.IsFalse(JobQueueEntrParamCard."Text Value".Editable(), 'The Parameter Value on the parameter card page should not be editable');
-
-        JobQueueEntrParamCard.Close();
+        JobQueueEntryParamCard.Close();
     end;
 
     [Test]
