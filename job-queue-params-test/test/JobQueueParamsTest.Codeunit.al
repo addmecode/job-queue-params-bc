@@ -740,62 +740,193 @@ codeunit 50140 "ADD_JobQueueParamsTest"
 
     [Test]
     procedure CorrectParamValueIsDisplayedOnJobQEntryParamTemplListPage()
+    var
+        JobQueueEntrParamTemplates: TestPage ADD_JobQueueEntrParamTemplates;
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Template List Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
+
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
         // [WHEN] The Job Queue Entry Parameter Template List Page is opened
+        JobQueueEntrParamTemplates.OpenView();
 
-        // [THEN] The correct Parameter Value should be displayed on the list page
+        // [THEN] The correct Parameter Value should be displayed on the list page for each parameter template
+        Assert.IsTrue(JobQueueEntrParamTemplates.First(), 'Should be able to navigate to first record');
+        repeat
+            TestDefaultParamValue(JobQueueEntrParamTemplates."Object Type".AsInteger(), JobQueueEntrParamTemplates."Object ID".AsInteger(), JobQueueEntrParamTemplates."Parameter Name".Value, JobQueueEntrParamTemplates."Parameter Value".Value);
+        until not JobQueueEntrParamTemplates.Next();
+
+        JobQueueEntrParamTemplates.Close();
     end;
 
     [Test]
     procedure CorrectParamValueIsDisplayedOnJobQEntryParamListPage()
+    var
+        JobQueueEntrParameters: TestPage ADD_JobQueueEntryParameters;
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter List Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values, Job Queue Entry and Job Queue Entry Parameters
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
         // [WHEN] The Job Queue Entry Parameter List Page is opened
+        JobQueueEntrParameters.OpenView();
 
-        // [THEN] The correct Parameter Value should be displayed on the list page
+        // [THEN] The correct Parameter Value should be displayed on the list page for each parameter template
+        Assert.IsTrue(JobQueueEntrParameters.First(), 'Should be able to navigate to first record');
+        repeat
+            TestDefaultParamValue(JobQueueEntrParameters."Object Type".AsInteger(), JobQueueEntrParameters."Object ID".AsInteger(), JobQueueEntrParameters."Parameter Name".Value, JobQueueEntrParameters."Parameter Value".Value);
+        until not JobQueueEntrParameters.Next();
+
+        JobQueueEntrParameters.Close();
     end;
 
     [Test]
     procedure CorrectParamValueIsDisplayedOnJobQEntryParamSubformListPage()
+    var
+        JobQueueEntryCard: TestPage "Job Queue Entry Card";
+        JobQueueEntry: Record "Job Queue Entry";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
-        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Subform List Page
+        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Subform Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter with a specific value
 
-        // [WHEN] The Job Queue Entry Parameter Subform List Page is opened
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values, Job Queue Entry and Job Queue Entry Parameters
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [THEN] The correct Parameter Value should be displayed on the list page
+        // [WHEN] Job queue entry card page is opened
+        JobQueueEntry.SetRange("Object ID to Run", ObjId);
+        JobQueueEntry.SetRange("Object Type to Run", ObjType);
+        JobQueueEntry.FindFirst();
+        JobQueueEntryCard.OpenView();
+        JobQueueEntryCard.GoToRecord(JobQueueEntry);
+
+        // [THEN] The correct Parameter Value should be displayed on the list page for each parameter template
+        Assert.IsTrue(JobQueueEntryCard.JobQueueEntryParameters.First(), 'Should be able to navigate to first record');
+        repeat
+            TestDefaultParamValue(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryCard.JobQueueEntryParameters."Parameter Name".Value, JobQueueEntryCard.JobQueueEntryParameters."Parameter Value".Value);
+        until not JobQueueEntryCard.JobQueueEntryParameters.Next();
+
+        JobQueueEntryCard.Close();
     end;
 
     [Test]
-    procedure CorrectParamValueIsDisplayedOnJobQEntryParamTemplCardPage()
+    procedure CorrectParamValueIsVisibleOnJobQEntryParamTemplCardPage()
+    var
+        JobQueueEntryParamTemplCard: TestPage ADD_JobQueueEntrParamTemplCard;
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
-        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Template Card Page
+        //[SCENARIO] Correct Parameter Value should be Visible on Job Queue Entry Parameter Template Card Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
 
-        // [WHEN] The Job Queue Entry Parameter Template Card Page is opened
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values, Job Queue Entry and Job Queue Entry Parameters
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [THEN] The correct Parameter Value should be displayed on the card page
+        // [WHEN] Job Queue Entry Parameter Template Card Page is opened
+        JobQueueEntryParamTemplate.SetRange("Object ID", ObjId);
+        JobQueueEntryParamTemplate.SetRange("Object Type", ObjType);
+        JobQueueEntryParamTemplate.FindSet();
+        JobQueueEntryParamTemplCard.OpenView();
+        repeat
+            JobQueueEntryParamTemplCard.GoToRecord(JobQueueEntryParamTemplate);
+            // [THEN] The correct value should be visible
+            case JobQueueEntryParamTemplate."Parameter Type" of
+                JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."BigInteger Value".Visible(), 'BigInteger Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Boolean Value".Visible(), 'Boolean Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Code Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Code Value".Visible(), 'Code Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Date Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Date Value".Visible(), 'Date Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."DateFormula Value".Visible(), 'DateFormula Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."DateTime Value".Visible(), 'DateTime Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Decimal Value".Visible(), 'Decimal Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Duration Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Duration Value".Visible(), 'Duration Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Guid Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Guid Value".Visible(), 'Guid Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Integer Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Integer Value".Visible(), 'Integer Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Text Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Text Value".Visible(), 'Text Value should be visible');
+                JobQueueEntryParamTemplate.FieldNo("Time Value"):
+                    Assert.IsTrue(JobQueueEntryParamTemplCard."Time Value".Visible(), 'Time Value should be visible');
+            end;
+        until JobQueueEntryParamTemplate.Next() = 0;
+
+        JobQueueEntryParamTemplCard.Close();
     end;
 
     [Test]
-    procedure CorrectParamValueIsDisplayedOnJobQEntryParamCardPage()
+    procedure CorrectParamValueIsVisibleOnJobQEntryParamCardPage()
+    var
+        JobQueueEntryParamCard: TestPage ADD_JobQueueEntrParamCard;
+        JobQueueEntryParam: Record "ADD_JobQueueEntryParameter";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
-        //[SCENARIO] Correct Parameter Value should be displayed on Job Queue Entry Parameter Card Page
+        //[SCENARIO] Correct Parameter Value should be Visible on Job Queue Entry Parameter Template Card Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter with a specific value
 
-        // [WHEN] The Job Queue Entry Parameter Card Page is opened
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values, Job Queue Entry and Job Queue Entry Parameters
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [THEN] The correct Parameter Value should be displayed on the card page
+        // [WHEN] Job Queue Entry Parameter Template Card Page is opened
+        JobQueueEntryParam.SetRange("Object ID", ObjId);
+        JobQueueEntryParam.SetRange("Object Type", ObjType);
+        JobQueueEntryParam.FindSet();
+        JobQueueEntryParamCard.OpenView();
+        repeat
+            JobQueueEntryParamCard.GoToRecord(JobQueueEntryParam);
+            // [THEN] The correct value should be visible
+            case JobQueueEntryParam."Parameter Type" of
+                JobQueueEntryParam.FieldNo("BigInteger Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."BigInteger Value".Visible(), 'BigInteger Value should be visible');
+                JobQueueEntryParam.FieldNo("Boolean Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Boolean Value".Visible(), 'Boolean Value should be visible');
+                JobQueueEntryParam.FieldNo("Code Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Code Value".Visible(), 'Code Value should be visible');
+                JobQueueEntryParam.FieldNo("Date Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Date Value".Visible(), 'Date Value should be visible');
+                JobQueueEntryParam.FieldNo("DateFormula Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."DateFormula Value".Visible(), 'DateFormula Value should be visible');
+                JobQueueEntryParam.FieldNo("DateTime Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."DateTime Value".Visible(), 'DateTime Value should be visible');
+                JobQueueEntryParam.FieldNo("Decimal Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Decimal Value".Visible(), 'Decimal Value should be visible');
+                JobQueueEntryParam.FieldNo("Duration Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Duration Value".Visible(), 'Duration Value should be visible');
+                JobQueueEntryParam.FieldNo("Guid Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Guid Value".Visible(), 'Guid Value should be visible');
+                JobQueueEntryParam.FieldNo("Integer Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Integer Value".Visible(), 'Integer Value should be visible');
+                JobQueueEntryParam.FieldNo("Text Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Text Value".Visible(), 'Text Value should be visible');
+                JobQueueEntryParam.FieldNo("Time Value"):
+                    Assert.IsTrue(JobQueueEntryParamCard."Time Value".Visible(), 'Time Value should be visible');
+            end;
+        until JobQueueEntryParam.Next() = 0;
+
+        JobQueueEntryParamCard.Close();
     end;
 
     [Test]
@@ -1467,7 +1598,7 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParameter.FindSet();
         repeat
             ParamValue := JobQueueEntryParameterMgt.GetParameterValue(JobQueueEntryParameter);
-            ExpectedParamValue := GetDefaultParameterTemplValue(JobQueueEntryParameter."Parameter Type");
+            ExpectedParamValue := GetDefaultParameterValue(JobQueueEntryParameter."Parameter Type");
             AssertVariantsAreEqual(ExpectedParamValue, ParamValue, 'The returned parameter value should match the expected value');
         until JobQueueEntryParameter.Next() = 0;
     end;
@@ -1522,7 +1653,7 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryParamTemplate.FindSet();
         repeat
             ParamValue := JobQueueEntryParameterMgt.GetDefaultParameterValue(JobQueueEntryParamTemplate);
-            ExpectedParamValue := GetDefaultParameterTemplValue(JobQueueEntryParamTemplate."Parameter Type");
+            ExpectedParamValue := GetDefaultParameterValue(JobQueueEntryParamTemplate."Parameter Type");
             AssertVariantsAreEqual(ExpectedParamValue, ParamValue, 'The returned parameter value should match the expected value');
         until JobQueueEntryParamTemplate.Next() = 0;
     end;
@@ -1684,11 +1815,11 @@ codeunit 50140 "ADD_JobQueueParamsTest"
     var
         ParamValue: Variant;
     begin
-        ParamValue := GetDefaultParameterTemplValue(ParamType);
+        ParamValue := GetDefaultParameterValue(ParamType);
         CreateJqeParamTemplWithGivenValue(JobQueueEntry, JobQueueEntryParamTemplate, NewParamName, ParamType, ParamValue);
     end;
 
-    local procedure GetDefaultParameterTemplValue(ParamType: Integer): Variant
+    local procedure GetDefaultParameterValue(ParamType: Integer): Variant
     var
         JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
     begin
@@ -1777,42 +1908,8 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Any: Codeunit Any;
         DateForm: Text;
     begin
-        JobQueueEntryParamTemplate."Object ID" := ObjectId;
-        JobQueueEntryParamTemplate."Object Type" := ObjectType;
-        JobQueueEntryParamTemplate."Parameter Name" := NewParamName;
-        JobQueueEntryParamTemplate."Parameter Type" := ParamType;
-        case ParamType of
-            JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
-                JobQueueEntryParamTemplate."BigInteger Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
-                JobQueueEntryParamTemplate."Boolean Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Code Value"):
-                JobQueueEntryParamTemplate."Code Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Date Value"):
-                JobQueueEntryParamTemplate."Date Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
-                Evaluate(JobQueueEntryParamTemplate."DateFormula Value", ParamValue);
-            JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
-                JobQueueEntryParamTemplate."DateTime Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
-                JobQueueEntryParamTemplate."Decimal Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Duration Value"):
-                JobQueueEntryParamTemplate."Duration Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Guid Value"):
-                JobQueueEntryParamTemplate."Guid Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Integer Value"):
-                JobQueueEntryParamTemplate."Integer Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Text Value"):
-                JobQueueEntryParamTemplate."Text Value" := ParamValue;
-            JobQueueEntryParamTemplate.FieldNo("Time Value"):
-                JobQueueEntryParamTemplate."Time Value" := ParamValue;
-        end;
-        JobQueueEntryParamTemplate.Insert();
-
-        JobQueueEntry.Init();
-        JobQueueEntry.Validate("Object Type to Run", ObjectType);
-        JobQueueEntry.Validate("Object ID to Run", ObjectId);
-        JobQueueEntry.Insert(True);
+        CreateJqeParamTemplWithGivenValue(ObjectType, ObjectId, JobQueueEntryParamTemplate, NewParamName, ParamType, ParamValue);
+        CreateJobQueueEntry(ObjectType, ObjectId, JobQueueEntry);
     end;
 
     local procedure CreateParamTypeIntList(var ParamTypes: List of [Integer])
@@ -1831,6 +1928,29 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         ParamTypes.Add(JobQueueEntryParamTemplate.FieldNo("Integer Value"));
         ParamTypes.Add(JobQueueEntryParamTemplate.FieldNo("Text Value"));
         ParamTypes.Add(JobQueueEntryParamTemplate.FieldNo("Time Value"));
+    end;
+
+    local procedure CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjectType: Integer; ObjectID: Integer)
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ObjType: Integer;
+        ObjId: Integer;
+    begin
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param1', JobQueueEntryParamTemplate.FieldNo("BigInteger Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("BigInteger Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param2', JobQueueEntryParamTemplate.FieldNo("Boolean Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Boolean Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param3', JobQueueEntryParamTemplate.FieldNo("Code Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Code Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param4', JobQueueEntryParamTemplate.FieldNo("Date Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Date Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param5', JobQueueEntryParamTemplate.FieldNo("DateFormula Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("DateFormula Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param6', JobQueueEntryParamTemplate.FieldNo("DateTime Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("DateTime Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param7', JobQueueEntryParamTemplate.FieldNo("Decimal Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Decimal Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param8', JobQueueEntryParamTemplate.FieldNo("Duration Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Duration Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param9', JobQueueEntryParamTemplate.FieldNo("Guid Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Guid Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param10', JobQueueEntryParamTemplate.FieldNo("Integer Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Integer Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param11', JobQueueEntryParamTemplate.FieldNo("Text Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Text Value")));
+        CreateJqeParamTemplWithGivenValue(ObjType, ObjId, JobQueueEntryParamTemplate, 'Param12', JobQueueEntryParamTemplate.FieldNo("Time Value"), GetDefaultParameterValue(JobQueueEntryParamTemplate.FieldNo("Time Value")));
+        CreateJobQueueEntry(ObjectType, ObjectID, JobQueueEntry);
     end;
 
     local procedure CreateJqeParamTemplWithAllPossParamType(var JobQueueEntry: Record "Job Queue Entry"; var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate")
@@ -1989,6 +2109,69 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntry.Validate("Object Type to Run", JobQueueEntry."Object Type to Run"::Codeunit);
         JobQueueEntry.Validate("Object ID to Run", CuId);
         JobQueueEntry.Insert(True);
+    end;
+
+    local procedure CreateJqeParamTemplWithGivenValue(ObjectType: Integer; ObjectId: Integer; var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; NewParamName: Text[100]; ParamType: Integer; ParamValue: Variant)
+    begin
+        JobQueueEntryParamTemplate."Object ID" := ObjectId;
+        JobQueueEntryParamTemplate."Object Type" := ObjectType;
+        JobQueueEntryParamTemplate."Parameter Name" := NewParamName;
+        JobQueueEntryParamTemplate."Parameter Type" := ParamType;
+        case ParamType of
+            JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
+                JobQueueEntryParamTemplate."BigInteger Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
+                JobQueueEntryParamTemplate."Boolean Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Code Value"):
+                JobQueueEntryParamTemplate."Code Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Date Value"):
+                JobQueueEntryParamTemplate."Date Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
+                Evaluate(JobQueueEntryParamTemplate."DateFormula Value", ParamValue);
+            JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
+                JobQueueEntryParamTemplate."DateTime Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
+                JobQueueEntryParamTemplate."Decimal Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Duration Value"):
+                JobQueueEntryParamTemplate."Duration Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Guid Value"):
+                JobQueueEntryParamTemplate."Guid Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Integer Value"):
+                JobQueueEntryParamTemplate."Integer Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Text Value"):
+                JobQueueEntryParamTemplate."Text Value" := ParamValue;
+            JobQueueEntryParamTemplate.FieldNo("Time Value"):
+                JobQueueEntryParamTemplate."Time Value" := ParamValue;
+        end;
+        JobQueueEntryParamTemplate.Insert();
+    end;
+
+    local procedure CreateJobQueueEntry(var ObjectType: Integer; var ObjectId: Integer; var JobQueueEntry: Record "Job Queue Entry")
+    begin
+        JobQueueEntry.Init();
+        JobQueueEntry.Validate("Object Type to Run", ObjectType);
+        JobQueueEntry.Validate("Object ID to Run", ObjectId);
+        JobQueueEntry.Insert(True);
+    end;
+
+    local procedure GetDefaultParameterValueAsText(var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"): Text
+    var
+        ExpectedValue: Text;
+    begin
+        ExpectedValue := Format(GetDefaultParameterValue(JobQueueEntryParamTemplate."Parameter Type"));
+        if JobQueueEntryParamTemplate."Parameter Type" = JobQueueEntryParamTemplate.FieldNo("Duration Value") then
+            ExpectedValue += ' milliseconds';
+        exit(ExpectedValue);
+    end;
+
+    local procedure TestDefaultParamValue(ObjType: Integer; ObjId: Integer; ParamName: Text; ActualParamValue: Text)
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ExpectedValue: Text;
+    begin
+        JobQueueEntryParamTemplate.Get(ObjType, ObjId, ParamName);
+        ExpectedValue := GetDefaultParameterValueAsText(JobQueueEntryParamTemplate);
+        Assert.AreEqual(ExpectedValue, ActualParamValue, StrSubstNo('Parameter Value should match for parameter %1', JobQueueEntryParamTemplate."Parameter Name"));
     end;
 
 
