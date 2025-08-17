@@ -812,7 +812,7 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         JobQueueEntryCard.OpenView();
         JobQueueEntryCard.GoToRecord(JobQueueEntry);
 
-        // [THEN] The correct Parameter Value should be displayed on the list page for each parameter template
+        // [THEN] The correct Parameter Value should be displayed on the subform page for each parameter template
         Assert.IsTrue(JobQueueEntryCard.JobQueueEntryParameters.First(), 'Should be able to navigate to first record');
         repeat
             TestDefaultParamValue(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryCard.JobQueueEntryParameters."Parameter Name".Value, JobQueueEntryCard.JobQueueEntryParameters."Parameter Value".Value);
@@ -931,62 +931,137 @@ codeunit 50140 "ADD_JobQueueParamsTest"
 
     [Test]
     procedure CorrectParamTypeIsDisplayedOnJobQEntryParamTemplListPage()
+    var
+        JobQueueEntrParamTemplates: TestPage ADD_JobQueueEntrParamTemplates;
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Template List Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
+
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
         // [WHEN] The Job Queue Entry Parameter Template List Page is opened
+        JobQueueEntrParamTemplates.OpenView();
 
         // [THEN] The correct Parameter Type should be displayed on the list page
+        Assert.IsTrue(JobQueueEntrParamTemplates.First(), 'Should be able to navigate to first record');
+        repeat
+            TestParamType(JobQueueEntrParamTemplates."Object Type".AsInteger(), JobQueueEntrParamTemplates."Object ID".AsInteger(), JobQueueEntrParamTemplates."Parameter Name".Value, JobQueueEntrParamTemplates."Parameter Type".Value);
+        until not JobQueueEntrParamTemplates.Next();
+
+        JobQueueEntrParamTemplates.Close();
     end;
 
     [Test]
     procedure CorrectParamTypeIsDisplayedOnJobQEntryParamListPage()
+    var
+        JobQueueEntrParameters: TestPage ADD_JobQueueEntryParameters;
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter List Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter with a specific value
+
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
         // [WHEN] The Job Queue Entry Parameter List Page is opened
+        JobQueueEntrParameters.OpenView();
 
         // [THEN] The correct Parameter Type should be displayed on the list page
+        Assert.IsTrue(JobQueueEntrParameters.First(), 'Should be able to navigate to first record');
+        repeat
+            TestParamType(JobQueueEntrParameters."Object Type".AsInteger(), JobQueueEntrParameters."Object ID".AsInteger(), JobQueueEntrParameters."Parameter Name".Value, JobQueueEntrParameters."Parameter Type".Value);
+        until not JobQueueEntrParameters.Next();
+
+        JobQueueEntrParameters.Close();
     end;
 
     [Test]
     procedure CorrectParamTypeIsDisplayedOnJobQEntryParamSubformListPage()
+    var
+        JobQueueEntryCard: TestPage "Job Queue Entry Card";
+        JobQueueEntry: Record "Job Queue Entry";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
-        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Subform List Page
+        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter List Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter with a specific value
 
-        // [WHEN] The Job Queue Entry Parameter Subform List Page is opened
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [THEN] The correct Parameter Type should be displayed on the list page
+        // [WHEN] Job queue entry card page is opened
+        JobQueueEntry.SetRange("Object ID to Run", ObjId);
+        JobQueueEntry.SetRange("Object Type to Run", ObjType);
+        JobQueueEntry.FindFirst();
+        JobQueueEntryCard.OpenView();
+        JobQueueEntryCard.GoToRecord(JobQueueEntry);
+
+        // [THEN] The correct Parameter Type should be displayed on the subform page
+        Assert.IsTrue(JobQueueEntryCard.JobQueueEntryParameters.First(), 'Should be able to navigate to first record');
+        repeat
+            TestParamType(JobQueueEntry."Object Type to Run", JobQueueEntry."Object ID to Run", JobQueueEntryCard.JobQueueEntryParameters."Parameter Name".Value, JobQueueEntryCard.JobQueueEntryParameters."Parameter Type".Value);
+        until not JobQueueEntryCard.JobQueueEntryParameters.Next();
+
+        JobQueueEntryCard.Close();
     end;
 
     [Test]
     procedure CorrectParamTypeIsDisplayedOnJobQEntryParamTemplCardPage()
+    var
+        JobQEntryParamTemplCard: TestPage "ADD_JobQueueEntrParamTemplCard";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
         //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Template Card Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter Template with a specific value
 
-        // [WHEN] The Job Queue Entry Parameter Template Card Page is opened
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [THEN] The correct Parameter Type should be displayed on the card page
+        // [WHEN] Job queue entry parameter template card page is opened
+        JobQEntryParamTemplCard.OpenView();
+
+        // [THEN] The correct Parameter Type should be displayed on the subform page
+        Assert.IsTrue(JobQEntryParamTemplCard.First(), 'Should be able to navigate to first record');
+        repeat
+            TestParamType(JobQEntryParamTemplCard."Object Type".AsInteger(), JobQEntryParamTemplCard."Object ID".AsInteger(), JobQEntryParamTemplCard."Parameter Name".Value, JobQEntryParamTemplCard."Parameter Type".Value);
+        until not JobQEntryParamTemplCard.Next();
+
+        JobQEntryParamTemplCard.Close();
     end;
 
     [Test]
     procedure CorrectParamTypeIsDisplayedOnJobQEntryParamCardPage()
+    var
+        JobQEntryParamCard: TestPage "ADD_JobQueueEntrParamCard";
+        ObjType: Integer;
+        ObjId: Integer;
     begin
-        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Card Page
+        //[SCENARIO] Correct Parameter Type should be displayed on Job Queue Entry Parameter Template Card Page
         Initialize();
-        // [GIVEN] A Job Queue Entry Parameter with a specific value
 
-        // [WHEN] The Job Queue Entry Parameter Card Page is opened
+        // [GIVEN] Job Queue Entry Parameter Templates with different parameter types and values
+        GetTestCu1ForJobQueueEntry(ObjType, ObjId);
+        CreateJqeParamTemplWithAllPossParamTypeAndJobQueueEntry(ObjType, ObjId);
 
-        // [THEN] The correct Parameter Type should be displayed on the card page
+        // [WHEN] Job queue entry parameter template card page is opened
+        JobQEntryParamCard.OpenView();
+
+        // [THEN] The correct Parameter Type should be displayed on the subform page
+        Assert.IsTrue(JobQEntryParamCard.First(), 'Should be able to navigate to first record');
+        repeat
+            TestParamType(JobQEntryParamCard."Object Type".AsInteger(), JobQEntryParamCard."Object ID".AsInteger(), JobQEntryParamCard."Parameter Name".Value, JobQEntryParamCard."Parameter Type".Value);
+        until not JobQEntryParamCard.Next();
+
+        JobQEntryParamCard.Close();
     end;
 
     [Test]
@@ -2174,7 +2249,45 @@ codeunit 50140 "ADD_JobQueueParamsTest"
         Assert.AreEqual(ExpectedValue, ActualParamValue, StrSubstNo('Parameter Value should match for parameter %1', JobQueueEntryParamTemplate."Parameter Name"));
     end;
 
+    local procedure TestParamType(ObjType: Integer; ObjId: Integer; ParamName: Text; ActualParamType: Text)
+    var
+        JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate";
+        ExpectedValue: Text;
+    begin
+        JobQueueEntryParamTemplate.Get(ObjType, ObjId, ParamName);
+        ExpectedValue := GetJqeParamTemplTypeAsText(JobQueueEntryParamTemplate);
+        Assert.AreEqual(ExpectedValue, ActualParamType, StrSubstNo('Parameter Value should match for parameter %1', JobQueueEntryParamTemplate."Parameter Name"));
+    end;
 
+    local procedure GetJqeParamTemplTypeAsText(JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"): Text[100]
+    begin
+        case JobQueueEntryParamTemplate."Parameter Type" of
+            JobQueueEntryParamTemplate.FieldNo("BigInteger Value"):
+                exit('BigInteger');
+            JobQueueEntryParamTemplate.FieldNo("Boolean Value"):
+                exit('Boolean');
+            JobQueueEntryParamTemplate.FieldNo("Code Value"):
+                exit('Code');
+            JobQueueEntryParamTemplate.FieldNo("Date Value"):
+                exit('Date');
+            JobQueueEntryParamTemplate.FieldNo("DateFormula Value"):
+                exit('DateFormula');
+            JobQueueEntryParamTemplate.FieldNo("DateTime Value"):
+                exit('DateTime');
+            JobQueueEntryParamTemplate.FieldNo("Decimal Value"):
+                exit('Decimal');
+            JobQueueEntryParamTemplate.FieldNo("Duration Value"):
+                exit('Duration');
+            JobQueueEntryParamTemplate.FieldNo("Guid Value"):
+                exit('GUID');
+            JobQueueEntryParamTemplate.FieldNo("Integer Value"):
+                exit('Integer');
+            JobQueueEntryParamTemplate.FieldNo("Text Value"):
+                exit('Text');
+            JobQueueEntryParamTemplate.FieldNo("Time Value"):
+                exit('Time');
+        end;
+    end;
 
     // local procedure GetJqeParamTemplParamValueFieldRef(var JobQueueEntryParamTemplate: Record "ADD_JobQueueEntryParamTemplate"; var TemplFieldRef: FieldRef)
     // var
