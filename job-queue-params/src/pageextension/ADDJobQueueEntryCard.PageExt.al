@@ -1,7 +1,7 @@
 namespace Addmecode.JobQueueParams;
 using System.Threading;
 
-pageextension 50101 "ADD_JobQueueEntryCard" extends "Job Queue Entry Card"
+pageextension 50120 "ADD_JobQueueEntryCard" extends "Job Queue Entry Card"
 {
     layout
     {
@@ -9,10 +9,10 @@ pageextension 50101 "ADD_JobQueueEntryCard" extends "Job Queue Entry Card"
         {
             part(JobQueueEntryParameters; ADD_JobQueueEntryParamsSubform)
             {
-                SubPageLink = "Job Queue Entry ID" = FIELD(ID);
                 ApplicationArea = All;
-                UpdatePropagation = SubPart;
                 Editable = Rec.Status = Rec.Status::"On Hold";
+                SubPageLink = "Job Queue Entry ID" = field(ID);
+                UpdatePropagation = SubPart;
             }
         }
     }

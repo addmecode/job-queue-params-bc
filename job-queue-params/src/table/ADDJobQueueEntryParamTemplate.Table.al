@@ -2,57 +2,51 @@ namespace Addmecode.JobQueueParams;
 
 using System.Reflection;
 
-table 50101 "ADD_JobQueueEntryParamTemplate"
+table 50121 "ADD_JobQueueEntryParamTemplate"
 {
-    DataClassification = ToBeClassified;
     Caption = 'Job Queue Entry Parameter Template';
+    DataClassification = CustomerContent;
 
     fields
     {
         field(1; "Object Type"; option)
         {
-            //todo
-            DataClassification = CustomerContent;
+            Caption = 'Object Type';
+            Editable = false;
             OptionCaption = ',,,Report,,Codeunit';
             OptionMembers = ,,,"Report",,"Codeunit";
-            Editable = false;
         }
         field(2; "Object ID"; Integer)
         {
-            DataClassification = CustomerContent;
             Caption = 'Object ID';
-            TableRelation = AllObjWithCaption."Object ID" where("Object Type" = field("Object Type"));
             Editable = false;
+            TableRelation = AllObjWithCaption."Object ID" where("Object Type" = field("Object Type"));
         }
         field(3; "Object Caption"; Text[250])
         {
             CalcFormula = lookup(AllObjWithCaption."Object Caption" where("Object Type" = field("Object Type"),
                                                                            "Object ID" = field("Object ID")));
             Caption = 'Object Caption';
-            FieldClass = FlowField;
             Editable = false;
+            FieldClass = FlowField;
         }
         field(4; "Parameter Name"; Text[100])
         {
-            DataClassification = CustomerContent;
             Caption = 'Parameter Name';
             Editable = false;
         }
         field(5; "Parameter Type"; Integer)
         {
-            DataClassification = CustomerContent;
             Caption = 'Parameter Type';
             Editable = false;
         }
         field(6; "Parameter Description"; Text[250])
         {
-            DataClassification = CustomerContent;
             Caption = 'Parameter Description';
             Editable = true;
         }
         field(20; "BigInteger Value"; BigInteger)
         {
-            DataClassification = CustomerContent;
             Caption = 'BigInteger Value';
             Editable = true;
             trigger OnValidate()
@@ -62,7 +56,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(30; "Boolean Value"; Boolean)
         {
-            DataClassification = CustomerContent;
             Caption = 'Boolean Value';
             Editable = true;
             trigger OnValidate()
@@ -72,7 +65,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(40; "Code Value"; Code[20])
         {
-            DataClassification = CustomerContent;
             Caption = 'Code Value';
             Editable = true;
             trigger OnValidate()
@@ -82,7 +74,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(50; "Date Value"; Date)
         {
-            DataClassification = CustomerContent;
             Caption = 'Date Value';
             Editable = true;
             trigger OnValidate()
@@ -92,7 +83,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(60; "DateFormula Value"; DateFormula)
         {
-            DataClassification = CustomerContent;
             Caption = 'DateFormula Value';
             Editable = true;
             trigger OnValidate()
@@ -102,7 +92,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(70; "DateTime Value"; DateTime)
         {
-            DataClassification = CustomerContent;
             Caption = 'DateTime Value';
             Editable = true;
             trigger OnValidate()
@@ -112,7 +101,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(80; "Decimal Value"; Decimal)
         {
-            DataClassification = CustomerContent;
             Caption = 'Decimal Value';
             Editable = true;
             trigger OnValidate()
@@ -122,7 +110,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(90; "Duration Value"; Duration)
         {
-            DataClassification = CustomerContent;
             Caption = 'Duration Value';
             Editable = true;
             trigger OnValidate()
@@ -132,7 +119,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(100; "Guid Value"; Guid)
         {
-            DataClassification = CustomerContent;
             Caption = 'Guid Value';
             Editable = true;
             trigger OnValidate()
@@ -142,7 +128,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(110; "Integer Value"; Integer)
         {
-            DataClassification = CustomerContent;
             Caption = 'Integer Value';
             Editable = true;
             trigger OnValidate()
@@ -152,7 +137,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(120; "Text Value"; Text[250])
         {
-            DataClassification = CustomerContent;
             Caption = 'Text Value';
             Editable = true;
             trigger OnValidate()
@@ -162,7 +146,6 @@ table 50101 "ADD_JobQueueEntryParamTemplate"
         }
         field(130; "Time Value"; Time)
         {
-            DataClassification = CustomerContent;
             Caption = 'Time Value';
             Editable = true;
             trigger OnValidate()

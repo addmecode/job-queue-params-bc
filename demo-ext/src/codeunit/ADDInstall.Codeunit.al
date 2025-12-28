@@ -1,12 +1,10 @@
-codeunit 50131 "ADD_Install"
+codeunit 50126 ADD_Install
 {
     Subtype = Install;
 
-    trigger OnInstallAppPerCompany();
-    var
-        myAppInfo: ModuleInfo;
+    trigger OnInstallAppPerCompany()
     begin
-        OnBeforeInstallAppPerCompany();
+        this.OnBeforeInstallAppPerCompany();
     end;
 
     [IntegrationEvent(false, false)]

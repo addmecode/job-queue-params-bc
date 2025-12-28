@@ -1,13 +1,13 @@
-namespace Addmecode.jobqueueparams;
+namespace Addmecode.JobQueueParams;
 
-page 50103 "ADD_JobQueueEntrParamTemplCard"
+page 50122 "ADD_JobQueueEntrParamTemplCard"
 {
     ApplicationArea = All;
     Caption = 'Job Queue Entry Parameter Template Card';
+    DeleteAllowed = false;
+    InsertAllowed = false;
     PageType = Card;
     SourceTable = ADD_JobQueueEntryParamTemplate;
-    InsertAllowed = false;
-    DeleteAllowed = false;
 
     layout
     {
@@ -47,148 +47,154 @@ page 50103 "ADD_JobQueueEntrParamTemplCard"
             }
             group(Custom)
             {
-                ShowCaption = False;
+                ShowCaption = false;
                 group(ParameterDescription)
                 {
                     Caption = 'Parameter Description';
+                    Editable = true;
                     ShowCaption = true;
-                    Editable = True;
 
                     field("Parameter Description"; Rec."Parameter Description")
                     {
-                        ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                         ShowCaption = false;
+                        ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                     }
                 }
                 group(ParameterValue)
                 {
                     Caption = 'Parameter Value';
-                    ShowCaption = true;
                     Editable = true;
+                    ShowCaption = true;
                     group(BigIntegerValue)
                     {
-                        visible = isValueBigInteger;
                         ShowCaption = false;
+                        Visible = isValueBigInteger;
                         field("BigInteger Value"; Rec."BigInteger Value")
                         {
-                            ToolTip = 'Specifies the value of the BigInteger Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the BigInteger Value field.', Comment = '%';
                         }
                     }
                     group(BooleanValue)
                     {
-                        visible = isValueBoolean;
                         ShowCaption = false;
+                        Visible = isValueBoolean;
                         field("Boolean Value"; Rec."Boolean Value")
                         {
-                            ToolTip = 'Specifies the value of the Boolean Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Boolean Value field.', Comment = '%';
                         }
                     }
                     group(CodeValue)
                     {
-                        visible = isValueCode;
                         ShowCaption = false;
+                        Visible = isValueCode;
                         field("Code Value"; Rec."Code Value")
                         {
-                            ToolTip = 'Specifies the value of the Code Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Code Value field.', Comment = '%';
                         }
                     }
                     group(DateValue)
                     {
-                        visible = isValueDate;
                         ShowCaption = false;
+                        Visible = isValueDate;
                         field("Date Value"; Rec."Date Value")
                         {
-                            ToolTip = 'Specifies the value of the Date Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Date Value field.', Comment = '%';
                         }
                     }
                     group(DateFormulaValue)
                     {
-                        visible = isValueDateFormula;
                         ShowCaption = false;
+                        Visible = isValueDateFormula;
                         field("DateFormula Value"; Rec."DateFormula Value")
                         {
-                            ToolTip = 'Specifies the value of the DateFormula Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the DateFormula Value field.', Comment = '%';
                         }
                     }
                     group(DateTimeValue)
                     {
-                        visible = isValueDateTime;
                         ShowCaption = false;
+                        Visible = isValueDateTime;
                         field("DateTime Value"; Rec."DateTime Value")
                         {
-                            ToolTip = 'Specifies the value of the DateTime Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the DateTime Value field.', Comment = '%';
                         }
                     }
                     group(DecimalValue)
                     {
-                        visible = isValueDecimal;
                         ShowCaption = false;
+                        Visible = isValueDecimal;
                         field("Decimal Value"; Rec."Decimal Value")
                         {
-                            ToolTip = 'Specifies the value of the Decimal Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Decimal Value field.', Comment = '%';
                         }
                     }
                     group(DurationValue)
                     {
-                        visible = isValueDuration;
                         ShowCaption = false;
+                        Visible = isValueDuration;
                         field("Duration Value"; Rec."Duration Value")
                         {
-                            ToolTip = 'Specifies the value of the Duration Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Duration Value field.', Comment = '%';
                         }
                     }
                     group(GuidValue)
                     {
-                        visible = isValueGuid;
                         ShowCaption = false;
+                        Visible = isValueGuid;
                         field("Guid Value"; Rec."Guid Value")
                         {
-                            ToolTip = 'Specifies the value of the Guid Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Guid Value field.', Comment = '%';
                         }
                     }
                     group(IntegerValue)
                     {
-                        Visible = isValueInteger;
                         ShowCaption = false;
+                        Visible = isValueInteger;
                         field("Integer Value"; Rec."Integer Value")
                         {
-                            ToolTip = 'Specifies the value of the Integer Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Integer Value field.', Comment = '%';
                         }
                     }
                     group(TextValue)
                     {
-                        visible = isValueText;
                         ShowCaption = false;
+                        Visible = isValueText;
                         field("Text Value"; Rec."Text Value")
                         {
-                            ToolTip = 'Specifies the value of the Text Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Text Value field.', Comment = '%';
                         }
                     }
                     group(TimeValue)
                     {
-                        visible = isValueTime;
                         ShowCaption = false;
+                        Visible = isValueTime;
                         field("Time Value"; Rec."Time Value")
                         {
-                            ToolTip = 'Specifies the value of the Time Value field.', Comment = '%';
                             ShowCaption = false;
+                            ToolTip = 'Specifies the value of the Time Value field.', Comment = '%';
                         }
                     }
                 }
             }
         }
     }
+
+    trigger OnAfterGetRecord()
+    begin
+        SetFieldVisibility();
+    end;
+
     var
         isValueBigInteger: Boolean;
         isValueBoolean: Boolean;
@@ -202,11 +208,6 @@ page 50103 "ADD_JobQueueEntrParamTemplCard"
         isValueInteger: Boolean;
         isValueText: Boolean;
         isValueTime: Boolean;
-
-    trigger OnAfterGetRecord()
-    begin
-        SetFieldVisibility();
-    end;
 
     local procedure SetFieldVisibility()
     begin

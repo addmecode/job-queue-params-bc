@@ -1,14 +1,14 @@
 namespace Addmecode.JobQueueParams;
 
-page 50101 "ADD_JobQueueEntrParamTemplates"
+page 50123 "ADD_JobQueueEntryParameters"
 {
     ApplicationArea = All;
-    Caption = 'Job Queue Entry Parameter Templates';
-    PageType = List;
-    SourceTable = ADD_JobQueueEntryParamTemplate;
-    UsageCategory = Lists;
-    CardPageId = "ADD_JobQueueEntrParamTemplCard";
+    Caption = 'Job Queue Entry Parameters';
+    CardPageId = ADD_JobQueueEntrParamCard;
     Editable = false;
+    PageType = List;
+    SourceTable = ADD_JobQueueEntryParameter;
+    UsageCategory = Lists;
 
     layout
     {
@@ -16,6 +16,10 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
         {
             repeater(General)
             {
+                field("Job Queue Entry ID"; Rec."Job Queue Entry ID")
+                {
+                    ToolTip = 'Specifies the value of the Job Queue Entry ID field.', Comment = '%';
+                }
                 field("Object Type"; Rec."Object Type")
                 {
                     ToolTip = 'Specifies the value of the Object Type field.', Comment = '%';
@@ -23,10 +27,6 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
                 field("Object ID"; Rec."Object ID")
                 {
                     ToolTip = 'Specifies the value of the Object ID field.', Comment = '%';
-                }
-                field("Object Caption"; Rec."Object Caption")
-                {
-                    ToolTip = 'Specifies the value of the Object Caption field.', Comment = '%';
                 }
                 field("Parameter Name"; Rec."Parameter Name")
                 {
@@ -36,13 +36,13 @@ page 50101 "ADD_JobQueueEntrParamTemplates"
                 {
                     ToolTip = 'Specifies the value of the Parameter Description field.', Comment = '%';
                 }
-                field("Parameter Type"; Rec.GetTemplParameterTypeCaption())
+                field("Parameter Type"; Rec.GetParameterTypeCaption())
                 {
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
-                field("Parameter Value"; Rec.GetDefaultParameterValue())
+                field("Parameter Value"; Rec.GetParameterValueAsText())
                 {
-                    ToolTip = 'Specifies the default parameter value.', Comment = '%';
+                    ToolTip = 'Specifies the parameter value.', Comment = '%';
                 }
             }
         }
