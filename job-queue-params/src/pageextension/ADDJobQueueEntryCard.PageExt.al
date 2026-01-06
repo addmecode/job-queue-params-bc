@@ -1,7 +1,7 @@
 namespace Addmecode.JobQueueParams;
 using System.Threading;
 
-pageextension 50120 "ADD_JobQueueEntryCard" extends "Job Queue Entry Card"
+pageextension 50101 "ADD_JobQueueEntryCard" extends "Job Queue Entry Card"
 {
     layout
     {

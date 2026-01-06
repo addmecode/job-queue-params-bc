@@ -2,7 +2,7 @@ namespace Addmecode.JobQueueParams;
 
 using System.Reflection;
 
-table 50121 "ADD_JobQueueEntryParamTemplate"
+table 50105 "ADD_JobQueueEntryParamTemplate"
 {
     Caption = 'Job Queue Entry Parameter Template';
     DataClassification = CustomerContent;

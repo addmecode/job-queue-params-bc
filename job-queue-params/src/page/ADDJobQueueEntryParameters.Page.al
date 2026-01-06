@@ -1,6 +1,6 @@
 namespace Addmecode.JobQueueParams;
 
-page 50123 "ADD_JobQueueEntryParameters"
+page 50110 "ADD_JobQueueEntryParameters"
 {
     ApplicationArea = All;
     Caption = 'Job Queue Entry Parameters';

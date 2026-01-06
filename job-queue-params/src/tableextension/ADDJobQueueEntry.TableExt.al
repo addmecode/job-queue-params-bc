@@ -3,7 +3,7 @@ namespace Addmecode.jobqueueparamsbc;
 using Addmecode.JobQueueParams;
 using System.Threading;
 
-tableextension 50120 "ADD_JobQueueEntry" extends "Job Queue Entry"
+tableextension 50100 "ADD_JobQueueEntry" extends "Job Queue Entry"
 {
     procedure CreateJobQueueEntryParam()
     var

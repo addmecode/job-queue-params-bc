@@ -2,7 +2,7 @@ namespace Addmecode.JobQueueParams;
 
 using System.Threading;
 
-table 50120 "ADD_JobQueueEntryParameter"
+table 50104 "ADD_JobQueueEntryParameter"
 {
     Caption = 'Job Queue Entry Parameter';
     DataClassification = CustomerContent;

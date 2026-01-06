@@ -1,7 +1,7 @@
 namespace Addmecode.JobQueueParams;
 using System.Threading;
 
-codeunit 50120 "ADD_JobQueueEntryParameterMgt"
+codeunit 50104 "ADD_JobQueueEntryParameterMgt"
 {
     procedure CreateAllJobQueueEntryParamsFromTempl(JQE: Record "Job Queue Entry"; SetDefValue: Boolean)
     var

@@ -1,6 +1,6 @@
 namespace Addmecode.JobQueueParams;
 
-page 50121 "ADD_JobQueueEntrParamTemplates"
+page 50108 "ADD_JobQueueEntrParamTemplates"
 {
     ApplicationArea = All;
     Caption = 'Job Queue Entry Parameter Templates';

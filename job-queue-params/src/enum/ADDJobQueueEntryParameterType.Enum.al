@@ -1,4 +1,4 @@
-enum 50120 "ADD_JobQueueEntryParameterType"
+enum 50100 "ADD_JobQueueEntryParameterType"
 {
     Extensible = true;
 
