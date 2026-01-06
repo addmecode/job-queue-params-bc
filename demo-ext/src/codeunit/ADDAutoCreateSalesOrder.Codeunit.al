@@ -1,4 +1,4 @@
-codeunit 50125 ADD_AutoCreateSalesOrder
+codeunit 50106 "ADD_AutoCreateSalesOrder"
 {
     TableNo = "Job Queue Entry";
     trigger OnRun()

@@ -1,4 +1,4 @@
-codeunit 50126 ADD_Install
+codeunit 50107 "ADD_Install"
 {
     Subtype = Install;
 
