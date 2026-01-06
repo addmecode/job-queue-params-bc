@@ -1,4 +1,4 @@
-codeunit 50140 "ADD_JobQueueParamsTest"
+codeunit 50105 "ADD_JobQueueParamsTest"
 {
     // [FEATURE] [JobQueueParamsTest]
     Subtype = Test;
