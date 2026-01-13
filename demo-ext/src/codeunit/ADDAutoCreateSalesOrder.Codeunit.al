@@ -69,7 +69,7 @@ codeunit 50106 "ADD_AutoCreateSalesOrder"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::ADD_Install, OnBeforeInstallAppPerCompany, '', false, false)]
     local procedure CreateJqeTemplParams()
     var
-        JobQueueEntryParamTempl: Record ADD_JobQueueEntryParamTemplate;
+        JobQueueEntryParamTempl: Record "AMC Job Queue Param Template";
     begin
         JobQueueEntryParamTempl.Init();
         JobQueueEntryParamTempl."Object Type" := JobQueueEntryParamTempl."Object Type"::Codeunit;
