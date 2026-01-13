@@ -38,10 +38,12 @@ page 50110 "AMC Job Queue Entry Parameters"
                 }
                 field("Parameter Type"; Rec.GetParameterTypeCaption())
                 {
+                    Caption = 'Parameter Type';
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
                 field("Parameter Value"; Rec.GetParameterValueAsText())
                 {
+                    Caption = 'Parameter Value';
                     ToolTip = 'Specifies the parameter value.', Comment = '%';
                 }
             }

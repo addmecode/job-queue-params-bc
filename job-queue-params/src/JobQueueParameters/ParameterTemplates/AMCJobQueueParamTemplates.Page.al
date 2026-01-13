@@ -38,10 +38,12 @@ page 50108 "AMC Job Queue Param Templates"
                 }
                 field("Parameter Type"; Rec.GetTemplParameterTypeCaption())
                 {
+                    Caption = 'Parameter Type';
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
                 field("Parameter Value"; Rec.GetDefaultParameterValue())
                 {
+                    Caption = 'Parameter Value';
                     ToolTip = 'Specifies the default parameter value.', Comment = '%';
                 }
             }

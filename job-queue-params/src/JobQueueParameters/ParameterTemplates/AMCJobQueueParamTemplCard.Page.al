@@ -34,6 +34,7 @@ page 50109 "AMC Job Queue Param Templ Card"
                 }
                 field("Parameter Type"; Rec.GetTemplParameterTypeCaption())
                 {
+                    Caption = 'Parameter Type';
                     ToolTip = 'Specifies the value of the Parameter Type field.', Comment = '%';
                 }
                 field(SystemModifiedAt; Rec.SystemModifiedAt)
