@@ -1,4 +1,4 @@
-codeunit 50106 "ADD_AutoCreateSalesOrder"
+codeunit 50106 "AMC Auto Create Sales Order"
 {
     TableNo = "Job Queue Entry";
 
@@ -76,7 +76,7 @@ codeunit 50106 "ADD_AutoCreateSalesOrder"
         exit('Location Code');
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::ADD_Install, OnBeforeInstallAppPerCompany, '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"AMC Install", OnBeforeInstallAppPerCompany, '', false, false)]
     local procedure CreateJobQueueEntryParamTemplatesHandler()
     var
         JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template";
@@ -110,6 +110,6 @@ codeunit 50106 "ADD_AutoCreateSalesOrder"
     begin
         JobQueueEntryParamTemplate.Init();
         JobQueueEntryParamTemplate."Object Type" := JobQueueEntryParamTemplate."Object Type"::Codeunit;
-        JobQueueEntryParamTemplate."Object ID" := Codeunit::ADD_AutoCreateSalesOrder;
+        JobQueueEntryParamTemplate."Object ID" := Codeunit::"AMC Auto Create Sales Order";
     end;
 }

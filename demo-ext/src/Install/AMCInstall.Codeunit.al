@@ -1,4 +1,4 @@
-codeunit 50107 "ADD_Install"
+codeunit 50107 "AMC Install"
 {
     Subtype = Install;
 
