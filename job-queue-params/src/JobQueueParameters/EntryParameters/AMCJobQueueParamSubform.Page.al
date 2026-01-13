@@ -1,13 +1,13 @@
 namespace Addmecode.JobQueueParams;
 
-page 50111 "ADD_JobQueueEntryParamsSubform"
+page 50111 "AMC Job Queue Param Subform"
 {
     ApplicationArea = All;
     Caption = 'Job Queue Entry Parameters';
-    CardPageId = ADD_JobQueueEntrParamCard;
+    CardPageId = "AMC Job Queue Param Card";
     Editable = false;
     PageType = ListPart;
-    SourceTable = ADD_JobQueueEntryParameter;
+    SourceTable = "AMC Job Queue Entry Parameter";
 
     layout
     {

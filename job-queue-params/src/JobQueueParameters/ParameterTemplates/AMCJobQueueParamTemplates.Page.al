@@ -1,13 +1,13 @@
 namespace Addmecode.JobQueueParams;
 
-page 50108 "ADD_JobQueueEntrParamTemplates"
+page 50108 "AMC Job Queue Param Templates"
 {
     ApplicationArea = All;
     Caption = 'Job Queue Entry Parameter Templates';
-    CardPageId = ADD_JobQueueEntrParamTemplCard;
+    CardPageId = "AMC Job Queue Param Templ Card";
     Editable = false;
     PageType = List;
-    SourceTable = ADD_JobQueueEntryParamTemplate;
+    SourceTable = "AMC Job Queue Param Template";
     UsageCategory = Lists;
 
     layout

@@ -1,13 +1,13 @@
 namespace Addmecode.JobQueueParams;
 using System.Threading;
 
-pageextension 50101 "ADD_JobQueueEntryCard" extends "Job Queue Entry Card"
+pageextension 50101 "AMC Job Queue Entry Card" extends "Job Queue Entry Card"
 {
     layout
     {
         addafter(General)
         {
-            part(JobQueueEntryParameters; ADD_JobQueueEntryParamsSubform)
+            part(JobQueueEntryParameters; "AMC Job Queue Param Subform")
             {
                 ApplicationArea = All;
                 Editable = Rec.Status = Rec.Status::"On Hold";

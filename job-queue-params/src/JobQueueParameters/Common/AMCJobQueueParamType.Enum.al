@@ -1,4 +1,6 @@
-enum 50100 "ADD_JobQueueEntryParameterType"
+namespace Addmecode.JobQueueParams;
+
+enum 50100 "AMC Job Queue Param Type"
 {
     Extensible = true;
 

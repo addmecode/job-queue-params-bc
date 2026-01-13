@@ -1,8 +1,7 @@
 namespace Addmecode.JobQueueParams;
-
 using System.Reflection;
 
-table 50105 "ADD_JobQueueEntryParamTemplate"
+table 50105 "AMC Job Queue Param Template"
 {
     Caption = 'Job Queue Entry Parameter Template';
     DataClassification = CustomerContent;
@@ -165,7 +164,7 @@ table 50105 "ADD_JobQueueEntryParamTemplate"
 
     trigger OnInsert()
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         //todo
         JobQueueEntryMgt.ValidateParameterType(Rec);
@@ -173,7 +172,7 @@ table 50105 "ADD_JobQueueEntryParamTemplate"
 
     trigger OnModify()
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         //todo
         JobQueueEntryMgt.ValidateParameterType(Rec);
@@ -185,7 +184,7 @@ table 50105 "ADD_JobQueueEntryParamTemplate"
     /// <param name="SetDefaultValueForExistingJobQueueEntries">Specifies whether to set default values for existing entries.</param>
     procedure CreateIfNotExists(SetDefaultValueForExistingJobQueueEntries: Boolean)
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         JobQueueEntryMgt.CreateJqeParamTemplIfNotExists(Rec, SetDefaultValueForExistingJobQueueEntries);
     end;
@@ -196,7 +195,7 @@ table 50105 "ADD_JobQueueEntryParamTemplate"
     /// <returns>The formatted default parameter value.</returns>
     procedure GetDefaultParameterValue(): Text
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         exit(JobQueueEntryMgt.GetDefaultParameterValueAsText(Rec));
     end;
@@ -207,7 +206,7 @@ table 50105 "ADD_JobQueueEntryParamTemplate"
     /// <returns>The parameter type caption.</returns>
     procedure GetTemplParameterTypeCaption(): Text
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         exit(JobQueueEntryMgt.GetTemplParameterTypeCaption(Rec));
     end;

@@ -1,8 +1,7 @@
 namespace Addmecode.JobQueueParams;
-
 using System.Threading;
 
-table 50104 "ADD_JobQueueEntryParameter"
+table 50104 "AMC Job Queue Entry Parameter"
 {
     Caption = 'Job Queue Entry Parameter';
     DataClassification = CustomerContent;
@@ -40,7 +39,7 @@ table 50104 "ADD_JobQueueEntryParameter"
         }
         field(5; "Parameter Type"; Integer)
         {
-            CalcFormula = lookup(ADD_JobQueueEntryParamTemplate."Parameter Type"
+            CalcFormula = lookup("AMC Job Queue Param Template"."Parameter Type"
                           where("Parameter Name" = field("Parameter Name"),
                                 "Object Type" = field("Object Type"),
                                 "Object ID" = field("Object ID")));
@@ -50,7 +49,7 @@ table 50104 "ADD_JobQueueEntryParameter"
         }
         field(6; "Parameter Description"; Text[250])
         {
-            CalcFormula = lookup(ADD_JobQueueEntryParamTemplate."Parameter Description"
+            CalcFormula = lookup("AMC Job Queue Param Template"."Parameter Description"
                           where("Parameter Name" = field("Parameter Name"),
                                 "Object Type" = field("Object Type"),
                                 "Object ID" = field("Object ID")));
@@ -130,7 +129,7 @@ table 50104 "ADD_JobQueueEntryParameter"
 
     trigger OnModify()
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         JobQueueEntryMgt.CheckIfJqeIsOnHold(Rec);
     end;
@@ -141,7 +140,7 @@ table 50104 "ADD_JobQueueEntryParameter"
     /// <returns>The parameter value as a variant.</returns>
     procedure GetParameterValue(): Variant
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         exit(JobQueueEntryMgt.GetParameterValue(Rec));
     end;
@@ -152,7 +151,7 @@ table 50104 "ADD_JobQueueEntryParameter"
     /// <returns>The formatted parameter value.</returns>
     procedure GetParameterValueAsText(): Text
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         exit(JobQueueEntryMgt.GetParameterValueAsText(Rec));
     end;
@@ -163,7 +162,7 @@ table 50104 "ADD_JobQueueEntryParameter"
     /// <returns>The parameter type caption.</returns>
     procedure GetParameterTypeCaption(): Text
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         exit(JobQueueEntryMgt.GetParameterTypeCaption(Rec));
     end;
@@ -174,7 +173,7 @@ table 50104 "ADD_JobQueueEntryParameter"
     /// <returns>True if the parameter is editable; otherwise, false.</returns>
     procedure IsParamEditable(): Boolean
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         exit(JobQueueEntryMgt.IsParamEditable(Rec));
     end;

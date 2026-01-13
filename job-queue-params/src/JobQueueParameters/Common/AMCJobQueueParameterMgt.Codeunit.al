@@ -1,7 +1,7 @@
 namespace Addmecode.JobQueueParams;
 using System.Threading;
 
-codeunit 50104 "ADD_JobQueueEntryParameterMgt"
+codeunit 50104 "AMC Job Queue Parameter Mgt"
 {
     /// <summary>
     /// Creates all job queue entry parameters from matching templates.
@@ -10,7 +10,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// <param name="SetDefaultValue">Specifies whether to copy default values from templates.</param>
     procedure CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry: Record "Job Queue Entry"; SetDefaultValue: Boolean)
     var
-        JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate;
+        JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template";
     begin
         if JobQueueEntry."Object ID to Run" = 0 then
             exit;
@@ -22,16 +22,16 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
             until JobQueueEntryParamTemplate.Next() = 0;
     end;
 
-    local procedure CreateJobQueueEntryParamFromTemplate(JobQueueEntry: Record "Job Queue Entry"; JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValue: Boolean)
+    local procedure CreateJobQueueEntryParamFromTemplate(JobQueueEntry: Record "Job Queue Entry"; JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template"; SetDefaultValue: Boolean)
     var
-        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
+        JobQueueEntryParam: Record "AMC Job Queue Entry Parameter";
         ParameterRecRef: RecordRef;
         TemplateRecRef: RecordRef;
         ParameterFieldRef: FieldRef;
         TemplateFieldRef: FieldRef;
     begin
         TemplateRecRef.GetTable(JobQueueEntryParamTemplate);
-        ParameterRecRef.Open(Database::ADD_JobQueueEntryParameter);
+        ParameterRecRef.Open(Database::"AMC Job Queue Entry Parameter");
 
         ParameterRecRef.Field(JobQueueEntryParam.FieldNo("Job Queue Entry ID")).Value := JobQueueEntry.ID;
         ParameterRecRef.Field(JobQueueEntryParam.FieldNo("Parameter Name")).Value := JobQueueEntryParamTemplate."Parameter Name";
@@ -49,7 +49,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// <param name="JobQueueEntry">The job queue entry whose parameters will be deleted.</param>
     procedure DeleteAllJobQueueEntryParams(JobQueueEntry: Record "Job Queue Entry")
     var
-        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
+        JobQueueEntryParam: Record "AMC Job Queue Entry Parameter";
     begin
         JobQueueEntryParam.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
         JobQueueEntryParam.DeleteAll(true);
@@ -79,9 +79,9 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParamTemplateToCreate">The template to create.</param>
     /// <param name="SetDefaultValueForExistingJobQueueEntries">Specifies whether to set default values for existing entries.</param>
-    procedure CreateJqeParamTemplIfNotExists(JobQueueEntryParamTemplateToCreate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValueForExistingJobQueueEntries: Boolean)
+    procedure CreateJqeParamTemplIfNotExists(JobQueueEntryParamTemplateToCreate: Record "AMC Job Queue Param Template"; SetDefaultValueForExistingJobQueueEntries: Boolean)
     var
-        ExistingJobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate;
+        ExistingJobQueueEntryParamTemplate: Record "AMC Job Queue Param Template";
     begin
         if (ExistingJobQueueEntryParamTemplate.Get(JobQueueEntryParamTemplateToCreate."Object Type", JobQueueEntryParamTemplateToCreate."Object ID", JobQueueEntryParamTemplateToCreate."Parameter Name")) then
             exit;
@@ -97,7 +97,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// <returns>The parameter value as a variant.</returns>
     procedure GetJobQueueEntryParamValue(JobQueueEntry: Record "Job Queue Entry"; ParameterName: Text[100]): Variant
     var
-        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
+        JobQueueEntryParam: Record "AMC Job Queue Entry Parameter";
     begin
         JobQueueEntryParam.Get(JobQueueEntry.ID, ParameterName);
         exit(GetParameterValue(JobQueueEntryParam));
@@ -108,7 +108,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParam">The parameter record.</param>
     /// <returns>True if the parameter is editable; otherwise, false.</returns>
-    procedure IsParamEditable(JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Boolean
+    procedure IsParamEditable(JobQueueEntryParam: Record "AMC Job Queue Entry Parameter"): Boolean
     var
         JobQueueEntry: Record "Job Queue Entry";
     begin
@@ -121,7 +121,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
     /// <returns>The parameter type caption.</returns>
-    procedure GetTemplParameterTypeCaption(var JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate): Text
+    procedure GetTemplParameterTypeCaption(var JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template"): Text
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
@@ -136,7 +136,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParam">The parameter entry record.</param>
     /// <returns>The parameter type caption.</returns>
-    procedure GetParameterTypeCaption(var JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Text
+    procedure GetParameterTypeCaption(var JobQueueEntryParam: Record "AMC Job Queue Entry Parameter"): Text
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
@@ -152,7 +152,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParam">The parameter entry record.</param>
     /// <returns>The formatted parameter value.</returns>
-    procedure GetParameterValueAsText(JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Text
+    procedure GetParameterValueAsText(JobQueueEntryParam: Record "AMC Job Queue Entry Parameter"): Text
     begin
         exit(Format(GetParameterValue(JobQueueEntryParam)));
     end;
@@ -162,7 +162,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParam">The parameter entry record.</param>
     /// <returns>The parameter value as a variant.</returns>
-    procedure GetParameterValue(JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Variant
+    procedure GetParameterValue(JobQueueEntryParam: Record "AMC Job Queue Entry Parameter"): Variant
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
@@ -178,7 +178,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
     /// <returns>The formatted default value.</returns>
-    procedure GetDefaultParameterValueAsText(JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate): Text
+    procedure GetDefaultParameterValueAsText(JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template"): Text
     begin
         exit(Format(GetDefaultParameterValue(JobQueueEntryParamTemplate)));
     end;
@@ -188,7 +188,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// </summary>
     /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
     /// <returns>The default parameter value as a variant.</returns>
-    procedure GetDefaultParameterValue(JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate): Variant
+    procedure GetDefaultParameterValue(JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template"): Variant
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
@@ -202,21 +202,21 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// Validates that the template has a consistent parameter type definition.
     /// </summary>
     /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
-    procedure ValidateParameterType(JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate)
+    procedure ValidateParameterType(JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template")
     begin
         //todo validate if there is only one parameter value set and it is the same as the parameter type
     end;
 
-    local procedure CreateJobQueueEntryParamFromTemplateIfMissing(JobQueueEntry: Record "Job Queue Entry"; JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValue: Boolean)
+    local procedure CreateJobQueueEntryParamFromTemplateIfMissing(JobQueueEntry: Record "Job Queue Entry"; JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template"; SetDefaultValue: Boolean)
     var
-        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
+        JobQueueEntryParam: Record "AMC Job Queue Entry Parameter";
     begin
         if JobQueueEntryParam.Get(JobQueueEntry.ID, JobQueueEntryParamTemplate."Parameter Name") then
             exit;
         CreateJobQueueEntryParamFromTemplate(JobQueueEntry, JobQueueEntryParamTemplate, SetDefaultValue);
     end;
 
-    local procedure CreateJobQueueEntryParamsFromNewTemplateForExistingEntries(NewJobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValueForExistingJobQueueEntries: Boolean)
+    local procedure CreateJobQueueEntryParamsFromNewTemplateForExistingEntries(NewJobQueueEntryParamTemplate: Record "AMC Job Queue Param Template"; SetDefaultValueForExistingJobQueueEntries: Boolean)
     var
         JobQueueEntry: Record "Job Queue Entry";
     begin
@@ -227,7 +227,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
             until JobQueueEntry.Next() = 0;
     end;
 
-    local procedure SetFilterForJobQueueEntriesForTemplate(NewJobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; var FilteredJobQueueEntry: Record "Job Queue Entry")
+    local procedure SetFilterForJobQueueEntriesForTemplate(NewJobQueueEntryParamTemplate: Record "AMC Job Queue Param Template"; var FilteredJobQueueEntry: Record "Job Queue Entry")
     begin
         FilteredJobQueueEntry.SetRange("Object Type to Run", NewJobQueueEntryParamTemplate."Object Type");
         FilteredJobQueueEntry.SetRange("Object ID to Run", NewJobQueueEntryParamTemplate."Object ID");
@@ -237,7 +237,7 @@ codeunit 50104 "ADD_JobQueueEntryParameterMgt"
     /// Ensures the related job queue entry is on hold before allowing changes.
     /// </summary>
     /// <param name="JobQueueEntryParam">The parameter entry record.</param>
-    procedure CheckIfJqeIsOnHold(JobQueueEntryParam: Record ADD_JobQueueEntryParameter)
+    procedure CheckIfJqeIsOnHold(JobQueueEntryParam: Record "AMC Job Queue Entry Parameter")
     var
         JobQueueEntry: Record "Job Queue Entry";
     begin

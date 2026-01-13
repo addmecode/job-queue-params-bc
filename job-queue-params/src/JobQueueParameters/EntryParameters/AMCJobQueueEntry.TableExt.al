@@ -1,16 +1,14 @@
-namespace Addmecode.jobqueueparamsbc;
-
-using Addmecode.JobQueueParams;
+namespace Addmecode.JobQueueParams;
 using System.Threading;
 
-tableextension 50100 "ADD_JobQueueEntry" extends "Job Queue Entry"
+tableextension 50100 "AMC Job Queue Entry" extends "Job Queue Entry"
 {
     /// <summary>
     /// Creates parameters for the current job queue entry from templates.
     /// </summary>
     procedure CreateJobQueueEntryParam()
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         JobQueueEntryMgt.CreateAllJobQueueEntryParamsFromTempl(Rec, true);
     end;
@@ -20,7 +18,7 @@ tableextension 50100 "ADD_JobQueueEntry" extends "Job Queue Entry"
     /// </summary>
     procedure DeleteJobQueueEntryParam()
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         JobQueueEntryMgt.DeleteAllJobQueueEntryParams(Rec);
     end;
@@ -30,7 +28,7 @@ tableextension 50100 "ADD_JobQueueEntry" extends "Job Queue Entry"
     /// </summary>
     procedure OverwriteJobQueueEntryParam()
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         JobQueueEntryMgt.OverwriteAllJobQueueEntryParamsFromTempl(Rec, true);
     end;
@@ -42,7 +40,7 @@ tableextension 50100 "ADD_JobQueueEntry" extends "Job Queue Entry"
     /// <returns>The parameter value as a variant.</returns>
     procedure GetJobQueueEntryParamValue(ParameterName: Text[100]): Variant
     var
-        JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
+        JobQueueEntryMgt: Codeunit "AMC Job Queue Parameter Mgt";
     begin
         exit(JobQueueEntryMgt.GetJobQueueEntryParamValue(Rec, ParameterName));
     end;
