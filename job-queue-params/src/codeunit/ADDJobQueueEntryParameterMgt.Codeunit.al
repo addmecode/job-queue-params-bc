@@ -3,194 +3,262 @@ using System.Threading;
 
 codeunit 50104 "ADD_JobQueueEntryParameterMgt"
 {
-    procedure CreateAllJobQueueEntryParamsFromTempl(JQE: Record "Job Queue Entry"; SetDefValue: Boolean)
+    /// <summary>
+    /// Creates all job queue entry parameters from matching templates.
+    /// </summary>
+    /// <param name="JobQueueEntry">The job queue entry to receive parameters.</param>
+    /// <param name="SetDefaultValue">Specifies whether to copy default values from templates.</param>
+    procedure CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry: Record "Job Queue Entry"; SetDefaultValue: Boolean)
     var
-        JQEParamTempl: Record ADD_JobQueueEntryParamTemplate;
+        JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate;
     begin
-        if JQE."Object ID to Run" = 0 then
+        if JobQueueEntry."Object ID to Run" = 0 then
             exit;
-        JQEParamTempl.SetRange("Object ID", JQE."Object ID to Run");
-        JQEParamTempl.SetRange("Object Type", JQE."Object Type to Run");
-        if JQEParamTempl.FindSet() then
+        JobQueueEntryParamTemplate.SetRange("Object ID", JobQueueEntry."Object ID to Run");
+        JobQueueEntryParamTemplate.SetRange("Object Type", JobQueueEntry."Object Type to Run");
+        if JobQueueEntryParamTemplate.FindSet() then
             repeat
-                CreateJqeParamFromTempl(JQE, JQEParamTempl, SetDefValue);
-            until JQEParamTempl.Next() = 0;
+                CreateJobQueueEntryParamFromTemplate(JobQueueEntry, JobQueueEntryParamTemplate, SetDefaultValue);
+            until JobQueueEntryParamTemplate.Next() = 0;
     end;
 
-    local procedure CreateJqeParamFromTempl(JQE: Record "Job Queue Entry"; JQEParamTempl: Record ADD_JobQueueEntryParamTemplate; SetDefValue: Boolean)
+    local procedure CreateJobQueueEntryParamFromTemplate(JobQueueEntry: Record "Job Queue Entry"; JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValue: Boolean)
     var
-        JQEParam: Record ADD_JobQueueEntryParameter;
-        RecRefParam: RecordRef;
-        RecRefTempl: RecordRef;
-        ParamFieldRef: FieldRef;
-        TemplFieldRef: FieldRef;
+        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
+        ParameterRecRef: RecordRef;
+        TemplateRecRef: RecordRef;
+        ParameterFieldRef: FieldRef;
+        TemplateFieldRef: FieldRef;
     begin
-        RecRefTempl.GetTable(JQEParamTempl);
-        RecRefParam.Open(Database::ADD_JobQueueEntryParameter);
+        TemplateRecRef.GetTable(JobQueueEntryParamTemplate);
+        ParameterRecRef.Open(Database::ADD_JobQueueEntryParameter);
 
-        RecRefParam.Field(JQEParam.FieldNo("Job Queue Entry ID")).Value := JQE.ID;
-        RecRefParam.Field(JQEParam.FieldNo("Parameter Name")).Value := JQEParamTempl."Parameter Name";
-        if SetDefValue then begin
-            TemplFieldRef := RecRefTempl.Field(JQEParamTempl."Parameter Type");
-            ParamFieldRef := RecRefParam.Field(TemplFieldRef.Number);
-            ParamFieldRef.Value := TemplFieldRef.Value;
+        ParameterRecRef.Field(JobQueueEntryParam.FieldNo("Job Queue Entry ID")).Value := JobQueueEntry.ID;
+        ParameterRecRef.Field(JobQueueEntryParam.FieldNo("Parameter Name")).Value := JobQueueEntryParamTemplate."Parameter Name";
+        if SetDefaultValue then begin
+            TemplateFieldRef := TemplateRecRef.Field(JobQueueEntryParamTemplate."Parameter Type");
+            ParameterFieldRef := ParameterRecRef.Field(TemplateFieldRef.Number);
+            ParameterFieldRef.Value := TemplateFieldRef.Value;
         end;
-        RecRefParam.Insert();
+        ParameterRecRef.Insert();
     end;
 
-    procedure DeleteAllJobQueueEntryParams(JQE: Record "Job Queue Entry")
+    /// <summary>
+    /// Deletes all parameters linked to the provided job queue entry.
+    /// </summary>
+    /// <param name="JobQueueEntry">The job queue entry whose parameters will be deleted.</param>
+    procedure DeleteAllJobQueueEntryParams(JobQueueEntry: Record "Job Queue Entry")
     var
-        JQEParam: Record ADD_JobQueueEntryParameter;
+        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
     begin
-        JQEParam.SetRange("Job Queue Entry ID", JQE.ID);
-        JQEParam.DeleteAll(true);
+        JobQueueEntryParam.SetRange("Job Queue Entry ID", JobQueueEntry.ID);
+        JobQueueEntryParam.DeleteAll(true);
     end;
 
-    procedure OverwriteAllJobQueueEntryParamsFromTempl(JQE: Record "Job Queue Entry"; SetDefValue: Boolean)
+    /// <summary>
+    /// Recreates job queue entry parameters when the object to run changes.
+    /// </summary>
+    /// <param name="JobQueueEntry">The job queue entry to update.</param>
+    /// <param name="SetDefaultValue">Specifies whether to copy default values from templates.</param>
+    procedure OverwriteAllJobQueueEntryParamsFromTempl(JobQueueEntry: Record "Job Queue Entry"; SetDefaultValue: Boolean)
     var
-        xJQE: Record "Job Queue Entry";
+        ExistingJobQueueEntry: Record "Job Queue Entry";
     begin
-        if not xJQE.Get(JQE.ID) then
+        if not ExistingJobQueueEntry.Get(JobQueueEntry.ID) then
             exit;
 
-        if (JQE."Object ID to Run" = xJQE."Object ID to Run") and (JQE."Object Type to Run" = xJQE."Object Type to Run") then
+        if (JobQueueEntry."Object ID to Run" = ExistingJobQueueEntry."Object ID to Run") and (JobQueueEntry."Object Type to Run" = ExistingJobQueueEntry."Object Type to Run") then
             exit;
 
-        DeleteAllJobQueueEntryParams(JQE);
-        CreateAllJobQueueEntryParamsFromTempl(JQE, SetDefValue);
+        DeleteAllJobQueueEntryParams(JobQueueEntry);
+        CreateAllJobQueueEntryParamsFromTempl(JobQueueEntry, SetDefaultValue);
     end;
 
-    procedure CreateJqeParamTemplIfNotExists(JqeTemplToCreate: Record ADD_JobQueueEntryParamTemplate; SetDefValueForExistingJqe: Boolean)
+    /// <summary>
+    /// Creates a parameter template and initializes existing job queue entries when missing.
+    /// </summary>
+    /// <param name="JobQueueEntryParamTemplateToCreate">The template to create.</param>
+    /// <param name="SetDefaultValueForExistingJobQueueEntries">Specifies whether to set default values for existing entries.</param>
+    procedure CreateJqeParamTemplIfNotExists(JobQueueEntryParamTemplateToCreate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValueForExistingJobQueueEntries: Boolean)
     var
-        JobQueueEntryParamTempl: Record ADD_JobQueueEntryParamTemplate;
+        ExistingJobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate;
     begin
-        if (JobQueueEntryParamTempl.Get(JqeTemplToCreate."Object Type", JqeTemplToCreate."Object ID", JqeTemplToCreate."Parameter Name")) then
+        if (ExistingJobQueueEntryParamTemplate.Get(JobQueueEntryParamTemplateToCreate."Object Type", JobQueueEntryParamTemplateToCreate."Object ID", JobQueueEntryParamTemplateToCreate."Parameter Name")) then
             exit;
-        JqeTemplToCreate.Insert(true);
-        CreateJqeParamFromNewTempForExistingJqe(JqeTemplToCreate, SetDefValueForExistingJqe);
+        JobQueueEntryParamTemplateToCreate.Insert(true);
+        CreateJobQueueEntryParamsFromNewTemplateForExistingEntries(JobQueueEntryParamTemplateToCreate, SetDefaultValueForExistingJobQueueEntries);
     end;
 
-    procedure GetJobQueueEntryParamValue(Jqe: Record "Job Queue Entry"; ParamName: Text[100]): Variant
+    /// <summary>
+    /// Gets a parameter value for the specified job queue entry.
+    /// </summary>
+    /// <param name="JobQueueEntry">The job queue entry.</param>
+    /// <param name="ParameterName">The parameter name to read.</param>
+    /// <returns>The parameter value as a variant.</returns>
+    procedure GetJobQueueEntryParamValue(JobQueueEntry: Record "Job Queue Entry"; ParameterName: Text[100]): Variant
     var
-        JqueParam: Record ADD_JobQueueEntryParameter;
+        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
     begin
-        JqueParam.Get(Jqe.ID, ParamName);
-        exit(GetParameterValue(JqueParam));
+        JobQueueEntryParam.Get(JobQueueEntry.ID, ParameterName);
+        exit(GetParameterValue(JobQueueEntryParam));
     end;
 
-    procedure IsParamEditable(JqeParam: Record ADD_JobQueueEntryParameter): Boolean
+    /// <summary>
+    /// Determines whether the parameter can be edited based on the job queue entry status.
+    /// </summary>
+    /// <param name="JobQueueEntryParam">The parameter record.</param>
+    /// <returns>True if the parameter is editable; otherwise, false.</returns>
+    procedure IsParamEditable(JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Boolean
     var
         JobQueueEntry: Record "Job Queue Entry";
     begin
-        JobQueueEntry.Get(JqeParam."Job Queue Entry ID");
+        JobQueueEntry.Get(JobQueueEntryParam."Job Queue Entry ID");
         exit(JobQueueEntry.Status = JobQueueEntry.Status::"On Hold");
     end;
 
-    procedure GetTemplParameterTypeCaption(var JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    /// <summary>
+    /// Returns the caption of the parameter type stored in the template.
+    /// </summary>
+    /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
+    /// <returns>The parameter type caption.</returns>
+    procedure GetTemplParameterTypeCaption(var JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate): Text
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
-        RecRef.GetTable(JqeParamTempl);
-        FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
+        RecRef.GetTable(JobQueueEntryParamTemplate);
+        FieldRef := RecRef.Field(JobQueueEntryParamTemplate."Parameter Type");
         exit(Format(FieldRef.Type));
     end;
 
-    procedure GetParameterTypeCaption(var JqeParam: Record ADD_JobQueueEntryParameter): Text
+    /// <summary>
+    /// Returns the caption of the parameter type stored in the entry.
+    /// </summary>
+    /// <param name="JobQueueEntryParam">The parameter entry record.</param>
+    /// <returns>The parameter type caption.</returns>
+    procedure GetParameterTypeCaption(var JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Text
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
-        JqeParam.CalcFields("Parameter Type");
-        RecRef.GetTable(JqeParam);
-        FieldRef := RecRef.Field(JqeParam."Parameter Type");
+        JobQueueEntryParam.CalcFields("Parameter Type");
+        RecRef.GetTable(JobQueueEntryParam);
+        FieldRef := RecRef.Field(JobQueueEntryParam."Parameter Type");
         exit(Format(FieldRef.Type));
     end;
 
-    procedure GetParameterValueAsText(JqeParam: Record ADD_JobQueueEntryParameter): Text
+    /// <summary>
+    /// Returns the parameter value formatted as text.
+    /// </summary>
+    /// <param name="JobQueueEntryParam">The parameter entry record.</param>
+    /// <returns>The formatted parameter value.</returns>
+    procedure GetParameterValueAsText(JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Text
     begin
-        exit(Format(GetParameterValue((JqeParam))));
+        exit(Format(GetParameterValue(JobQueueEntryParam)));
     end;
 
-    procedure GetParameterValue(JqeParam: Record ADD_JobQueueEntryParameter): Variant
+    /// <summary>
+    /// Returns the raw parameter value.
+    /// </summary>
+    /// <param name="JobQueueEntryParam">The parameter entry record.</param>
+    /// <returns>The parameter value as a variant.</returns>
+    procedure GetParameterValue(JobQueueEntryParam: Record ADD_JobQueueEntryParameter): Variant
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
-        JqeParam.CalcFields("Parameter Type");
-        RecRef.GetTable(JqeParam);
-        FieldRef := RecRef.Field(JqeParam."Parameter Type");
+        JobQueueEntryParam.CalcFields("Parameter Type");
+        RecRef.GetTable(JobQueueEntryParam);
+        FieldRef := RecRef.Field(JobQueueEntryParam."Parameter Type");
         exit(FieldRef.Value());
     end;
 
-    procedure GetDefaultParameterValueAsText(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Text
+    /// <summary>
+    /// Returns the default parameter value formatted as text.
+    /// </summary>
+    /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
+    /// <returns>The formatted default value.</returns>
+    procedure GetDefaultParameterValueAsText(JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate): Text
     begin
-        exit(Format(GetDefaultParameterValue(JqeParamTempl)));
+        exit(Format(GetDefaultParameterValue(JobQueueEntryParamTemplate)));
     end;
 
-    procedure GetDefaultParameterValue(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate): Variant
+    /// <summary>
+    /// Returns the raw default parameter value from the template.
+    /// </summary>
+    /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
+    /// <returns>The default parameter value as a variant.</returns>
+    procedure GetDefaultParameterValue(JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate): Variant
     var
         RecRef: RecordRef;
         FieldRef: FieldRef;
     begin
-        RecRef.GetTable(JqeParamTempl);
-        FieldRef := RecRef.Field(JqeParamTempl."Parameter Type");
+        RecRef.GetTable(JobQueueEntryParamTemplate);
+        FieldRef := RecRef.Field(JobQueueEntryParamTemplate."Parameter Type");
         exit(FieldRef.Value());
     end;
 
-    procedure ValidateParameterType(JqeParamTempl: Record ADD_JobQueueEntryParamTemplate)
+    /// <summary>
+    /// Validates that the template has a consistent parameter type definition.
+    /// </summary>
+    /// <param name="JobQueueEntryParamTemplate">The parameter template record.</param>
+    procedure ValidateParameterType(JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate)
     begin
         //todo validate if there is only one parameter value set and it is the same as the parameter type
     end;
 
-    local procedure CreateJqeParamFromTemplIfNotExists(JQE: Record "Job Queue Entry"; JQEParamTempl: Record ADD_JobQueueEntryParamTemplate; SetDefValue: Boolean)
+    local procedure CreateJobQueueEntryParamFromTemplateIfMissing(JobQueueEntry: Record "Job Queue Entry"; JobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValue: Boolean)
     var
-        JqeParam: Record ADD_JobQueueEntryParameter;
+        JobQueueEntryParam: Record ADD_JobQueueEntryParameter;
     begin
-        if JqeParam.Get(JQE.ID, JQEParamTempl."Parameter Name") then
+        if JobQueueEntryParam.Get(JobQueueEntry.ID, JobQueueEntryParamTemplate."Parameter Name") then
             exit;
-        CreateJqeParamFromTempl(JQE, JQEParamTempl, SetDefValue);
+        CreateJobQueueEntryParamFromTemplate(JobQueueEntry, JobQueueEntryParamTemplate, SetDefaultValue);
     end;
 
-    local procedure CreateJqeParamFromNewTempForExistingJqe(NewJqeParamTempl: Record ADD_JobQueueEntryParamTemplate; SetDefValueForExistingJqe: Boolean)
-    var
-        Jqe: Record "Job Queue Entry";
-    begin
-        SetFilterToFindJobQueueEntriesRelatedToJqeTempl(NewJqeParamTempl, Jqe);
-        if Jqe.FindSet() then
-            repeat
-                CreateJqeParamFromTemplIfNotExists(Jqe, NewJqeParamTempl, SetDefValueForExistingJqe);
-            until Jqe.Next() = 0;
-    end;
-
-    local procedure SetFilterToFindJobQueueEntriesRelatedToJqeTempl(NewJqeParamTempl: Record ADD_JobQueueEntryParamTemplate; var FilteredJqe: Record "Job Queue Entry")
-    begin
-        FilteredJqe.SetRange("Object Type to Run", NewJqeParamTempl."Object Type");
-        FilteredJqe.SetRange("Object ID to Run", NewJqeParamTempl."Object ID");
-    end;
-
-    procedure CheckIfJqeIsOnHold(JqeParam: Record ADD_JobQueueEntryParameter)
+    local procedure CreateJobQueueEntryParamsFromNewTemplateForExistingEntries(NewJobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; SetDefaultValueForExistingJobQueueEntries: Boolean)
     var
         JobQueueEntry: Record "Job Queue Entry";
     begin
-        JobQueueEntry.Get(JqeParam."Job Queue Entry ID");
+        SetFilterForJobQueueEntriesForTemplate(NewJobQueueEntryParamTemplate, JobQueueEntry);
+        if JobQueueEntry.FindSet() then
+            repeat
+                CreateJobQueueEntryParamFromTemplateIfMissing(JobQueueEntry, NewJobQueueEntryParamTemplate, SetDefaultValueForExistingJobQueueEntries);
+            until JobQueueEntry.Next() = 0;
+    end;
+
+    local procedure SetFilterForJobQueueEntriesForTemplate(NewJobQueueEntryParamTemplate: Record ADD_JobQueueEntryParamTemplate; var FilteredJobQueueEntry: Record "Job Queue Entry")
+    begin
+        FilteredJobQueueEntry.SetRange("Object Type to Run", NewJobQueueEntryParamTemplate."Object Type");
+        FilteredJobQueueEntry.SetRange("Object ID to Run", NewJobQueueEntryParamTemplate."Object ID");
+    end;
+
+    /// <summary>
+    /// Ensures the related job queue entry is on hold before allowing changes.
+    /// </summary>
+    /// <param name="JobQueueEntryParam">The parameter entry record.</param>
+    procedure CheckIfJqeIsOnHold(JobQueueEntryParam: Record ADD_JobQueueEntryParameter)
+    var
+        JobQueueEntry: Record "Job Queue Entry";
+    begin
+        JobQueueEntry.Get(JobQueueEntryParam."Job Queue Entry ID");
         JobQueueEntry.TestField(Status, JobQueueEntry.Status::"On Hold");
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Job Queue Entry", 'OnAfterInsertEvent', '', false, false)]
-    local procedure OnAfterInsertJQE(var Rec: Record "Job Queue Entry")
+    local procedure OnAfterInsertJobQueueEntry(var Rec: Record "Job Queue Entry")
     begin
         Rec.CreateJobQueueEntryParam();
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Job Queue Entry", 'OnBeforeModifyEvent', '', false, false)]
-    local procedure OnBeforeModifyJQE(var Rec: Record "Job Queue Entry")
+    local procedure OnBeforeModifyJobQueueEntry(var Rec: Record "Job Queue Entry")
     begin
         Rec.OverwriteJobQueueEntryParam();
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Job Queue Entry", 'OnAfterDeleteEvent', '', false, false)]
-    local procedure OnAfterDeleteJQE(var Rec: Record "Job Queue Entry")
+    local procedure OnAfterDeleteJobQueueEntry(var Rec: Record "Job Queue Entry")
     begin
         Rec.DeleteJobQueueEntryParam();
     end;

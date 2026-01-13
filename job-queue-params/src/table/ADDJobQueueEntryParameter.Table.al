@@ -135,6 +135,10 @@ table 50104 "ADD_JobQueueEntryParameter"
         JobQueueEntryMgt.CheckIfJqeIsOnHold(Rec);
     end;
 
+    /// <summary>
+    /// Returns the raw parameter value.
+    /// </summary>
+    /// <returns>The parameter value as a variant.</returns>
     procedure GetParameterValue(): Variant
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
@@ -142,6 +146,10 @@ table 50104 "ADD_JobQueueEntryParameter"
         exit(JobQueueEntryMgt.GetParameterValue(Rec));
     end;
 
+    /// <summary>
+    /// Returns the parameter value formatted as text.
+    /// </summary>
+    /// <returns>The formatted parameter value.</returns>
     procedure GetParameterValueAsText(): Text
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
@@ -149,6 +157,10 @@ table 50104 "ADD_JobQueueEntryParameter"
         exit(JobQueueEntryMgt.GetParameterValueAsText(Rec));
     end;
 
+    /// <summary>
+    /// Returns the caption of the parameter type.
+    /// </summary>
+    /// <returns>The parameter type caption.</returns>
     procedure GetParameterTypeCaption(): Text
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
@@ -156,6 +168,10 @@ table 50104 "ADD_JobQueueEntryParameter"
         exit(JobQueueEntryMgt.GetParameterTypeCaption(Rec));
     end;
 
+    /// <summary>
+    /// Determines whether the parameter is editable based on job queue entry status.
+    /// </summary>
+    /// <returns>True if the parameter is editable; otherwise, false.</returns>
     procedure IsParamEditable(): Boolean
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;

@@ -72,7 +72,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(BigIntegerValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueBigInteger;
+                        Visible = IsValueBigInteger;
                         field("BigInteger Value"; Rec."BigInteger Value")
                         {
                             ShowCaption = false;
@@ -82,7 +82,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(BooleanValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueBoolean;
+                        Visible = IsValueBoolean;
                         field("Boolean Value"; Rec."Boolean Value")
                         {
                             ShowCaption = false;
@@ -92,7 +92,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(CodeValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueCode;
+                        Visible = IsValueCode;
                         field("Code Value"; Rec."Code Value")
                         {
                             ShowCaption = false;
@@ -102,7 +102,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(DateValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueDate;
+                        Visible = IsValueDate;
                         field("Date Value"; Rec."Date Value")
                         {
                             ShowCaption = false;
@@ -112,7 +112,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(DateFormulaValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueDateFormula;
+                        Visible = IsValueDateFormula;
                         field("DateFormula Value"; Rec."DateFormula Value")
                         {
                             ShowCaption = false;
@@ -122,7 +122,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(DateTimeValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueDateTime;
+                        Visible = IsValueDateTime;
                         field("DateTime Value"; Rec."DateTime Value")
                         {
                             ShowCaption = false;
@@ -132,7 +132,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(DecimalValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueDecimal;
+                        Visible = IsValueDecimal;
                         field("Decimal Value"; Rec."Decimal Value")
                         {
                             ShowCaption = false;
@@ -142,7 +142,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(DurationValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueDuration;
+                        Visible = IsValueDuration;
                         field("Duration Value"; Rec."Duration Value")
                         {
                             ShowCaption = false;
@@ -152,7 +152,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(GuidValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueGuid;
+                        Visible = IsValueGuid;
                         field("Guid Value"; Rec."Guid Value")
                         {
                             ShowCaption = false;
@@ -162,7 +162,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(IntegerValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueInteger;
+                        Visible = IsValueInteger;
                         field("Integer Value"; Rec."Integer Value")
                         {
                             ShowCaption = false;
@@ -172,7 +172,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(TextValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueText;
+                        Visible = IsValueText;
                         field("Text Value"; Rec."Text Value")
                         {
                             ShowCaption = false;
@@ -182,7 +182,7 @@ page 50107 "ADD_JobQueueEntrParamCard"
                     group(TimeValue)
                     {
                         ShowCaption = false;
-                        Visible = isValueTime;
+                        Visible = IsValueTime;
                         field("Time Value"; Rec."Time Value")
                         {
                             ShowCaption = false;
@@ -202,33 +202,33 @@ page 50107 "ADD_JobQueueEntrParamCard"
 
     var
         IsParamEditable: Boolean;
-        isValueBigInteger: Boolean;
-        isValueBoolean: Boolean;
-        isValueCode: Boolean;
-        isValueDate: Boolean;
-        isValueDateFormula: Boolean;
-        isValueDateTime: Boolean;
-        isValueDecimal: Boolean;
-        isValueDuration: Boolean;
-        isValueGuid: Boolean;
-        isValueInteger: Boolean;
-        isValueText: Boolean;
-        isValueTime: Boolean;
+        IsValueBigInteger: Boolean;
+        IsValueBoolean: Boolean;
+        IsValueCode: Boolean;
+        IsValueDate: Boolean;
+        IsValueDateFormula: Boolean;
+        IsValueDateTime: Boolean;
+        IsValueDecimal: Boolean;
+        IsValueDuration: Boolean;
+        IsValueGuid: Boolean;
+        IsValueInteger: Boolean;
+        IsValueText: Boolean;
+        IsValueTime: Boolean;
 
     local procedure SetFieldVisibility()
     begin
         Rec.CalcFields("Parameter Type");
-        isValueBigInteger := Rec."Parameter Type" = Rec.FieldNo("BigInteger Value");
-        isValueBoolean := Rec."Parameter Type" = Rec.FieldNo("Boolean Value");
-        isValueCode := Rec."Parameter Type" = Rec.FieldNo("Code Value");
-        isValueDate := Rec."Parameter Type" = Rec.FieldNo("Date Value");
-        isValueDateFormula := Rec."Parameter Type" = Rec.FieldNo("DateFormula Value");
-        isValueDateTime := Rec."Parameter Type" = Rec.FieldNo("DateTime Value");
-        isValueDecimal := Rec."Parameter Type" = Rec.FieldNo("Decimal Value");
-        isValueDuration := Rec."Parameter Type" = Rec.FieldNo("Duration Value");
-        isValueGuid := Rec."Parameter Type" = Rec.FieldNo("Guid Value");
-        isValueInteger := Rec."Parameter Type" = Rec.FieldNo("Integer Value");
-        isValueText := Rec."Parameter Type" = Rec.FieldNo("Text Value");
-        isValueTime := Rec."Parameter Type" = Rec.FieldNo("Time Value");
+        IsValueBigInteger := Rec."Parameter Type" = Rec.FieldNo("BigInteger Value");
+        IsValueBoolean := Rec."Parameter Type" = Rec.FieldNo("Boolean Value");
+        IsValueCode := Rec."Parameter Type" = Rec.FieldNo("Code Value");
+        IsValueDate := Rec."Parameter Type" = Rec.FieldNo("Date Value");
+        IsValueDateFormula := Rec."Parameter Type" = Rec.FieldNo("DateFormula Value");
+        IsValueDateTime := Rec."Parameter Type" = Rec.FieldNo("DateTime Value");
+        IsValueDecimal := Rec."Parameter Type" = Rec.FieldNo("Decimal Value");
+        IsValueDuration := Rec."Parameter Type" = Rec.FieldNo("Duration Value");
+        IsValueGuid := Rec."Parameter Type" = Rec.FieldNo("Guid Value");
+        IsValueInteger := Rec."Parameter Type" = Rec.FieldNo("Integer Value");
+        IsValueText := Rec."Parameter Type" = Rec.FieldNo("Text Value");
+        IsValueTime := Rec."Parameter Type" = Rec.FieldNo("Time Value");
     end;
 }

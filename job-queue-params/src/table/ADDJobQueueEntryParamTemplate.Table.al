@@ -179,13 +179,21 @@ table 50105 "ADD_JobQueueEntryParamTemplate"
         JobQueueEntryMgt.ValidateParameterType(Rec);
     end;
 
-    procedure CreateIfNotExists(SetDefValueForExistingJqe: Boolean)
+    /// <summary>
+    /// Creates the template if it does not exist and initializes related entries.
+    /// </summary>
+    /// <param name="SetDefaultValueForExistingJobQueueEntries">Specifies whether to set default values for existing entries.</param>
+    procedure CreateIfNotExists(SetDefaultValueForExistingJobQueueEntries: Boolean)
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
     begin
-        JobQueueEntryMgt.CreateJqeParamTemplIfNotExists(Rec, SetDefValueForExistingJqe);
+        JobQueueEntryMgt.CreateJqeParamTemplIfNotExists(Rec, SetDefaultValueForExistingJobQueueEntries);
     end;
 
+    /// <summary>
+    /// Returns the default parameter value as text.
+    /// </summary>
+    /// <returns>The formatted default parameter value.</returns>
     procedure GetDefaultParameterValue(): Text
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
@@ -193,6 +201,10 @@ table 50105 "ADD_JobQueueEntryParamTemplate"
         exit(JobQueueEntryMgt.GetDefaultParameterValueAsText(Rec));
     end;
 
+    /// <summary>
+    /// Returns the caption of the parameter type.
+    /// </summary>
+    /// <returns>The parameter type caption.</returns>
     procedure GetTemplParameterTypeCaption(): Text
     var
         JobQueueEntryMgt: Codeunit ADD_JobQueueEntryParameterMgt;
