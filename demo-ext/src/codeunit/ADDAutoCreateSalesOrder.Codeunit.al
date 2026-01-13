@@ -1,24 +1,32 @@
 codeunit 50106 "ADD_AutoCreateSalesOrder"
 {
     TableNo = "Job Queue Entry";
+
     trigger OnRun()
     var
-        NewSalesOrderNo: Code[20];
+        CustomerNo: Code[20];
+        ItemNo: Code[20];
+        LocCode: Code[10];
+        Quantity: Integer;
+        SalesOrderNo: Code[20];
     begin
-        NewSalesOrderNo := this.CreateSalesOrderHeader(Rec.GetJobQueueEntryParamValue(this.GetCustNoParamName()),
-                                                Rec.GetJobQueueEntryParamValue(this.GetLocCodeParamName()));
+        CustomerNo := Rec.GetJobQueueEntryParamValue(GetCustNoParamName());
+        LocCode := Rec.GetJobQueueEntryParamValue(GetLocCodeParamName());
+        ItemNo := Rec.GetJobQueueEntryParamValue(GetItemNoParamName());
+        Quantity := Rec.GetJobQueueEntryParamValue(GetQuantityParamName());
 
-        this.CreateSalesOrderLines(NewSalesOrderNo,
-                            Rec.GetJobQueueEntryParamValue(this.GetItemNoParamName()),
-                            Rec.GetJobQueueEntryParamValue(this.GetQuantityParamName()));
+        SalesOrderNo := this.CreateSalesOrderHeader(CustomerNo, LocCode);
+        this.CreateSalesOrderLines(SalesOrderNo, ItemNo, Quantity);
     end;
 
     local procedure CreateSalesOrderHeader(CustomerNo: Code[20]; LocCode: Code[10]): Code[20]
     var
         Customer: Record Customer;
         SalesHeader: Record "Sales Header";
+        CustomerNotFoundErr: Label 'Customer %1 does not exist.', Comment = '%1 = Customer No.';
     begin
-        Customer.Get(CustomerNo);
+        if not Customer.Get(CustomerNo) then
+            Error(CustomerNotFoundErr, CustomerNo);
 
         SalesHeader.Init();
         SalesHeader.Validate("Document Type", SalesHeader."Document Type"::Order);
@@ -34,8 +42,10 @@ codeunit 50106 "ADD_AutoCreateSalesOrder"
     var
         Item: Record Item;
         SalesLine: Record "Sales Line";
+        ItemNotFoundErr: Label 'Item %1 does not exist.', Comment = '%1 = Item No.';
     begin
-        Item.Get(ItemNo);
+        if not Item.Get(ItemNo) then
+            Error(ItemNotFoundErr, ItemNo);
 
         SalesLine.Init();
         SalesLine.Validate("Document Type", SalesLine."Document Type"::Order);
@@ -67,34 +77,39 @@ codeunit 50106 "ADD_AutoCreateSalesOrder"
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::ADD_Install, OnBeforeInstallAppPerCompany, '', false, false)]
-    local procedure CreateJqeTemplParams()
+    local procedure CreateJobQueueEntryParamTemplatesHandler()
     var
-        JobQueueEntryParamTempl: Record "AMC Job Queue Param Template";
+        JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template";
     begin
-        JobQueueEntryParamTempl.Init();
-        JobQueueEntryParamTempl."Object Type" := JobQueueEntryParamTempl."Object Type"::Codeunit;
-        JobQueueEntryParamTempl."Object ID" := Codeunit::ADD_AutoCreateSalesOrder;
+        InitJobQueueEntryParamTemplate(JobQueueEntryParamTemplate);
+        JobQueueEntryParamTemplate."Parameter Name" := this.GetCustNoParamName();
+        JobQueueEntryParamTemplate."Parameter Description" := 'Customer number to auto create sales order.';
+        JobQueueEntryParamTemplate.Validate("Code Value", 'C00001');
+        JobQueueEntryParamTemplate.CreateIfNotExists(true);
 
-        JobQueueEntryParamTempl."Parameter Name" := this.GetCustNoParamName();
-        JobQueueEntryParamTempl."Parameter Description" := 'Customer number to auto create sales order.';
-        JobQueueEntryParamTempl.Validate("Code Value", 'C00001');
-        JobQueueEntryParamTempl.CreateIfNotExists(true);
+        this.InitJobQueueEntryParamTemplate(JobQueueEntryParamTemplate);
+        JobQueueEntryParamTemplate."Parameter Name" := this.GetItemNoParamName();
+        JobQueueEntryParamTemplate."Parameter Description" := 'Item number to auto create sales order.';
+        JobQueueEntryParamTemplate.Validate("Code Value", 'Item0001');
+        JobQueueEntryParamTemplate.CreateIfNotExists(true);
 
-        JobQueueEntryParamTempl.Init();
-        JobQueueEntryParamTempl."Parameter Name" := this.GetItemNoParamName();
-        JobQueueEntryParamTempl."Parameter Description" := 'Item number to auto create sales order.';
-        JobQueueEntryParamTempl.Validate("Code Value", 'Item0001');
-        JobQueueEntryParamTempl.CreateIfNotExists(true);
-        JobQueueEntryParamTempl.Init();
+        this.InitJobQueueEntryParamTemplate(JobQueueEntryParamTemplate);
+        JobQueueEntryParamTemplate."Parameter Name" := this.GetQuantityParamName();
+        JobQueueEntryParamTemplate."Parameter Description" := 'Quantity to auto create sales order.';
+        JobQueueEntryParamTemplate.Validate("Integer Value", 1);
+        JobQueueEntryParamTemplate.CreateIfNotExists(true);
 
-        JobQueueEntryParamTempl."Parameter Name" := this.GetQuantityParamName();
-        JobQueueEntryParamTempl."Parameter Description" := 'Quantity to auto create sales order.';
-        JobQueueEntryParamTempl.Validate("Integer Value", 1);
-        JobQueueEntryParamTempl.CreateIfNotExists(true);
+        this.InitJobQueueEntryParamTemplate(JobQueueEntryParamTemplate);
+        JobQueueEntryParamTemplate."Parameter Name" := this.GetLocCodeParamName();
+        JobQueueEntryParamTemplate."Parameter Description" := 'Location Code to auto create sales order.';
+        JobQueueEntryParamTemplate.Validate("Code Value", 'MAIN');
+        JobQueueEntryParamTemplate.CreateIfNotExists(true);
+    end;
 
-        JobQueueEntryParamTempl."Parameter Name" := this.GetLocCodeParamName();
-        JobQueueEntryParamTempl."Parameter Description" := 'Location Code to auto create sales order.';
-        JobQueueEntryParamTempl.Validate("Code Value", 'MAIN');
-        JobQueueEntryParamTempl.CreateIfNotExists(true);
+    local procedure InitJobQueueEntryParamTemplate(var JobQueueEntryParamTemplate: Record "AMC Job Queue Param Template")
+    begin
+        JobQueueEntryParamTemplate.Init();
+        JobQueueEntryParamTemplate."Object Type" := JobQueueEntryParamTemplate."Object Type"::Codeunit;
+        JobQueueEntryParamTemplate."Object ID" := Codeunit::ADD_AutoCreateSalesOrder;
     end;
 }

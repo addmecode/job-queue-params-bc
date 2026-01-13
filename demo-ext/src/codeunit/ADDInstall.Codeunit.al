@@ -7,8 +7,11 @@ codeunit 50107 "ADD_Install"
         this.OnBeforeInstallAppPerCompany();
     end;
 
+    /// <summary>
+    /// Publishes an event before install logic runs per company.
+    /// </summary>
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeInstallAppPerCompany()
+    procedure OnBeforeInstallAppPerCompany()
     begin
     end;
 }
